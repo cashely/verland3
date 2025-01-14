@@ -1,16 +1,28 @@
-import { useState } from 'react'
-import './App.css'
-import { useMatches } from 'react-router';
-import { RouterProvider } from 'react-router-dom';
-import routes from './routes'
+import { useState, useEffect } from "react";
+import "./App.css";
+import { ConfigProvider, App as AntdApp } from "antd";
+import Router from "./router";
 
 function App() {
-  const [count, setCount] = useState(0)
   return (
-    <>
-      <RouterProvider router={routes} />
-    </>
-  )
+    <ConfigProvider
+      theme={{
+        token: {
+          borderRadius: 0,
+          borderRadiusLG: 0,
+          borderRadiusSM: 0,
+          // colorPrimary: theme.primary,
+          fontSize: 12,
+          // colorLink: theme.primary,
+          colorText: "#666",
+        },
+      }}
+    >
+      <AntdApp>
+        <Router />
+      </AntdApp>
+    </ConfigProvider>
+  );
 }
 
-export default App
+export default App;

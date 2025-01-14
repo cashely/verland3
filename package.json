@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "node --watch index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "api:dev": "pnpm run api:dev -F @verland3.0/api"
   },
   "keywords": [],
   "author": "",
