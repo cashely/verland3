@@ -8,20 +8,10 @@ import {
 import Header from "./components/header";
 import SiderBar from "./components/sidebar";
 import NavBar from "./components/navbar";
-import { getTokenFromLocalStorage } from "../utils/index.ts";
+import { getTokenFromLocalStorage } from "@/utils/index.ts";
 const Layout = () => {
-  const token = getTokenFromLocalStorage();
   const location = useLocation();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (token) {
-      // 有 token 跳转到首页
-      navigate("/");
-    } else {
-      // 没有 token 跳转到登录页
-      navigate("/login");
-    }
-  }, [navigate]);
+
   console.log(location.pathname);
 
   return (
@@ -30,7 +20,7 @@ const Layout = () => {
       <div className="flex flex-col flex-1 h-full">
         <Header />
         <NavBar />
-        <section className="h-full p-[16px] overflow-hidden flex-1 child-body">
+        <section className="bg-[#f5f5f5] h-full p-[16px] overflow-hidden flex-1 child-body">
           {useOutlet()}
         </section>
       </div>

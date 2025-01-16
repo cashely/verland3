@@ -17,8 +17,7 @@ const SiderBar = () => {
     >
       <h1 className="text-sm text-gray-100">
         <Logo width={30} fontSize={18} />
-      </h1>{" "}
-      {location.pathname}
+      </h1>
       <SideMenu initPath={initPath}></SideMenu>
     </aside>
   );

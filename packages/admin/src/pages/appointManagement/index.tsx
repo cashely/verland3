@@ -1,5 +1,11 @@
-import React from "react";
+import { useState } from "react";
+import SearchForm from "@/components/SearchForm";
+import { searchConfig } from './config'
+
 
 export default function appointManagement() {
-  return <div>appointManagement</div>;
+
+  return (
+    <SearchForm formList={searchConfig} />
+  );
 }

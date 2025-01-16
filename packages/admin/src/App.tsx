@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import { ConfigProvider, App as AntdApp } from "antd";
 import Router from "./router";
+//TODO
+import useTheme from "@/hooks/themeContext";
 
 function App() {
+  const { theme } = useTheme();
   return (
     <ConfigProvider
       theme={{
@@ -11,9 +14,9 @@ function App() {
           borderRadius: 0,
           borderRadiusLG: 0,
           borderRadiusSM: 0,
-          // colorPrimary: theme.primary,
+          colorPrimary: theme.primary,
           fontSize: 12,
-          // colorLink: theme.primary,
+          colorLink: theme.primary,
           colorText: "#666",
         },
       }}

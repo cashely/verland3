@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, Layout } from "antd";
 import { anyncRoutesList } from "../../../../router/routes";
 import { isExternal } from "../../../../utils/validate";
@@ -11,8 +11,8 @@ function SideMenu(props) {
     mode = "inline",
     initPath = "", //默认展示路由
   } = props;
-  console.log("🚀 ~ SideMenu ~ initPath:", props.initPath);
 
+  const navigate = useNavigate()
   const [defaultOpenKeys, setDefaultOpenKeys] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [menuList, setMenuList] = useState([]);
@@ -94,30 +94,31 @@ function SideMenu(props) {
     //默认打开菜单
     setDefaultOpenKeys(selectedOpenMenus);
     setSelectedKeys(openMenus);
-
-    console.log(
-      "🚀 ~ initActiveMenu ~ selectedOpenMenus:",
-      menuList,
-      openMenus,
-      selectedOpenMenus
-    );
   };
 
+  const handleOpenChange = (openKeys: string[]) => {
+    console.log(openKeys)
+    setDefaultOpenKeys(openKeys)
+  }
+
+  const handleSelectKeys = ({  key, keyPath,selectedKeys }) => {
+    console.log(key,keyPath,selectedKeys,'++++')
+    setSelectedKeys([key])
+    navigate(key)
+  }
+
   return (
-    <section className="h-full bg-[#001529]">
+    <section className="h-full bg-[#001529] pt-[10px]">
       <Sider width={200}>
         {/* 可以放logo */}
-        {defaultOpenKeys.toString() === ""}
-        {JSON.stringify(selectedKeys)}
-        {/* {JSON.stringify(menuList)} */}
-        {/* ["/appointManagement"]
-        ["/appointManagement/list"] */}
         <Menu
           theme={theme}
           mode={mode}
           openKeys={defaultOpenKeys}
           selectedKeys={selectedKeys}
           items={menuList}
+          onOpenChange={handleOpenChange}
+          onSelect={handleSelectKeys}
         />
       </Sider>
     </section>

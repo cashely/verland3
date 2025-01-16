@@ -60,19 +60,19 @@ const anyncRoutesList = [
     children: [
       {
         hidden: true,
-        index: true,
-        // path: "/dashboard",
+        // index: true,
+        path: "/dashboard",
         element: <ProjectList />,
         handle: {
           title: "首页",
         },
       },
       //重定向
-      // {
-      //   hidden: true,
-      //   index: true,
-      //   element: <Navigate to="/dashboard" />,
-      // },
+      {
+        hidden: true,
+        index: true,
+        element: <Navigate to="/dashboard" />,
+      },
     ],
   },
   {
