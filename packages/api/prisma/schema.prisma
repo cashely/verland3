@@ -11,48 +11,135 @@ generator client {
 datasource db {
   provider = "sqlite"
   // url      = env("DATABASE_URL")
-  url = "file:../data.db"
+  url      = "file:../data.db"
+}
+
+model adminUser {
+  id        String   @id @default(uuid(7))
+  username  String
+  password  String
+  role      Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
 
 model User {
   id        String   @id @default(uuid(7))
   wxid      String?  @unique
   nickname  String?
-  addressId String?
-  address   Address?
-  createAt  DateTime @default(now())
+  addressId String?   @unique
+  address   Address?  @relation(fields: [addressId], references: [id])
+  createdAt DateTime @default(now())
   pets      Pet[]
-  avatarId  String?
+  avatarId  String?  @unique
   avatar    Image?   @relation(fields: [avatarId], references: [id])
+  phone     String?
+  books     Book[]
+  advise    Advise[]
 }
 
 model Address {
-  id       String   @id @default(uuid(7))
-  province String?
-  city     String?
-  area     String?
-  detail   String?
-  userId   String   @unique
-  user     User     @relation(fields: [userId], references: [id])
-  createAt DateTime @default(now())
+  id        String   @id @default(uuid(7))
+  province  String?
+  city      String?
+  area      String?
+  detail    String?
+  userId    String?
+  user      User?
+  createdAt DateTime @default(now())
+  Book      Book[]
 }
 
 model Pet {
-  id       String   @id @default(uuid(7))
-  nickname String?
-  weight   Int?
-  age      String?
-  images   Image[]
-  userId   String
-  user     User     @relation(fields: [userId], references: [id])
-  createAt DateTime @default(now())
+  id        String   @id @default(uuid(7))
+  nickname  String?
+  weight    Int?
+  age       String?
+  images    Image[]
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  type      String // 宠物父类型
+  subType   String // 宠物子类型
+  bookId    String?
+  book      Book?
+  statu     Int      @default(1) // 宠物的状态 1-活着 2-死亡
 }
 
 model Image {
-  id       String   @id @default(uuid(7))
-  path     String
-  createAt DateTime @default(now())
-  User     User[]
-  Pet      Pet?     @relation(fields: [petId], references: [id])
-  petId    String?
+  id         String    @id @default(uuid(7))
+  path       String
+  createAt   DateTime  @default(now())
+  userId     String?
+  user       User?
+  Pet        Pet?      @relation(fields: [petId], references: [id]) //  关联字段-宠物
+  petId      String?
+  bookGoodId String?
+  bookGood   BookGood? // 关联字段-预约附加服务产品
+  ticketId   String?   @unique
+  ticket     Ticket?
+}
+
+// 预约附加服务产品
+model BookGood {
+  id      String  @id @default(uuid(7))
+  price   Int // 价格,单位为分
+  title   String // 产品名称
+  thumbId String? @unique // 缩略图
+  thunm   Image?  @relation(fields: [thumbId], references: [id])
+  content String // 产品描述
+  book    Book[]
+}
+
+// 预约单
+model Book {
+  id              String     @id @default(uuid(7))
+  menu            Int        @default(1) // 套餐类型,默认为套餐1
+  bookDateTime    DateTime // 预约上门时间
+  isExpress       Int        @default(2) // 是否需要快递
+  expressDateTime DateTime? // 快递时间
+  addressId       String
+  address         Address?   @relation(fields: [addressId], references: [id])
+  isRite          Int        @default(2) // 是否需要仪式
+  riteDateTIme    DateTime? // 仪式时间
+  petId           String     @unique // 宠物
+  pet             Pet        @relation(fields: [petId], references: [id])
+  totalAmount     Int // 总金额
+  payAmount       Int // 付款金额
+  payChannel      Int        @default(1) // 付款渠道 1-微信
+  bookGoods       BookGood[]
+  mark            String? // 备注
+  channel         Int        @default(1) // 订单渠道来源 1-平台
+  statu           Int        @default(0) // 未付款
+  userId          String     @unique // 下单用户
+  user            User       @relation(fields: [userId], references: [id])
+  ticketId        String?    @unique
+  ticket          Ticket?
+  createdAt       DateTime
+}
+
+// 发票
+model Ticket {
+  id        String   @id @default(uuid())
+  bookId    String   @unique
+  book      Book     @relation(fields: [bookId], references: [id])
+  createdAt DateTime
+  statu     Int      @default(2) //  开票状态 0 - 未开票
+  header    String? // 发票抬头
+  type      Int      @default(1) // 发票类型 1-个人
+  number    String? // 税号
+  email     String // 邮箱
+  fileId    String?  @unique
+  file      Image?   @relation(fields: [fileId], references: [id])
+}
+
+// 投诉建议
+model Advise {
+  id            String   @id @default(uuid())
+  type          Int      @default(1) // 投诉建议类型 1-建议 2-投诉
+  content       String
+  replayAt      DateTime
+  replayContent String
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
 }

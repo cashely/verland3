@@ -3,6 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import response from "./middles/response";
 import routes from './routes';
+import prisma from "./configs/prisma";
 
 const app = express();
 

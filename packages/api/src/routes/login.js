@@ -1,3 +1,4 @@
+import { transaction } from '../configs/prisma';
 import Router from "../middles/route";
 
 const loginRouter = new Router({
@@ -5,7 +6,9 @@ const loginRouter = new Router({
 })
 
 loginRouter.post('/', async (req, res) => {
-    
+    transaction(async (prisma) => {
+        
+    }, res);
 })
 
 
