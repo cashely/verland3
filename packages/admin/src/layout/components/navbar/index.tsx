@@ -17,10 +17,12 @@ function NavBar() {
           const path: any = {
             title: match.handle?.title,
           };
-
-          if (index !== matches.length - 1) {
-            path.href = `/#${match.pathname}`;
-          }
+          if (match.id === '1') {
+            path.href = `/#${match.pathname}/list`;
+          } else
+            if (index !== matches.length - 1) {
+              path.href = `/#${match.pathname}`;
+            }
           return path;
           //   return (
           //     <Link key={match.id} to={match.pathname}>

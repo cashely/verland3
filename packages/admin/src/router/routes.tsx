@@ -1,6 +1,8 @@
 import { lazy } from "react";
 import loadable from "@loadable/component";
 import { Navigate, redirect } from "react-router-dom";
+import { getTokenFromLocalStorage } from "../utils/index.ts";
+import useUrlQuery from "../hooks/useUrlQuery.ts";
 //按需加载
 const Login = loadable(() => import("../pages/login"));
 const Page401 = loadable(() => import("../pages/errorPage/401"));
@@ -10,8 +12,8 @@ const ProjectList = loadable(() => import("../pages/projects/list"));
 const AppointManagement = loadable(() => import("../pages/appointManagement"));
 const SaleManagement = loadable(() => import("../pages/saleManagement"));
 const AccountManagement = loadable(() => import("../pages/accountManagement"));
-
-import { getTokenFromLocalStorage } from "../utils/index.ts";
+const AppointManagementDetail = loadable(() => import("../pages/appointManagement/detail"));
+const EditOrAdd = loadable(() => import("../pages/appointManagement/editOrAdd"));
 const hasToken = getTokenFromLocalStorage();
 console.log("🚀 ~ hasToken:", hasToken);
 // const AuthComponent = ({ children }: Props) => {
@@ -81,8 +83,10 @@ const anyncRoutesList = [
     element: <Layout />,
     icon: "icon2",
     handle: { title: "预约管理" },
+    redirect: "/a",
     children: [
       {
+        index: true,
         path: "/appointManagement/list",
         title: "列表",
         handle: {
@@ -90,6 +94,33 @@ const anyncRoutesList = [
         },
         element: <AppointManagement />,
         //lazy(),
+      },
+      {
+        path: "/appointManagement/detail/:id",
+        title: "预约详情",
+        handle: {
+          title: "预约详情",
+        },
+        hidden: true,
+        element: <AppointManagementDetail />,
+        //lazy(),
+      },
+      {
+        path: "/appointManagement/editAdd/:id?",
+        title: "预约编辑",  //编辑或者新增
+        handle: {
+          title: "预约编辑",
+        },
+        hidden: true,
+        element: <EditOrAdd />,
+        //lazy(),
+        loader: (e) => {
+         console.log(e,'-111')
+          // alert(1);
+         // return hasToken ? redirect("/dashboard") : null;
+          // return false;
+          return null
+        },
       },
     ],
   },
