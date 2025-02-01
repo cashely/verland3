@@ -1,14 +1,16 @@
 import "dotenv/config";
 import express from "express";
 import bodyParser from "body-parser";
+import path from 'node:path';
 import response from "./middles/response";
 import routes from './routes';
-import prisma from "./configs/prisma";
 
 const app = express();
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(express.static(path.join(__dirname, './static')));
 
 app.use(response);
 

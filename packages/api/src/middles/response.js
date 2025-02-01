@@ -10,7 +10,7 @@ Response.prototype.success = function (data = true) {
     });
 };
 
-Response.prototype.error = function (code, message) {
+Response.prototype.error = function (message, code = 400) {
     this.res.json({
         code: code,
         message: message

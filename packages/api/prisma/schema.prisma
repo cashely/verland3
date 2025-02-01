@@ -36,6 +36,7 @@ model User {
   phone     String?
   books     Book[]
   advise    Advise[]
+  wxAccessToken WxAccessToken[]
 }
 
 model Address {
@@ -69,7 +70,8 @@ model Pet {
 model Image {
   id         String    @id @default(uuid(7))
   path       String
-  createAt   DateTime  @default(now())
+  title      String
+  createdAt   DateTime  @default(now())
   userId     String?
   user       User?
   Pet        Pet?      @relation(fields: [petId], references: [id]) //  关联字段-宠物
@@ -85,8 +87,9 @@ model BookGood {
   id      String  @id @default(uuid(7))
   price   Int // 价格,单位为分
   title   String // 产品名称
+  createdAt DateTime  @default(now())  //  创建时间
   thumbId String? @unique // 缩略图
-  thunm   Image?  @relation(fields: [thumbId], references: [id])
+  thumb   Image?  @relation(fields: [thumbId], references: [id])
   content String // 产品描述
   book    Book[]
 }
@@ -124,7 +127,7 @@ model Ticket {
   bookId    String   @unique
   book      Book     @relation(fields: [bookId], references: [id])
   createdAt DateTime
-  statu     Int      @default(2) //  开票状态 0 - 未开票
+  statu     Int      @default(2) //  开票状态 2 - 未开票
   header    String? // 发票抬头
   type      Int      @default(1) // 发票类型 1-个人
   number    String? // 税号
@@ -142,4 +145,14 @@ model Advise {
   replayContent String
   userId        String
   user          User     @relation(fields: [userId], references: [id])
+}
+
+// 微信token临时存储表
+model WxAccessToken {
+  id      String  @id @default(uuid())
+  token   String
+  createdAt String
+  expiresIn Int
+  userId   String
+  user    User  @relation(fields: [userId], references: [id])
 }

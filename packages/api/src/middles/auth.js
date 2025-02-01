@@ -12,7 +12,7 @@ function getTokenFromString(tokenString) {
 
 
 export default (req, res, next) => {
-    const { token } = req.query;
+    const { token } = req.headers;
     const tokenStr = getTokenFromString(token);
 
     console.log( res.response, ' res.response')

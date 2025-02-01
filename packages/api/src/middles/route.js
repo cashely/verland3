@@ -15,7 +15,7 @@ function Router(options = { auth: false }) {
     if (auth) {
         router.use((req, res, next) => {
 
-            const { token } = req.query;
+            const { token } = req.headers;
             const tokenStr = getTokenFromString(token);
             if (!tokenStr) {
                 res.response.noLogin();
