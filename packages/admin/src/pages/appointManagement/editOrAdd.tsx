@@ -5,8 +5,11 @@ const EditTemplate = loadable(() => import("../../components/EditTemplate"))
 
 export default () => {
     const [formList, setFormList] = useState([])
+    const params = useParams()
 
     useEffect(() => {
+        console.log(params)
+
         setFormList([
             {
                 label: '姓名',
@@ -28,6 +31,8 @@ export default () => {
         ])
     }, [])
     return (
-        <EditTemplate formList={formList} ></EditTemplate>
+        <EditTemplate formList={formList} defaultFormData={params?.id ? {
+            name: '大明哥'
+        } : {}}></EditTemplate>
     )
 }

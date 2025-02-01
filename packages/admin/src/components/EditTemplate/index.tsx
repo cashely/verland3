@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Form, Input, Row, Select, Space, InputNumber } from 'antd';
 
 const { Option } = Select
 const formItemClasses = `rounded-[4px]`
 export default function DetailTemplate(props: any) {
     const {
+        defaultFormData = {},
         formList = [],
         onSubmit = () => { },
         templateConfig = {
@@ -22,10 +23,16 @@ export default function DetailTemplate(props: any) {
         onSubmit && onSubmit(formModel)
     }
 
+    //设置默认值
+    useEffect(() => {
+        setFormModel(defaultFormData)
+        detailForm.setFieldsValue(defaultFormData)
+    }, [])
+
 
     return (
         <section className={'bg-white rounded p-[16px] pt-[20px]'}>
-            <Form form={detailForm} name="detailForm" onFinish={onFinish}>
+            <Form initialValues={formModel} form={detailForm} name="detailForm" onFinish={onFinish}>
                 <Row gutter={24}>
                     {
                         formList.map((item, index) => (<Col span={6} key={index}>
