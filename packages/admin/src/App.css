@@ -47,3 +47,11 @@ a:hover {
 .read-the-docs {
   color: #888;
 }
+
+.flex-column{
+  flex-direction: column;
+}
+
+.ant-menu-item-selected .ant-menu-item-icon{
+  color: #fff !important;
+}

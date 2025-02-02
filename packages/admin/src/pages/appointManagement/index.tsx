@@ -18,7 +18,7 @@ export default function appointManagement() {
   return (
     <>
       <SearchForm formList={searchConfig} />
-      <div className="mt-[20px] bg-[#f5f5f5]">
+      <div className="mt-[20px] bg-[#f5f5f5] flex flex-1">
         <TableList columns={tableColumns} dataSource={tableDataSource} {...tableConfig} handleAdd={handleAdd} />
       </div>
     </>

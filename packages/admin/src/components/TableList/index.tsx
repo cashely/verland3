@@ -7,9 +7,16 @@ import _ from 'lodash-es'
 //     [key: string]: T;
 //   }
 
-export default (props: TableProps) => {
+export default (props: TableProps & {
+    custom: {
+        showHeader?: boolean,
+    
+    }
+}) => {
 
-    const { columns, dataSource, ...otherConfig } = props
+    const { columns, dataSource, custom = {
+        showHeader: true
+    }, ...otherConfig } = props
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     //设置默认keys
     useEffect(() => {
@@ -18,10 +25,12 @@ export default (props: TableProps) => {
         }
     }, [])
     const tableConfig = {
+        rowKey: "id",
         bordered: true,
         loading: false,
+        scroll: { x: 'max-content' },
         //表格行选择
-        rowSelection: {
+        rowSelection: otherConfig?.rowSelection ? {
             // type: 'checkbox',
             selections: [{
                 key: Table.SELECTION_ALL,
@@ -44,7 +53,7 @@ export default (props: TableProps) => {
                 setSelectedRowKeys(newSelectedRowKeys)
             },
             ...otherConfig?.rowSelection
-        },
+        } : false,
         //分页、排序、筛选变化时触发
         onChange(pagination, filters, sorter, extra: { currentDataSource: [], action: paginate | sort | filter }) {
             console.log(pagination, filters, sorter, extra)
@@ -67,23 +76,23 @@ export default (props: TableProps) => {
         ..._.omit(otherConfig, ['rowSelection']),
     }
     return (<section className={
-        'bg-white rounded px-[16px] pt-[16px]'
+        'bg-white rounded px-[16px] pt-[16px] flex-1 overflow-hidden'
     }>
-        <div className={'tableHeader'} style={{ marginBottom: 16 }}>
+        {custom?.showHeader ? <div className={'tableHeader'} style={{ marginBottom: 16 }}>
             {/* <Space className={'flex items-right'}> */}
-                <Flex justify={'flex-end'} >  
-                    <Button onClick={props?.handleImport} type="default" style={{ marginRight: 6 }}>
-                        导入
-                    </Button>
-                    <Button onClick={props?.handleExport} type="default" style={{ marginRight: 6 }}>
-                        导出
-                    </Button>
-                    <Button onClick={props?.handleAdd} type="primary">
-                        新增
-                    </Button>
-                </Flex>
+            <Flex justify={'flex-end'} >
+                <Button onClick={props?.handleImport} type="default" style={{ marginRight: 6 }}>
+                    导入
+                </Button>
+                <Button onClick={props?.handleExport} type="default" style={{ marginRight: 6 }}>
+                    导出
+                </Button>
+                <Button onClick={props?.handleAdd} type="primary">
+                    新增
+                </Button>
+            </Flex>
             {/* </Space> */}
-        </div>
+        </div> : null}
         <Table<T> columns={columns} dataSource={dataSource} {...tableConfig} ></Table>
     </section>)
 }

@@ -69,7 +69,7 @@ export default function SearchForm(props: any) {
 								width: '100%'
 							}} min={1} placeholder={item.placeholder}  {...item.itemProps} /> : null}
 							{item.type === 'select' ? <Select className={formItemClasses} placeholder={item.placeholder}>
-								{item.options.map((option, indey) => (<Option key={indey} value={option.value}>{option.label}</Option>))}
+								{item?.options?.map((option, indey) => (<Option key={indey} value={option.value}>{option.label}</Option>))}
 							</Select> : null}
 						</Form.Item>
 
