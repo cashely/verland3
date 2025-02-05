@@ -9,5 +9,8 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src')
     }
+  },
+  server: {
+    allowedHosts: ['a2hvmu2b-zzthfd94-hgqoor5rnajo.vcc3p.mcprev.cn']
   }
 })
