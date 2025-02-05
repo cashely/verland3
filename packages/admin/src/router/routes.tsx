@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import loadable from "@loadable/component";
 import { Navigate, redirect } from "react-router-dom";
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { TeamOutlined, CustomerServiceOutlined } from '@ant-design/icons';
 import { getTokenFromLocalStorage } from "../utils/index.ts";
 import IcontFont from "@/components/IcontFont";
 import useUrlQuery from "../hooks/useUrlQuery.ts";
@@ -59,9 +59,10 @@ const constantRoutesList = [
 const anyncRoutesList = [
   {
     path: "/",
+    errorElement: <Page404 />,
     element: <Layout />,
     title: "首页",
-    icon:<IcontFont type="icon-dashboard"></IcontFont>,
+    icon: <IcontFont type="icon-dashboard"></IcontFont>,
     handle: {
       title: "首页",
     },
@@ -79,7 +80,7 @@ const anyncRoutesList = [
       {
         hidden: true,
         index: true,
-        
+
         element: <Navigate to="/dashboard" />,
       },
     ],
@@ -186,7 +187,9 @@ const anyncRoutesList = [
     path: "/saleManagement",
     title: "售后管理",
     element: <Layout />,
-    icon: "icon2",
+    icon: <CustomerServiceOutlined style={{
+      fontSize: 16
+    }} />,
     handle: { title: "售后管理" },
     children: [
       {
@@ -203,7 +206,9 @@ const anyncRoutesList = [
     path: "/accountManagement",
     title: "账号管理",
     element: <Layout />,
-    icon: "icon2",
+    icon: <TeamOutlined style={{
+      fontSize: 16
+    }} />,
     handle: { title: "账号管理" },
     children: [
       {

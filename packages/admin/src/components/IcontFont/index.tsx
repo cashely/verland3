@@ -1,7 +1,7 @@
 import { createFromIconfontCN } from '@ant-design/icons';
 
 
-const IconFont = createFromIconfontCN({
+const PetIcon = createFromIconfontCN({
     scriptUrl: [
         '//at.alicdn.com/t/c/font_4819930_obe08jogf6s.js',
     ],
@@ -11,10 +11,10 @@ const IconFont = createFromIconfontCN({
 });
 
 export default (props: any) => {
-    return <IconFont style={{
-        fontSize: '16px',
-        color: '#1890ff',
+    return <PetIcon  {...props} style={{
+        fontSize: 16,
+        // color: '#1890ff',
         // color: "red",//'#1890ff'
         cursor: 'pointer'
-    }} {...props} />
+    }} />
 };
