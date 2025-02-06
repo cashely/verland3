@@ -12,8 +12,12 @@ function getTokenFromString(tokenString) {
 
 
 export default (req, res, next) => {
-    const { token } = req.headers;
+    let { token } = req.headers;
+    if (!token) {
+        token = req.query.token;
+    }
     const tokenStr = getTokenFromString(token);
+    console.log(token, 'token')
 
     console.log( res.response, ' res.response')
     if (!tokenStr) {
