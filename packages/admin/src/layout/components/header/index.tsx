@@ -3,6 +3,7 @@ import { Dropdown, Space, message, Progress, Flex } from "antd";
 import { useShallow } from "zustand/react/shallow";
 import styles from "./index.module.scss";
 // import LocaleButton from "../common/LocaleButton";
+import Hamburger from '@/components/Hamburger'
 
 import { removeTokenFromLocalStorage } from "../../../utils";
 // import { getCurrentUserApi, logoutApi } from "./apis";
@@ -73,7 +74,7 @@ function Header() {
       className={`${styles.header} flex justify-between p-2 border-b h-[64px] header`}
     >
       <Flex className="items-center content-center w-[150px]">
-        <span className="mr-2 text-nowrap">容量:</span>
+        <Hamburger /> 
         {/* <Progress
             percent={(userInfo.documentCount / userInfo.stock) * 100}
             format={() => `${userInfo.documentCount} / ${userInfo.stock}`}

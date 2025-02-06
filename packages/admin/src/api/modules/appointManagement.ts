@@ -6,7 +6,7 @@ import request from "../request";
  */
 
 export async function list<T>(): Promise<RequestResult<T>> {
-    return request.get("/list");
+    return request.get("/bookGood");
 }
 
 /**
@@ -14,7 +14,7 @@ export async function list<T>(): Promise<RequestResult<T>> {
  */
 
 export async function add<T>(data: T): Promise<RequestResult<T>> {
-    return request.post("/list", data);
+    return request.post("/bookGood", data);
 }
 
 
@@ -25,7 +25,7 @@ export async function add<T>(data: T): Promise<RequestResult<T>> {
 export async function edit<T>(data: {
     id: string;
 }): Promise<RequestResult<T>> {
-    return request.put("/put", data);
+    return request.put("/bookGood", data);
 }
 
 
@@ -34,5 +34,5 @@ export async function edit<T>(data: {
  */
 
 export async function del<T>(id: string): Promise<RequestResult<T>> {
-    return request.delete(`/delete/${id}`);
+    return request.delete(`/bookGood/${id}`);
 }

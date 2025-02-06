@@ -2,15 +2,18 @@ import { Pagination, Table, Empty, Button, Space, Flex } from 'antd';
 import type { TableColumnsType, TableProps } from 'antd';
 import React, { useEffect, useState } from 'react'
 import _ from 'lodash-es'
-// interface DataType<T> {
-//     key: React.Key;
-//     [key: string]: T;
-//   }
+
+interface DataType {
+    key: number;
+    name: string;
+    age: number;
+    address: string;
+    description: string;
+}
 
 export default (props: TableProps & {
     custom: {
         showHeader?: boolean,
-    
     }
 }) => {
 
@@ -24,7 +27,7 @@ export default (props: TableProps & {
             setSelectedRowKeys(otherConfig?.rowSelection?.defaultSelectedRowKeys)
         }
     }, [])
-    const tableConfig = {
+    const tableConfig: TableProps<DataType> = {
         rowKey: "id",
         bordered: true,
         loading: false,

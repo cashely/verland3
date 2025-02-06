@@ -4,6 +4,8 @@ import { Menu, Layout } from "antd";
 import { anyncRoutesList } from "../../../../router/routes";
 import { isExternal } from "../../../../utils/validate";
 import "./index.module.scss";
+import appStore from '@/store/app'
+
 const { Sider } = Layout;
 function SideMenu(props) {
   const {
@@ -11,7 +13,7 @@ function SideMenu(props) {
     mode = "inline",
     initPath = "", //默认展示路由
   } = props;
-
+  const { sidebarStatus } = appStore()
   const navigate = useNavigate()
   const [defaultOpenKeys, setDefaultOpenKeys] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
@@ -101,15 +103,15 @@ function SideMenu(props) {
     setDefaultOpenKeys(openKeys)
   }
 
-  const handleSelectKeys = ({  key, keyPath,selectedKeys }) => {
-    console.log(key,keyPath,selectedKeys,'++++')
+  const handleSelectKeys = ({ key, keyPath, selectedKeys }) => {
+    console.log(key, keyPath, selectedKeys, '++++')
     setSelectedKeys([key])
     navigate(key)
   }
 
   return (
     <section className="h-full bg-[#001529] pt-[10px]">
-      <Sider width={200}>
+      <Sider  collapsed={!sidebarStatus}>
         {/* 可以放logo */}
         <Menu
           theme={theme}
