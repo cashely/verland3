@@ -23,6 +23,23 @@ const bookGoodRouter = new Router({
         res.response.success(bookGood);
     }, res);
 })
+.get('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const bookGood = await prisma.bookGood.findUnique({
+            where: {
+                id
+            },
+            include: {
+                thumb: true,
+                thumbId: false
+            }
+        });
+        res.response.success(bookGood);
+    } catch (error) {
+        res.response.error(error.message);
+    }
+})
 .post('/', async (req, res) => {
     try {
         const { title, price, content, thumbId } = req.body;

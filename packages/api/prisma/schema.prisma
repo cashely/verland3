@@ -31,12 +31,12 @@ model User {
   address   Address?  @relation(fields: [addressId], references: [id])
   createdAt DateTime @default(now())
   pets      Pet[]
-  avatarId  String?  @unique
-  avatar    Image?   @relation(fields: [avatarId], references: [id])
+  avatar    String?
   phone     String?
   books     Book[]
   advise    Advise[]
   wxAccessToken WxAccessToken[]
+  tickets   Ticket[]
 }
 
 model Address {
@@ -73,7 +73,6 @@ model Image {
   title      String
   createdAt   DateTime  @default(now())
   userId     String?
-  user       User?
   Pet        Pet?      @relation(fields: [petId], references: [id]) //  关联字段-宠物
   petId      String?
   bookGoodId String?
@@ -133,6 +132,8 @@ model Ticket {
   number    String? // 税号
   email     String // 邮箱
   fileId    String?  @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   file      Image?   @relation(fields: [fileId], references: [id])
 }
 
