@@ -7,7 +7,7 @@ const router = new Router({
 
 router.get('/', async (req, res) => {
     try {
-        const user = await prisma.adminUser.findFirst({
+        const user = await prisma.user.findFirst({
             where: {
                 id: req.user.id
             }
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 .put('/', async (req, res) => {
     try {
         const { avatar, nickname, phone, addressId } = req.body;
-        const user = await prisma.adminUser.update({
+        const user = await prisma.user.update({
             where: {
                 id: req.user.id
             },

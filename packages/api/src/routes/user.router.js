@@ -1,5 +1,5 @@
-import Router from "../../middles/route";
-import prisma from "../../configs/prisma";
+import Router from "../middles/route";
+import prisma from "../configs/prisma";
 
 const router = new Router({
     auth: true
