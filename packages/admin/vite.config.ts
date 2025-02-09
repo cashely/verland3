@@ -11,6 +11,6 @@ export default defineConfig({
     }
   },
   server: {
-    allowedHosts: ['a2hvmu2b-zzthfd94-hgqoor5rnajo.vcc3p.mcprev.cn']
+    allowedHosts: ['bg5qy0oa-44uaxo2p-zfv339zm18pz.vcc3p.mcprev.cn']
   }
 })
