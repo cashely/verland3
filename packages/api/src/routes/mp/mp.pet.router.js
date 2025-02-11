@@ -20,21 +20,58 @@ router.get('/', async (req, res) => {
     res.response.success(books);
 })
 
-router.post('/', async (req, res) => {
-    const { id } = req.user;
-    const { nickname, weight, age, type, subType, statu = 1 } = req.body;
-    const pet = await prisma.pet.create({
-        data: {
-            userId: id,
-            nickname,
-            weight,
-            age,
-            type,
-            subType,
-            statu
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    const pet = await prisma.pet.findUnique({
+        where: {
+            id
         }
     });
     res.response.success(pet);
+})
+
+router.post('/', async (req, res) => {
+    try {
+        const { id } = req.user;
+        const { nickname, weight, age, type, subType, statu = 1 } = req.body;
+        const pet = await prisma.pet.create({
+            data: {
+                userId: id,
+                nickname,
+                weight,
+                age,
+                type,
+                subType,
+                statu
+            }
+        });
+        res.response.success(pet);
+    }   catch (error) {
+        res.response.error(error);
+    }
+})
+
+router.put('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nickname, weight, age, type, subType, statu = 1 } = req.body;
+        const pet = await prisma.pet.update({
+            where: {
+                id
+            },
+            data: {
+                nickname,
+                weight,
+                age,
+                type,
+                subType,
+                statu
+            }
+        });
+        res.response.success(pet);
+    } catch (error) {
+        res.response.error(error);
+    }
 })
 
 export default router;
