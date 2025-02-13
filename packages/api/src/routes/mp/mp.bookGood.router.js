@@ -15,5 +15,19 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const bookGood = await prisma.bookGood.findUnique({
+            where: {
+                id,
+            },
+        });
+        res.response.success(bookGood);
+    } catch (error) {
+        res.response.error(error);
+    }
+});
+
 
 export default router;
