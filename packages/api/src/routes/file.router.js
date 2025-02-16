@@ -21,6 +21,10 @@ fileRouter.post('/', multer({
     })
 }).single('file'), async (req, res) => {
     const { file } = req;
+
+    if (!file) {
+        throw new Error('file字段不能为空');
+    }
     
     // 获取文件基于image的路径
     const filePath = path.relative(path.join(process.cwd(), 'src/static'), file.path)
