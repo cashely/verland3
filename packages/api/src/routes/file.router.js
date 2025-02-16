@@ -9,7 +9,23 @@ const fileRouter = new Router({
 
 const UPLOAD_FOLDER = path.join(__dirname, '../static/images/');
 
-fileRouter.post('/', multer({
+fileRouter.post('/', (_, _, next) => {
+    const staticPath = path.join(process.cwd(), 'src/static');
+
+    // 检查static文件夹是否存在
+    if (!fs.existsSync(staticPath)) {
+        // 如果不存在，则创建
+        fs.mkdirSync(staticPath);
+    }
+
+    // 检查static下面的images文件夹是否存在
+    const imagesPath = path.join(staticPath, 'images');
+    // 如果文件夹不存在创建文件夹
+    if (!fs.existsSync(imagesPath)) {
+        fs.mkdirSync(imagesPath);
+    }
+    next();
+}, multer({
     dest: UPLOAD_FOLDER,
     storage: multer.diskStorage({
         destination(_req, _file, _cb) {
@@ -23,7 +39,8 @@ fileRouter.post('/', multer({
     const { file } = req;
 
     if (!file) {
-        throw new Error('file字段不能为空');
+        res.response.error('file字段不能为空');
+        return;
     }
     
     // 获取文件基于image的路径
