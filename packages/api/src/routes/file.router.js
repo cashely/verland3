@@ -9,7 +9,7 @@ const fileRouter = new Router({
 
 const UPLOAD_FOLDER = path.join(__dirname, '../static/images/');
 
-fileRouter.post('/', (_, _, next) => {
+fileRouter.post('/', (req, res, next) => {
     const staticPath = path.join(process.cwd(), 'src/static');
 
     // 检查static文件夹是否存在
