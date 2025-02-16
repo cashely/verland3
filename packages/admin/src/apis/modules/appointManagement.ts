@@ -1,4 +1,4 @@
-import type { RequestResult } from '../../index.d';
+import type { RequestResult } from '../..';
 import request from "../request";
 
 /**

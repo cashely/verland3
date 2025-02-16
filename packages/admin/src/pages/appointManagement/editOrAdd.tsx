@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import loadable from "@loadable/component";
-const EditTemplate = loadable(() => import("../../components/EditTemplate"))
+const EditTemplate = loadable(() => import("../../components/AddForm"))
 
 export default () => {
     const [formList, setFormList] = useState([])

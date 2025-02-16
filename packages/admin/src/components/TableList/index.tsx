@@ -27,6 +27,22 @@ export default (props: TableProps & {
             setSelectedRowKeys(otherConfig?.rowSelection?.defaultSelectedRowKeys)
         }
     }, [])
+
+    const renderTitle = () => <div className={'tableHeader'}>
+        {/* <Space className={'flex items-right'}> */}
+        <Flex justify={'flex-end'} >
+            <Button onClick={props?.handleImport} type="default" style={{ marginRight: 6 }}>
+                导入
+            </Button>
+            <Button onClick={props?.handleExport} type="default" style={{ marginRight: 6 }}>
+                导出
+            </Button>
+            <Button onClick={props?.handleAdd} type="primary">
+                新增
+            </Button>
+        </Flex>
+        {/* </Space> */}
+    </div> 
     const tableConfig: TableProps<DataType> = {
         rowKey: "id",
         bordered: true,
@@ -76,26 +92,14 @@ export default (props: TableProps & {
                 console.log(current, pageSize);
             },
         },
+        title: custom.showHeader ? renderTitle : undefined,
+        footer: () => 'Footer',
         ..._.omit(otherConfig, ['rowSelection']),
     }
     return (<section className={
         'bg-white rounded px-[16px] pt-[16px] flex-1 overflow-hidden'
     }>
-        {custom?.showHeader ? <div className={'tableHeader'} style={{ marginBottom: 16 }}>
-            {/* <Space className={'flex items-right'}> */}
-            <Flex justify={'flex-end'} >
-                <Button onClick={props?.handleImport} type="default" style={{ marginRight: 6 }}>
-                    导入
-                </Button>
-                <Button onClick={props?.handleExport} type="default" style={{ marginRight: 6 }}>
-                    导出
-                </Button>
-                <Button onClick={props?.handleAdd} type="primary">
-                    新增
-                </Button>
-            </Flex>
-            {/* </Space> */}
-        </div> : null}
+        {props.children?.[0]?.content}
         <Table<T> columns={columns} dataSource={dataSource} {...tableConfig} ></Table>
     </section>)
 }

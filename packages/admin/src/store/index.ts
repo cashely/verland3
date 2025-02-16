@@ -14,7 +14,10 @@ type Store =
       & LoadingStore;
 
 const useStore = create<Store, any>(immer((set, ...a) => ({
-
+      userInfo:{},
+      setUserInfo: (userInfo) => set((state) => {
+            state.userInfo = userInfo;
+      }),
       ...loadingSlice(set, ...a),
 })));
 

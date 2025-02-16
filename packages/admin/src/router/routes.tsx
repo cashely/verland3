@@ -20,6 +20,7 @@ const BookGoodsManagement = loadable(() => import("../pages/bookGoodsManagement"
 const TickManagement = loadable(() => import("../pages/tickManagement"));
 const AdviceManagement = loadable(() => import("../pages/adviceManagement"));
 const hasToken = getTokenFromLocalStorage();
+const BookGoodsEditOrAdd = lazy(() => import("../pages/bookGoodsManagement/editOrAdd"));
 console.log("🚀 ~ hasToken:", hasToken);
 // const AuthComponent = ({ children }: Props) => {
 //   // 检查权限是否通过的逻辑
@@ -59,7 +60,7 @@ const constantRoutesList = [
 const anyncRoutesList = [
   {
     path: "/",
-    errorElement: <Page404 />,
+    errorelement: <Page404 />,
     element: <Layout />,
     title: "首页",
     icon: <IcontFont type="icon-dashboard"></IcontFont>,
@@ -163,6 +164,15 @@ const anyncRoutesList = [
           title: "列表",
         },
         element: <BookGoodsManagement />,
+      },
+      {
+        path: "/bookGoodsManagement/editOrAdd/:id?",
+        title: "新增编辑",
+        hidden: true,
+        handle: {
+          title: "新增编辑",
+        },
+        element: <BookGoodsEditOrAdd />,
       },
     ],
   },

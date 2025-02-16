@@ -9,8 +9,9 @@ import {
   formFieldValidator,
   getTokenFromLocalStorage,
 } from "../../utils";
-// import { loginApi } from "./api";
-import useStore from "../../store";
+import { loginApi } from "@/apis/modules/common";
+import useStore from '@/store'
+
 import { useEffect } from "react";
 
 function Login() {
@@ -41,14 +42,10 @@ function Login() {
       openLoading();
       //校验表单规则
       const values = await form.validateFields();
-      const res = {
-        code: 200,
-        data: "safdsfsa",
-        message: "登录成功",
-      }; //await loginApi<string | undefined>(values);
+      const res = await loginApi<string | undefined>(values);
       if (res.code === 200) {
-        message.success("登录成功");
         setTokenToLocalStorage(res.data);
+        message.success("登录成功");
         navigate("/", {
           replace: true,
         });
@@ -74,7 +71,7 @@ function Login() {
           requiredMark={false}
           initialValues={{
             username: "admin",
-            password: "123456",
+            password: "admin",
           }}
           className="border rounded-md shadow-md py-8 px-4 w-[350px]"
         >

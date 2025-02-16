@@ -2,16 +2,16 @@ import { Space, Typography, Button, Modal } from "antd";
 import { NavLink } from 'react-router-dom'
 const searchConfig = [
     {
-        label: '服务名称',
+        label: '产品名称',
         prop: 'title',
         type: 'input',
         placeholder: '请输入服务名称',
         options: [{
-            label: '服务名称1',
+            label: '产品名称1',
             value: '1'
         },
         {
-            label: '服务内容2',
+            label: '产品内容2',
             value: '2'
         },
         ]
@@ -35,13 +35,28 @@ const handleDel = () => {
 }
 const tableColumns = [
     {
-        title: '服务名称',
+        title: '产品名称',
         dataIndex: 'title',
         key: 'title',
+        fixed: 'left',
+        // width: '120',
+        // fixed: 'left',
+        // type: 'slot',
+    },
+    {
+        title: '缩略图',
+        dataIndex: 'thumb',
+        key: 'thumb',
         fixed: 'left'
     },
     {
-        title: '服务内容',
+        title: '价格',
+        dataIndex: 'price',
+        key: 'price',
+        fixed: 'left'
+    },
+    {
+        title: '产品内容',
         dataIndex: 'content',
         key: 'content',
     },
@@ -49,6 +64,11 @@ const tableColumns = [
         title: '服务价格',
         dataIndex: 'price',
         key: 'price'
+    },
+    {
+        title: '创建时间',
+        dataIndex: 'createAt',
+        key: 'createAt'
     },
     {
         title: '操作',

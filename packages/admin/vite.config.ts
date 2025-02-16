@@ -11,6 +11,13 @@ export default defineConfig({
     }
   },
   server: {
-    allowedHosts: ['bg5qy0oa-44uaxo2p-zfv339zm18pz.vcc3p.mcprev.cn']
+    proxy:{
+      '/api': {
+        target: 'https://e5zb324g-cn5douq5-6h93snslkbeg.vcc3p.mcprev.cn',
+        changeOrigin: true,
+        // rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    },
+    allowedHosts: ['c968ryfb-b2kxiasz-er5denkcntt.vcc3p.mcprev.cn']
   }
 })

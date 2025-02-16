@@ -12,7 +12,8 @@ request.interceptors.request.use((config) => {
     config.signal = controller.signal;
     const token = getTokenFromLocalStorage();
     if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+       config.url = `${config.url}?token=Bearer ${token}`
+       // config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
 }, error => {
@@ -26,6 +27,8 @@ request.interceptors.request.use((config) => {
 request.interceptors.response.use((response) => {
     if (response.data.code === 401) {
         message.error("未获取到授权信息,请重新登录!");
+        // 清除token
+        localStorage.removeItem("token");
         // 跳转到登录页
         window.location.href = "/#/login";
         return;

@@ -3,12 +3,11 @@ import { Dropdown, Space, message, Progress, Flex } from "antd";
 import { useShallow } from "zustand/react/shallow";
 import styles from "./index.module.scss";
 // import LocaleButton from "../common/LocaleButton";
+import useStore from '@/store'
 import Hamburger from '@/components/Hamburger'
-
 import { removeTokenFromLocalStorage } from "../../../utils";
-// import { getCurrentUserApi, logoutApi } from "./apis";
+import { adminUser, logoutApi } from "@/apis/modules/common";
 // import CreateUserButton from "./CreateUserButton";
-// import useStore from "../../store";
 
 function Header() {
   //   const { userInfo, fetchUserInfo } = useStore(
@@ -19,16 +18,17 @@ function Header() {
   //     }))
   //   );
   // fetchUserInfo()
+  const { userInfo } = useStore()
   const menuItems: any = [
-    {
-      label: (
-        <Flex className="text-gray-400">
-          <span className="mr-2">邀请码:</span>
-          {/* {userInfo.inviteCode} */}
-        </Flex>
-      ),
-      key: "0",
-    },
+    // {
+    //   label: (
+    //     <Flex className="text-gray-400">
+    //       <span className="mr-2">邀请码:</span>
+    //       {/* {userInfo.inviteCode} */}
+    //     </Flex>
+    //   ),
+    //   key: "0",
+    // },
     {
       type: "divider",
     },
@@ -49,9 +49,12 @@ function Header() {
   /**
    * @name 获取当前用户信息
    */
-  //   async function getCurrentUser() {
-  //     fetchUserInfo(getCurrentUserApi<any>);
-  //   }
+  async function getCurrentUser() {
+    // const { data: userInfo } = await adminUser();
+    // useStore.setState({
+    //   userInfo,
+    // });
+  }
 
   /**
    * @name 退出登录
@@ -65,16 +68,16 @@ function Header() {
     }
   }
 
-  //   useEffect(() => {
-  //     getCurrentUser();
-  //   }, []);
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
 
   return (
     <header
       className={`${styles.header} flex justify-between p-2 border-b h-[64px] header`}
     >
       <Flex className="items-center content-center w-[150px]">
-        <Hamburger /> 
+        <Hamburger />
         {/* <Progress
             percent={(userInfo.documentCount / userInfo.stock) * 100}
             format={() => `${userInfo.documentCount} / ${userInfo.stock}`}
@@ -92,12 +95,11 @@ function Header() {
           <div className="flex items-center gap-2">
             <span
               className="border rounded-full block text-sm w-[25px] h-[25px] overflow-hidden text-center line-[25px] bg-gray-200 bg-cover bg-center"
-              //     style={{
-              //       backgroundImage: `url(${userInfo.avatar})`,
-              //     }}
+            //     style={{
+            //       backgroundImage: `url(${userInfo.avatar})`,
+            //     }}
             ></span>
-            111
-            {/* {userInfo.username} */}
+            {userInfo.username}
           </div>
         </Space>
       </Dropdown>
