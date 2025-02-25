@@ -20,6 +20,17 @@ router.post('/', async (req, res) => {
         });
 
         const { nickname, weight, age, type, subType, statu = 2 } = req.body;
+        console.log({
+            data: {
+                userId: id,
+                nickname,
+                weight,
+                age,
+                type,
+                subType,
+                statu
+            }
+        }, 'ids')
         const pet = await prisma.pet.create({
             data: {
                 userId: id,
