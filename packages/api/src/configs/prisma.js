@@ -9,6 +9,7 @@ export function transaction (callback, res, errorMessage = '') {
         try {
             await callback(tx);
         } catch (error) {
+            console.log(error);
             res.response.error({
                 message: errorMessage || error.message,
                 code: 400
