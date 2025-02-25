@@ -27,6 +27,7 @@ model User {
   id        String   @id @default(uuid(7))
   wxid      String?  @unique
   nickname  String?
+  username  String?
   addressId String?   @unique
   address   Address?  @relation(fields: [addressId], references: [id])
   createdAt DateTime @default(now())
