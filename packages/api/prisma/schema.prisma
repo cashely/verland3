@@ -118,7 +118,7 @@ model Book {
   user            User       @relation(fields: [userId], references: [id])
   ticketId        String?    @unique
   ticket          Ticket?
-  createdAt       DateTime
+  createdAt       DateTime    @default(now())
 }
 
 // 发票
