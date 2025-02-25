@@ -54,7 +54,7 @@ model Address {
 
 model Pet {
   id        String   @id @default(uuid(7))
-  nickname  String?
+  petname  String?
   weight    Int?
   age       String?
   images    Image[]
