@@ -104,7 +104,7 @@ model Book {
   addressId       String
   address         Address?   @relation(fields: [addressId], references: [id])
   isRite          Int        @default(2) // 是否需要仪式
-  riteDateTIme    DateTime? // 仪式时间
+  riteDateTime    DateTime? // 仪式时间
   petId           String     @unique // 宠物
   pet             Pet        @relation(fields: [petId], references: [id])
   totalAmount     Int // 总金额
