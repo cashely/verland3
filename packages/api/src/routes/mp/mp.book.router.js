@@ -64,6 +64,11 @@ router.get('/', async (req, res) => {
         const books = await prisma.book.findMany({
             where: {
                 userId: id
+            },
+            include: {
+                address: true,
+                pet: true,
+                bookGoods: true
             }
         });
         res.response.success(books);
@@ -78,6 +83,11 @@ router.get('/:id', async (req, res) => {
         const book = await prisma.book.findUnique({
             where: {
                 id
+            },
+            include: {
+                address: true,
+                pet: true,
+                bookGoods: true
             }
         });
         res.response.success(book);

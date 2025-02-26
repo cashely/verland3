@@ -4,6 +4,7 @@ import adminUserRouter from './adminUser.router';
 import fileRouter from './file.router';
 import bookGoodRouter from './bookGood.router';
 import adviseRouter from './advise.router';
+import ticketRouter from './ticket.router';
 import book from './book.router';
 import user from './user.router';
 // 小程序路由
@@ -21,6 +22,7 @@ export default function routes(app) {
     app.use('/file', fileRouter);
     app.use('/bookGood', bookGoodRouter);
     app.use('/advise', adviseRouter);
+    app.use('/ticket', ticketRouter);
     app.use('/book', book);
     app.use('/user', user);
     // 小程序路由
