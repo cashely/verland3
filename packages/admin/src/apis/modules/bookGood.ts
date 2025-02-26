@@ -10,6 +10,14 @@ export async function list<T>(): Promise<RequestResult<T>> {
 }
 
 /**
+ * @name 详情
+ */
+
+export async function detail<T>(id: string): Promise<RequestResult<T>> {
+    return request.get(`/bookGood/${id}`);
+}
+
+/**
  * @name 新增
  */
 

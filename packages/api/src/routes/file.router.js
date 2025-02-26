@@ -2,6 +2,7 @@ import multer from 'multer';
 import path from 'node:path';
 import Router from '../middles/route';
 import prisma from '../configs/prisma';
+import fs from 'node:fs'
 
 const fileRouter = new Router({
     auth: false

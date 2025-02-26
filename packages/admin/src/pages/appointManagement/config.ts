@@ -1,6 +1,4 @@
-import { Space, Typography, Button, Modal } from "antd";
-import { NavLink } from 'react-router-dom'
-const searchConfig = [
+const searchItems = [
     {
         label: '姓名',
         prop: 'name',
@@ -42,36 +40,18 @@ const searchConfig = [
     },
 ]
 
-const handleDel = () => {
-    Modal.warning({
-        title: '提示',
-        content: '确定删除吗？',
-        okText: '确定',
-        cancelText: '取消',
-        centered: true,
-        onOk() {
-            console.log('OK');
-        },
-        onCancel() {
-            console.log('Cancel');
-        },
-    })
-}
 const tableColumns = [
     {
         title: '套餐类型',
-        dataIndex: 'menu',
         key: 'menu',
         fixed: 'left'
     },
     {
         title: '预约上门时间',
-        dataIndex: 'bookDateTime',
         key: 'bookDateTime',
     },
     {
         title: '是否需要快递',
-        dataIndex: 'isExpress',
         key: 'isExpress',
         render(_) {
             return _ === 1 ? '是' : '否'
@@ -84,12 +64,10 @@ const tableColumns = [
     },
     {
         title: '快递地址',
-        dataIndex: 'address',
         key: 'address',
     },
     {
         title: '是否需要仪式',
-        dataIndex: 'isRite',
         key: 'isRite',
         render(_) {
             return _ === 1 ? '是' : '否'
@@ -97,12 +75,10 @@ const tableColumns = [
     },
     {
         title: '仪式时间',
-        dataIndex: 'riteDateTIme',
         key: 'riteDateTIme',
     },
     {
         title: '总金额',
-        dataIndex: 'totalAmount',
         key: 'totalAmount',
     },
     {
@@ -112,7 +88,6 @@ const tableColumns = [
     },
     {
         title: '付款渠道',
-        dataIndex: 'payChannel',
         key: 'payChannel',
         render(_: number) {
             return _ === 1 ? '微信' : '支付宝'
@@ -120,7 +95,6 @@ const tableColumns = [
     },
     {
         title: '订单来源渠道',
-        dataIndex: 'channel',
         key: 'channel',
         render(_: number) {
             return _ === 1 ? '平台' : '小程序'
@@ -128,27 +102,8 @@ const tableColumns = [
     },
     {
         title: '付款状态',
-        dataIndex: 'statu',
         key: 'statu',
-        render(_: number) {
-            return _ === 0 ? '未付款' : '已付款'
-        }
     },
-    {
-        title: '操作',
-        key: 'action',
-        fixed: 'right',
-        render: (_, record) => {
-            const route = `/appointManagement/detail/${record.id}`
-            return <Space size="middle">
-                <NavLink to={`/appointManagement/editAdd/${record.id}`}>编辑</NavLink>
-                <NavLink to={route}>详情</NavLink>
-                <a onClick={handleDel}>删除</a>
-                {/* <Typography.Link>删除</Typography.Link> */}
-                {/* <Link to="/" component={Typography.Link} /> */}
-            </Space>
-        },
-    }
 ]
 
 const tableDataSource = [
@@ -207,7 +162,7 @@ const tableDataSource = [
 
 
 export {
-    searchConfig,
+    searchItems,
     tableColumns,
     tableDataSource
 }

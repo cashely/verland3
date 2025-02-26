@@ -1,0 +1,17 @@
+.ant-table-wrapper{
+  height: 100%;
+  .ant-spin-nested-loading{
+    height:inherit;
+    .ant-table{
+      flex:1;
+      .ant-table-container{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        .ant-table-body{
+          flex:1
+        }
+      }
+    }
+  }
+}

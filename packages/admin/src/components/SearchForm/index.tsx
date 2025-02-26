@@ -1,67 +1,31 @@
-import { useState } from "react";
-import { DownOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, Row, Select, Space, InputNumber } from 'antd';
-
+import { Col, Form, Input, Row, Select, InputNumber } from 'antd';
+import SearchTools from "./FormTools";
+import './index.scss'
 const { Option } = Select
 const formItemClasses = `rounded-[4px]`
-export default function SearchForm(props: any) {
-	const {
-		formList = [],
-		onSubmit = () => { },
-	} = props
+export default function SearchForm({
+	items = [],
+	onSearch = () => { },
+}: any) {
 
-	console.log(formList, '--qq')
-	const [formModel, setFormModel] = useState({})
-	const [expand, setExpand] = useState(false)
 	const [searchForm] = Form.useForm();
-
 	//提交
 	const onFinish = (values: any) => {
-		setFormModel(values)
+		// const values = searchForm.validateFields()
 		console.log(searchForm, values)
-		onSubmit && onSubmit(formModel)
+		onSearch && onSearch(values)
 	}
 
 	//重置
 	const handleResetForm = () => {
 		searchForm.resetFields();
-		setFormModel({})
 	}
-
-	const SearchTools = () => {
-		return <div style={{ textAlign: 'right' }}>
-			<Space size="small">
-				<Button
-					shape="round"
-					onClick={handleResetForm}
-				>
-					重置
-				</Button>
-				<Button type="primary" htmlType="submit" shape="round">
-					搜索
-				</Button>
-				{
-					formList.length > 6 ? <a
-						style={{ fontSize: 12 }}
-						onClick={() => {
-							setExpand(!expand);
-						}}
-					>
-						<DownOutlined rotate={expand ? 180 : 0} /> {expand ? "收起" : '展开'}
-					</a> : null
-				}
-			</Space>
-
-		</div>
-	}
-
 	return (
-		<section className={'bg-white rounded p-[16px] pt-[20px]'}>	<Form form={searchForm} name="searchForm" onFinish={onFinish}>
+		<div className={'search-form-box bg-white rounded p-[16px] pt-[20px]'}>	<Form form={searchForm} name="searchForm" onFinish={onFinish}>
 			<Row gutter={24}>
 				{
-					formList.map((item, index) => (<Col span={8} key={index}>
+					items.map((item, index) => (<Col span={8} key={index}>
 						<Form.Item
-							name={item.prop}
 							label={item.label}
 						>
 							{item.type === 'input' ? <Input className={formItemClasses} styles={{ prefix: 'red' }} classNames={{ count: '1' }} placeholder={item.placeholder} allowClear {...item.itemProps} /> : null}
@@ -77,7 +41,7 @@ export default function SearchForm(props: any) {
 					)
 				}
 			</Row>
-			<SearchTools></SearchTools>
-		</Form></section>
+			<SearchTools resetForm={handleResetForm} listNum={items.length}></SearchTools>
+		</Form></div>
 	);
 }
