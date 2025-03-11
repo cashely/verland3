@@ -13,8 +13,6 @@ router.get('/', async (req, res) => {
             userId: id
         },
         include: {
-            address: true,
-            pet: true
         }
     });
     res.response.success(books);
