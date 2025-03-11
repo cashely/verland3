@@ -18,7 +18,7 @@ interface UniversalUploadProps {
   maxSize?: number; // 文件最大尺寸（MB）
   maxCount?: number; // 最大上传数量
   accept?: string; // 可接受文件类型
-  formProp?: string; // 该formItem表单的prop
+  name?: string; // 该formItem表单的prop
   multiple?: boolean; // 是否支持多选
   onUploadSuccess?: (response: any) => void; // 上传成功回调
   onUploadError?: (error: Error) => void; // 上传失败回调
@@ -30,7 +30,7 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
   maxCount = 1,
   accept = acceptFileTypes.join(','),
   multiple = false,
-  formProp = '',//该formItem表单的prop
+  name = '',//该formItem表单的prop
   onUploadSuccess,
   onUploadError,
   children
@@ -84,9 +84,14 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
       if (res.code === 200) {
         // setVisible(true);
         // setDocuments(res.data);
+        const url = import.meta.env.VITE_API_BASE_URI + '/' + res.data?.path
+        _files[0].url = url
+        _files[0].status = 'done'
+        _files[0].percent = 100
+        setFileList(_files)
         onUploadSuccess?.({
-          formProp,
-          data: import.meta.env.VITE_API_BASE_URI + res.data
+          prop:name,
+          data: url
         })
         setIsUploading(false)
       }

@@ -1,105 +1,130 @@
-import { Space, Typography, Button, Modal } from "antd";
-import { NavLink } from 'react-router-dom'
-const searchConfig = [
-    {
-        label: '产品名称',
-        prop: 'title',
-        type: 'input',
-        placeholder: '请输入服务名称',
-        options: [{
-            label: '产品名称1',
-            value: '1'
-        },
-        {
-            label: '产品内容2',
-            value: '2'
-        },
-        ]
-    },
+
+
+const tableColums = [
+  {
+    title: '产品名称',
+    key: 'title',
+    fixed: 'left',
+  },
+  {
+    title: '缩略图',
+    key: 'thumb',
+    slot: "image"
+  },
+  {
+    title: '价格',
+    key: 'price',
+  },
+  {
+    title: '产品内容',
+    key: 'content',
+  },
+  {
+    title: '创建时间',
+    key: 'createdAt',
+    slot: 'datetime'
+  },
 ]
 
-const handleDel = () => {
-    Modal.warning({
-        title: '提示',
-        content: '确定删除吗？',
-        okText: '确定',
-        cancelText: '取消',
-        centered: true,
-        onOk() {
-            console.log('OK');
-        },
-        onCancel() {
-            console.log('Cancel');
-        },
-    })
-}
-const tableColumns = [
-    {
-        title: '产品名称',
-        dataIndex: 'title',
-        key: 'title',
-        fixed: 'left',
-        // width: '120',
-        // fixed: 'left',
-        // type: 'slot',
+const searchItems = [
+  {
+    label: '产品名称',
+    prop: 'title',
+    type: 'input',
+    placeholder: '请输入服务名称',
+    options: [{
+      label: '产品名称1',
+      value: '1'
     },
     {
-        title: '缩略图',
-        dataIndex: 'thumb',
-        key: 'thumb',
-        fixed: 'left'
+      label: '产品内容2',
+      value: '2'
     },
-    {
-        title: '价格',
-        dataIndex: 'price',
-        key: 'price',
-        fixed: 'left'
-    },
-    {
-        title: '产品内容',
-        dataIndex: 'content',
-        key: 'content',
-    },
-    {
-        title: '服务价格',
-        dataIndex: 'price',
-        key: 'price'
-    },
-    {
-        title: '创建时间',
-        dataIndex: 'createAt',
-        key: 'createAt'
-    },
-    {
-        title: '操作',
-        key: 'action',
-        width: 100,
-        fixed: 'right',
-        render: (_, record) => {
-            const route = `/bookGoodsManagement/detail/${record.id}`
-            return <Space size="middle">
-                <NavLink to={route}>详情</NavLink>
-                <a onClick={handleDel}>删除</a>
-                {/* <Typography.Link>删除</Typography.Link> */}
-                {/* <Link to="/" component={Typography.Link} /> */}
-            </Space>
-        },
-    }
+    ]
+  },
 ]
 
-const tableDataSource = [
-    {
-        id: '1',
-        key: '1',
-        title: '殡葬服务', //套餐类型
-        content: '殡葬仪式', //上门时间
-        price: 10000,   //是否需要快递
-    },
+const detailItems = [
+  {
+    label: '产品名称',
+    prop: 'title',
+  },
+  {
+    label: '缩略图',
+    prop: 'thumnb',
+  },
+  {
+    label: '价格',
+    prop: 'price',
+  },
+  {
+    label: '产品内容',
+    prop: 'content',
+  },
+  {
+    label: '创建时间',
+    prop: 'createdAt',
+  }
 ];
 
 
+
+const formConfig = {
+  formList: [
+    {
+      label: '产品名称',
+      prop: 'title',
+      type: 'input',
+      options: [],
+      rules: [{ required: true, message: '请输入产品名称' }],
+      span: 24,
+      itemProps: {
+        placeholder: '请输入服务名称',
+        // disabled: true
+        // readOnly: true,
+      }
+    },
+    {
+      label: '价格',
+      prop: 'price',
+      type: 'inputNumber',
+      rules: [{ required: true, message: '请输入价格' }],
+      span: 24,
+      itemProps: {
+        placeholder: '请输入价格',
+        prefix: '￥',
+        suffix: "RMB",
+        controls: false,
+        precision: "2",
+      }
+    },
+    {
+      label: "缩略图",
+      prop: 'thumb',
+      type: 'upload',
+      span: 24,
+    },
+    {
+      label: '产品内容',
+      prop: 'content',
+      type: 'textarea',
+      span: 24,
+      itemProps: {
+        placeholder: '请输入服务内容',
+        // readonly: true,
+        // required: true,
+      }
+    }
+  ],
+  formModel: {},
+  rules: []
+}
+
+
+
 export {
-    searchConfig,
-    tableColumns,
-    tableDataSource
+  tableColums,
+  searchItems,
+  detailItems,
+  formConfig
 }

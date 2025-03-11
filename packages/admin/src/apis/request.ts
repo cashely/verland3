@@ -12,8 +12,8 @@ request.interceptors.request.use((config) => {
     config.signal = controller.signal;
     const token = getTokenFromLocalStorage();
     if (token) {
-       config.url = `${config.url}?token=Bearer ${token}`
-       // config.headers.Authorization = `Bearer ${token}`;
+        config.url = `${config.url}?token=Bearer ${token}`
+        // config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
 }, error => {
@@ -25,6 +25,8 @@ request.interceptors.request.use((config) => {
 })
 
 request.interceptors.response.use((response) => {
+    console.log(response.data, 'responseData')
+   
     if (response.data.code === 401) {
         message.error("未获取到授权信息,请重新登录!");
         // 清除token
@@ -53,7 +55,14 @@ request.interceptors.response.use((response) => {
         message: error?.config?.signal?.reason || "请求失败",
         description: `${error.message}\n${error.code}`
     })
+    return Promise.reject(error);
 })
+
+export type Response<T = any> = {
+    status: boolean;
+    message: string;
+    result: T;
+};
 
 
 export default request;

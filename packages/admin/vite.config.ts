@@ -18,6 +18,6 @@ export default defineConfig({
         // rewrite: (path) => path.replace(/^\/api/, '')
       }
     },
-    allowedHosts: ['c968ryfb-b2kxiasz-er5denkcntt.vcc3p.mcprev.cn']
-  }
+    allowedHosts: ['i2vmbvpf-xcpzus6z-mvovyemgxlr5.vcc3p.mcprev.cn']
+  },
 })

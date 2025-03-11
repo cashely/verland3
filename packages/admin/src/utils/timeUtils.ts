@@ -1,13 +1,13 @@
 /* eslint-disable default-case */
 //补0
-const fillZero = function (val) {
+const fillZero = function (val: number) {
   return (val < 10 ? '0' : '') + val;
 };
 
 // 转换时间格式 例如 yyyy-MM-dd
-const timeFormat = function (val, format = 'yyyy-MM-dd') {
+const timeFormat = function (val: string, format = 'yyyy-MM-dd') {
   let t = val ? new Date(val) : new Date();
-  return format.replace(/yyyy|MM|dd|HH|mm|ss/g, (a) => {
+  return format.replace(/yyyy|MM|dd|HH|mm|ss/g, (a): any => {
     switch (a) {
       case 'yyyy':
         return t.getFullYear();
@@ -27,7 +27,7 @@ const timeFormat = function (val, format = 'yyyy-MM-dd') {
     }
   });
 };
-const timeYearEdit = function (val, format = 'yyyy-MM-dd', len = 1) {
+const timeYearEdit = function (val: string, format = 'yyyy-MM-dd', len = 1) {
   let timeStr = timeFormat(val, format);
   timeStr = Number(timeStr.slice(0, 4)) - len + timeStr.slice(4);
   return timeFormat(timeStr, format);
@@ -44,7 +44,7 @@ const getDateEnd = function (val = '') {
   return `${time} 23:59:59`;
 };
 
-const getDaysOfMonth = function (year, month) {
+const getDaysOfMonth = function (year: number, month: number) {
   switch (month) {
     case 1:
     case 3:
@@ -66,7 +66,7 @@ const getDaysOfMonth = function (year, month) {
   }
 };
 // 将秒转换成天、小时、分钟和秒
-const formatDuration = (seconds) => {
+const formatDuration = (seconds: number) => {
   let days = Math.floor(seconds / (3600 * 24));
   let hours = Math.floor((seconds % (3600 * 24)) / 3600);
   let minutes = Math.floor((seconds % 3600) / 60);
@@ -88,7 +88,7 @@ const formatDuration = (seconds) => {
 
   return duration.trim();
 };
-const formatHoursDuration = (seconds) => {
+const formatHoursDuration = (seconds: number) => {
   // 计算小时、分钟和剩余秒数
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
@@ -108,11 +108,11 @@ const formatHoursDuration = (seconds) => {
 
   return result.trim(); // 去除多余空格
 };
-const timeFormatDate = function (val) {
+const timeFormatDate = function (val: string) {
   if (val === '-') return '';
   return val ? timeFormat(val) : '';
 };
-const timeFormatDateTime = function (val) {
+const timeFormatDateTime = function (val: string) {
   if (val === '-') return '';
   return val ? timeFormat(val, 'yyyy-MM-dd HH:mm:ss') : '';
 };
@@ -138,7 +138,7 @@ const getDaysBetweenDates = function (date1, date2) {
  * @param {string} format - 自定义格式，支持 'YYYY', 'MM', 'DD', 'HH', 'mm', 'ss'
  * @returns {string} - 格式化后的日期
  */
-const calculateDate = (startDate, offset, format) => {
+const calculateDate = (startDate: string, offset: Record<string, any>, format: string) => {
   const date = new Date(startDate);
 
   if (offset.years) {
@@ -172,7 +172,7 @@ const calculateDate = (startDate, offset, format) => {
   return format.replace(/YYYY|MM|DD|HH|mm|ss/g, (match) => map[match]);
 };
 
-export default {
+export  {
   // timestamp,
   fillZero,
   timeYearEdit,

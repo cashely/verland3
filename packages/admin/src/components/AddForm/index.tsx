@@ -29,6 +29,10 @@ interface CustomFormProps extends Omit<FormProps, 'onFinish'> {
   submitText?: string;
   resetText?: string;
   showReset?: boolean;
+  formModel?: {
+    id?: string;
+    [key: string]: any;
+  }
 }
 
 
@@ -44,7 +48,7 @@ export default forwardRef<CustomFormRef, CustomFormProps>(({
   const [detailForm] = Form.useForm();
   // const formValues = Form.useWatch([], detailForm);
   const [formData, setFormData] = useState({})
-  const [btnLoading, setBtnLoading] = useState(false)
+
   // useEffect(() => {
   //   setFormData({ ...formModel, ...formValues })
   // }, [detailForm, formValues])
@@ -60,96 +64,91 @@ export default forwardRef<CustomFormRef, CustomFormProps>(({
   //重置
   const handleReset = () => {
     detailForm.resetFields()
-    // setFormData(formModel)
+    // setFormData(detailForm.getFieldsValue())
     onReset?.(detailForm.getFieldsValue())
   }
   const handleSubmit = (values?: any) => {
-    setBtnLoading(true)
     console.log(detailForm, values)
     setTimeout(() => {
       onSubmit?.(values)
-      setBtnLoading(false)
     }, 2000)
   }
 
   //图片上传成功
   const handleUploadSuccess = ({ prop, data }: any) => {
-    setFormData(produce((draft: any) => {
+    console.log('上传成功', prop, data)
+    setFormData(produce(formData, (draft: any) => {
       draft[prop] = data
+      console.log(draft)
     }))
   }
 
-  //设置默认值
-  // useEffect(() => {
-  //   detailForm.setFieldsValue(formModel)
-  //   console.log(detailForm.getFieldsValue(), 'initformModel');
-  // }, [])
+  //只能用setFieldsValue在初始化的时候设置默认值
+  useEffect(() => {
+    console.log(formModel, 'formModel变更')
+    detailForm.setFieldsValue(formModel)
+  }, [formModel, detailForm])
 
 
   return (
-    <section className={'bg-white rounded p-[16px] pt-[20px]'}>
-      {/* form-{JSON.stringify(detailForm.getFieldsValue())}
-      <br />
-      formdata-{JSON.stringify(formData)} */}
-      <Form layout="vertical" labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }} initialValues={{}} form={detailForm} name="detailForm" onFinish={handleSubmit} labelAlign="left">
-        <Row gutter={24}>
-          {
-            formList.map((item, index) =>
-            (
-              <Col span={item.span ?? 8} key={index}>
-                <Form.Item
-                  name={item.prop}
-                  label={item.label}
-                  labelCol={{ span: item.span }}
-                  wrapperCol={{ span: item.span }}
-                  rules={item.rules ?? []}
-                  required={item.rules?.length}
-                >
-                  {item.type === 'input' ? <Input className={formItemClasses} styles={{ prefix: 'red' }} classNames={{ count: '1' }} placeholder={item.placeholder} allowClear {...item.itemProps} /> : null}
-                  {item.type === 'inputNumber' ? <InputNumber className={formItemClasses} style={{
-                    width: '100%'
-                  }} min={1} placeholder={item.placeholder}  {...item.itemProps} /> : null}
-                  {item.type === 'select' ? <Select className={formItemClasses} placeholder={item.placeholder}>
-                    {item.options.map((option, indey) => (<Option key={indey} value={option.value}>{option.label}</Option>))}
-                  </Select> : null}
-                  {
-                    item.type === 'upload' ?
-                      <UploadButton formProp={item.formProp} onUploadSuccess={handleUploadSuccess}>
-                        {/* {
-                          (isUploading: boolean) => {
-                            setBtnLoading(isUploading)
-                          }
-                        } */}
-                      </UploadButton>
-                      : null
-                  }
-                  {
-                    item.type === 'textarea' ? <Input.TextArea className={formItemClasses} placeholder={item.placeholder} rows={4} showCount={true} maxLength={item.itemProps.maxLength ?? 100} {...item.itemProps} /> : null
-                  }
-                </Form.Item>
-              </Col>
-            ))
-          }
-        </Row>
+    <Form layout="vertical" labelCol={{ span: 8 }}
+      wrapperCol={{ span: 16 }} initialValues={formModel} form={detailForm} name="detailForm" onFinish={handleSubmit} labelAlign="left">
+      <Row gutter={24}>
         {
-          formList?.length ? <div style={{ textAlign: 'right' }}>
-            <Space size="small">
-              <Button
-                type="default"
-                htmlType="reset"
-                onClick={handleReset}
+          formList.map((item, index) =>
+          (
+            <Col span={item.span ?? 8} key={index}>
+              <Form.Item
+                name={item.prop}
+                label={item.label}
+                labelCol={{ span: item.span }}
+                wrapperCol={{ span: item.span }}
+                rules={item.rules ?? []}
+                required={item.rules?.length}
               >
-                {resetText}
-              </Button>
-              <Button type="primary" htmlType="submit" loading={btnLoading}>
-                {submitText}
-              </Button>
-            </Space>
-
-          </div> : null
+                {item.type === 'input' ? <Input className={formItemClasses} styles={{ prefix: 'red' }} classNames={{ count: '1' }} placeholder={item.placeholder} allowClear {...item.itemProps} /> : null}
+                {item.type === 'inputNumber' ? <InputNumber className={formItemClasses} style={{
+                  width: '100%'
+                }} min={1} placeholder={item.placeholder}  {...item.itemProps} /> : null}
+                {item.type === 'select' ? <Select className={formItemClasses} placeholder={item.placeholder}>
+                  {item.options.map((option, indey) => (<Option key={indey} value={option.value}>{option.label}</Option>))}
+                </Select> : null}
+                {
+                  item.type === 'upload' ?
+                    <UploadButton name={item.prop} onUploadSuccess={handleUploadSuccess}>
+                      {/* {
+                      (isUploading: boolean) => {
+                        setBtnLoading(isUploading)
+                      }
+                    } */}
+                    </UploadButton>
+                    : null
+                }
+                {
+                  item.type === 'textarea' ? <Input.TextArea className={formItemClasses} placeholder={item.placeholder} rows={4} showCount={true} maxLength={item.itemProps.maxLength ?? 100} {...item.itemProps} /> : null
+                }
+              </Form.Item>
+            </Col>
+          ))
         }
-      </Form>
-    </section>
+      </Row>
+      {/* {
+        formList?.length ? <div style={{ textAlign: 'right' }}>
+          <Space size="small">
+            <Button
+              type="default"
+              htmlType="reset"
+              onClick={handleReset}
+            >
+              {resetText}
+            </Button>
+            <Button type="primary" htmlType="submit" loading={btnLoading}>
+              {submitText}
+            </Button>
+          </Space>
+
+        </div> : null
+      } */}
+    </Form>
   )
 })
