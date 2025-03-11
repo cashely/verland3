@@ -13,6 +13,7 @@ router.get('/', async (req, res) => {
             userId: id
         },
         include: {
+            book: true
         }
     });
     res.response.success(books);
@@ -23,6 +24,9 @@ router.get('/:id', async (req, res) => {
     const pet = await prisma.pet.findUnique({
         where: {
             id
+        },
+        include: {
+            book: true
         }
     });
     res.response.success(pet);
@@ -31,11 +35,11 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { id } = req.user;
-        const { nickname, weight, age, type, subType, statu = 1 } = req.body;
+        const { petname, weight, age, type, subType, statu = 1, imageIds = [] } = req.body;
         const pet = await prisma.pet.create({
             data: {
                 userId: id,
-                nickname,
+                petname,
                 weight,
                 age,
                 type,
@@ -43,6 +47,7 @@ router.post('/', async (req, res) => {
                 statu
             }
         });
+        // todo: 关联宠物和图片
         res.response.success(pet);
     }   catch (error) {
         res.response.error(error);

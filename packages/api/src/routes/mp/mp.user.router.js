@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 })
 .put('/', async (req, res) => {
     try {
-        const { avatar, nickname, phone, addressId } = req.body;
+        const { avatar, nickname, phone, addressId, username, gender } = req.body;
         const user = await prisma.user.update({
             where: {
                 id: req.user.id
@@ -28,7 +28,9 @@ router.get('/', async (req, res) => {
                 avatar,
                 nickname,
                 phone,
-                addressId
+                addressId,
+                username,
+                gender
             }
         });
         res.response.success(user);

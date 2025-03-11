@@ -29,6 +29,7 @@ model User {
   nickname  String?
   username  String?
   addressId String?   @unique
+  gender    Int      @default(0) // 性别 0 - 男 1 - 女
   address   Address?  @relation(fields: [addressId], references: [id])
   createdAt DateTime @default(now())
   pets      Pet[]
@@ -113,7 +114,7 @@ model Book {
   bookGoods       BookGood[]
   mark            String? // 备注
   channel         Int        @default(1) // 订单渠道来源 1-平台
-  statu           Int        @default(0) // 未付款
+  statu           Int        @default(0) // 待付款  已预约  待寄送  已完成  已取消
   userId          String     @unique // 下单用户
   user            User       @relation(fields: [userId], references: [id])
   ticketId        String?    @unique
@@ -129,7 +130,7 @@ model Ticket {
   createdAt DateTime
   statu     Int      @default(2) //  开票状态 2 - 未开票
   header    String? // 发票抬头
-  type      Int      @default(1) // 发票类型 1-个人
+  type      Int      @default(1) // 发票类型 1-个人 2 - 企业
   number    String? // 税号
   email     String // 邮箱
   fileId    String?  @unique
@@ -158,3 +159,5 @@ model WxAccessToken {
   userId   String
   user    User  @relation(fields: [userId], references: [id])
 }
+
+// todo: 评价表
