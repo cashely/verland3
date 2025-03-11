@@ -7,8 +7,16 @@ const router = new Router({
 
 router.get('/', async (req, res) => {
     try {
-        const { id } = req.user;
-        const books = await prisma.book.findMany();
+        const books = await prisma.book.findMany({
+            include: {
+                user: true,
+                address: true,
+                pet: true,
+                evaluate: true,
+                ticket: true,
+                bookGoods: true
+            }
+        });
         res.response.success(books);
     } catch (error) {
         res.response.error(error);
@@ -21,6 +29,14 @@ router.get('/:id', async (req, res) => {
         const book = await prisma.book.findUnique({
             where: {
                 id
+            },
+            include: {
+                user: true,
+                address: true,
+                pet: true,
+                evaluate: true,
+                ticket: true,
+                bookGoods: true
             }
         });
         res.response.success(book);

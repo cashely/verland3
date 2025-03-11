@@ -39,6 +39,7 @@ model User {
   advise    Advise[]
   wxAccessToken WxAccessToken[]
   tickets   Ticket[]
+  evaluates  Evaluate[]
 }
 
 model Address {
@@ -120,6 +121,8 @@ model Book {
   ticketId        String?    @unique
   ticket          Ticket?
   createdAt       DateTime    @default(now())
+  evaluateId      String?
+  evaluate        Evaluate?
 }
 
 // 发票
@@ -161,3 +164,12 @@ model WxAccessToken {
 }
 
 // todo: 评价表
+model Evaluate {
+  id      String @id  @default(uuid())
+  content String
+  score  Int     @default(5)
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+  bookId  String @unique
+  book    Book   @relation(fields: [bookId], references: [id])
+}
