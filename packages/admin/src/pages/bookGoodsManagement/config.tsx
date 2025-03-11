@@ -4,23 +4,28 @@ const tableColums = [
   {
     title: '产品名称',
     key: 'title',
+    dataIndex: 'title',
     fixed: 'left',
   },
   {
     title: '缩略图',
     key: 'thumb',
+    dataIndex: 'thumb',
     slot: "image"
   },
   {
     title: '价格',
+    dataIndex: 'price',
     key: 'price',
   },
   {
     title: '产品内容',
+    dataIndex: 'content',
     key: 'content',
   },
   {
     title: '创建时间',
+    dataIndex: 'createdAt',
     key: 'createdAt',
     slot: 'datetime'
   },

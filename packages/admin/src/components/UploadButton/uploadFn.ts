@@ -17,16 +17,18 @@ const checkFileType = (file: File, {
         return Upload.LIST_IGNORE;
     }
     //文件類型校驗
-    const fileType = file.type || '';
-    const acceptTypes = accept.split(',').map(t => t.trim());
-    if (accept !== '*' && !acceptTypes.some(type => {
-        if (type.startsWith('.')) {
-            return file.name.toLowerCase().endsWith(type.toLowerCase());
+    if (!!accept) {
+        const fileType = file.type || '';
+        const acceptTypes = accept.split(',').map(t => t.trim());
+        if (accept !== '*' && !acceptTypes.some(type => {
+            if (type.startsWith('.')) {
+                return file.name.toLowerCase().endsWith(type.toLowerCase());
+            }
+            return fileType.includes(type.replace('*', ''));
+        })) {
+            message.error(`仅支持 ${accept} 格式文件`);
+            return Upload.LIST_IGNORE;
         }
-        return fileType.includes(type.replace('*', ''));
-    })) {
-        message.error(`仅支持 ${accept} 格式文件`);
-        return Upload.LIST_IGNORE;
     }
     return true;
 }

@@ -18,9 +18,31 @@ const tableColumns = [
   },
 ]
 
-
+const detailItems = [
+  {
+    label: 'wxid',
+    prop: 'wxid',
+  },
+  {
+    label: '用户名',
+    prop: 'username',
+  },
+  {
+    label: '头像',
+    prop: 'thumb',
+  },
+  {
+    label: '手机号',
+    prop: 'phone',
+  },
+  {
+    label: '创建时间',
+    prop: 'createdAt',
+  }
+];
 
 export {
   searchItems,
   tableColumns,
+  detailItems
 }

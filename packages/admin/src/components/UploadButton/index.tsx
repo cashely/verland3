@@ -1,11 +1,12 @@
-import { Button, Upload, Modal, Collapse, message, Image } from 'antd';
-import React, { useState } from 'react';
+import { Button, Upload, Image } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { CloudUploadOutlined } from '@ant-design/icons';
 import { checkFileType, getBase64 } from './uploadFn';
 import type { FileType } from './uploadFn';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { acceptFileTypes } from './uploadConfig';
 import request from '@/apis/request';
+import { produce } from 'immer';
 
 interface Iprops {
   onSuccess?: (result: any) => void;
@@ -30,6 +31,7 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
   maxCount = 1,
   accept = acceptFileTypes.join(','),
   multiple = false,
+  _fileList = [],
   name = '',//该formItem表单的prop
   onUploadSuccess,
   onUploadError,
@@ -42,64 +44,18 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
   // 弹窗是否可见
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
-  // 上传以后返回的文档列表
-  const [documents, setDocuments] = useState<any[]>([]);
   const [fileList, setFileList] = useState<any[]>([]);
 
   const onBeforeUpload = (file: any) => {
     console.log('onBeforeUpload', file)
-    if (checkFileType(file, { accept, maxSize })) {
+    if (checkFileType(file, { maxSize })) {
       // setFileList([...fileList, file])
-      onUpload([...fileList, file]);
+      // onUpload([file]);
       return;
     }
-    return;
   }
 
-  //自定義上傳
-  const onUpload = async (fileList: UploadFile[]) => {
-    const formData = new FormData();
-    const _files = []
-    fileList.forEach((file: UploadFile) => {
-      formData.append('file', file);
-      _files.push({
-        uid: file.uid,
-        name: file.name,
-        percent: 0,
-        status: 'uploading',
-      })
-    });
-    try {
-      const res: any = await request.post('/file', formData,
-        {
-          onUploadProgress(progressEvent: ProgressEvent) {
-            const { total, loaded } = progressEvent;
-            const percentage = Math.ceil(loaded / total * 100);
-            // this.$emit('on-progress', percentage, progressEvent);
-            // progressCb(percentage);
-            setIsUploading(true)
-          }
-        }
-      );
-      if (res.code === 200) {
-        // setVisible(true);
-        // setDocuments(res.data);
-        const url = import.meta.env.VITE_API_BASE_URI + '/' + res.data?.path
-        _files[0].url = url
-        _files[0].status = 'done'
-        _files[0].percent = 100
-        setFileList(_files)
-        onUploadSuccess?.({
-          prop:name,
-          data: url
-        })
-        setIsUploading(false)
-      }
-    } catch (error) {
 
-    }
-
-  }
 
   /**
    * @name onCollapseChange 折叠面板变化时
@@ -145,24 +101,82 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
     fileList: newFileList,
   }) => {
     console.log(file, 'handleChange-file')
+    if (file.status === 'uploading') {
+      setIsUploading(true)
+      //去上传
+      const _fileObj = {
+        uid: file.uid,
+        name: file.name,
+        status: 'uploading',
+        url: '',
+      }
+      onUpload(_fileObj, file.originFileObj as File)
+      return;
+    }
     console.log(newFileList, 'handleChange-newFileList')
     // setFileList(newFileList)
   }
+
+  //自定義上傳
+  const onUpload = async (fileObj, file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const res: any = await request.post('/file', formData,
+        {
+          onUploadProgress(progressEvent: ProgressEvent) {
+            const { total, loaded } = progressEvent;
+            // const percentage = Math.ceil(loaded / total * 100);
+            // this.$emit('on-progress', percentage, progressEvent);
+            // progressCb(percentage);
+            setIsUploading(true)
+          }
+        }
+      );
+      if (res.code === 200) {
+        const { data } = res
+        console.log(res, '接口调用成功')
+        const url = import.meta.env.VITE_API_BASE_URI + '/' + data?.path
+        //构造图片对象
+        fileObj.url = url
+        fileObj.status = 'done'
+        fileObj.percent = 100
+        setFileList(produce(draft => {
+          if (draft.length === 1) {
+            draft[0] = fileObj
+          } else {
+            draft.push(fileObj)
+          }
+        }))
+        onUploadSuccess?.({
+          ...fileObj,
+          id: data?.id
+        })
+        setIsUploading(false)
+      }
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+  useEffect(() => {
+    setFileList([...fileList, ..._fileList])
+  }, [])
 
   return (
     <>
       <Upload
         name='file'
         listType="picture-card"
-        accept={accept}
-        multiple={multiple}
+        accept="image/*"
+        multiple={false}
         fileList={fileList}
         showUploadList={true}
         disabled={isUploading}
-        maxCount={maxCount}
+        maxCount={1}
         onPreview={handlePreview}
         onChange={handleChange}
-        beforeUpload={onBeforeUpload}
+      // beforeUpload={onBeforeUpload}
       >
         <Button variant='link' color='default' icon={<CloudUploadOutlined />} title="上傳圖片">Upload</Button>
       </Upload >

@@ -3,6 +3,7 @@ import { Button, Col, Form, Input, Row, Select, Space, InputNumber } from 'antd'
 import type { FormProps, FormInstance } from 'antd'
 import UploadButton from "@/components/UploadButton";
 import { produce } from "immer";
+import { stringify } from "querystring";
 const { Option } = Select
 const formItemClasses = `rounded-[4px]`
 
@@ -49,15 +50,11 @@ export default forwardRef<CustomFormRef, CustomFormProps>(({
   // const formValues = Form.useWatch([], detailForm);
   const [formData, setFormData] = useState({})
 
-  // useEffect(() => {
-  //   setFormData({ ...formModel, ...formValues })
-  // }, [detailForm, formValues])
-
-
   // 暴露方法给父组件
   useImperativeHandle(ref, () => ({
     form: detailForm,
-    submit: () => handleSubmit(),
+    formData,
+    submit: () => detailForm.submit(),
     reset: () => handleReset(),
   }));
 
@@ -67,32 +64,48 @@ export default forwardRef<CustomFormRef, CustomFormProps>(({
     // setFormData(detailForm.getFieldsValue())
     onReset?.(detailForm.getFieldsValue())
   }
+
+  //暂时用不到
   const handleSubmit = (values?: any) => {
-    console.log(detailForm, values)
+    console.log('提交表单++++++', detailForm, values)
     setTimeout(() => {
       onSubmit?.(values)
     }, 2000)
   }
 
   //图片上传成功
-  const handleUploadSuccess = ({ prop, data }: any) => {
-    console.log('上传成功', prop, data)
-    setFormData(produce(formData, (draft: any) => {
-      draft[prop] = data
-      console.log(draft)
+  const handleUploadSuccess = (fileObj: any) => {
+    console.log('上传成功', fileObj)
+    setFormData(produce((draft: any) => {
+      draft['thumbId'] = fileObj.id
     }))
+  }
+
+  //表单值变化
+  const handleValueChange = (_, values: Record<string, any>) => {
+    setFormData({
+      ...formData,
+      ...values,
+      id: formModel?.id
+    })
   }
 
   //只能用setFieldsValue在初始化的时候设置默认值
   useEffect(() => {
     console.log(formModel, 'formModel变更')
     detailForm.setFieldsValue(formModel)
+    setFormData({
+      ...formModel,
+    })
   }, [formModel, detailForm])
 
 
   return (
     <Form layout="vertical" labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }} initialValues={formModel} form={detailForm} name="detailForm" onFinish={handleSubmit} labelAlign="left">
+      wrapperCol={{ span: 16 }} initialValues={formData} form={detailForm} name="detailForm" onFinish={handleSubmit} labelAlign="left" onValuesChange={handleValueChange}>
+      formModal--  {JSON.stringify(formModel)}
+      <hr></hr>
+      formData-- {JSON.stringify(formData)}
       <Row gutter={24}>
         {
           formList.map((item, index) =>
@@ -115,7 +128,9 @@ export default forwardRef<CustomFormRef, CustomFormProps>(({
                 </Select> : null}
                 {
                   item.type === 'upload' ?
-                    <UploadButton name={item.prop} onUploadSuccess={handleUploadSuccess}>
+                    <UploadButton name={item.prop} onUploadSuccess={handleUploadSuccess} _fileList={[{
+                      url: formModel.thumb
+                    }]}>
                       {/* {
                       (isUploading: boolean) => {
                         setBtnLoading(isUploading)

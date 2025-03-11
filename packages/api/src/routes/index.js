@@ -7,6 +7,7 @@ import adviseRouter from './advise.router';
 import ticketRouter from './ticket.router';
 import book from './book.router';
 import user from './user.router';
+import pet from './pet.router';
 // 小程序路由
 import mpAdviseRouter from './mp/mp.advise.router';
 import mpBookRouter from './mp/mp.book.router';
@@ -25,6 +26,7 @@ export default function routes(app) {
     app.use('/ticket', ticketRouter);
     app.use('/book', book);
     app.use('/user', user);
+    app.use('/pet', pet)
     // 小程序路由
     app.use('/mp/advise', mpAdviseRouter);
     app.use('/mp/book', mpBookRouter);

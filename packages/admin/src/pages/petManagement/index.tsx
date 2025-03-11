@@ -1,28 +1,38 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom"
-import { Button, Flex, } from "antd";
-import { searchItems, tableColums } from './config.tsx'
-import { list } from '@/apis/modules/advise'
+import { Button, Flex } from "antd";
+import { searchItems, tableColumns } from './config.ts'
+import { list } from '@/apis/modules/pet.ts'
 import MyPage from '@/components/BasicPage'
 
 
-export default function appointManagement() {
+//发票
+export default function TickManagement() {
+
 
   const navigate = useNavigate()
+
+
+
+  useEffect(() => {
+    // console.log(pageRef?.current)
+    // pageRef?.current?.load()
+
+  }, [])
+
 
   return (
     <MyPage
       pageApi={list}
-      tableOptions={tableColums}
+      tableOptions={tableColumns}
       searchItems={searchItems}>
       {
         {
           showColumnActions: (_, record) => {
             const id = record.id
-            const detailRoute = `/advice/detail/${id}`
-            const editRoute = `/advice/editOrAdd/${id}`
+            const detailRoute = `/bookGoodsManagement/detail/${id}`
+            const editRoute = `/bookGoodsManagement/editOrAdd/${id}`
             return <Flex gap="small">
-              {/* <NavLink to={route}>详情</NavLink> */}
               <Button onClick={() => navigate(detailRoute)} size="small" color="primary" variant="link">详情</Button>
               <Button onClick={() => navigate(editRoute)} size="small" color="primary" variant="link">编辑</Button>
             </Flex>
