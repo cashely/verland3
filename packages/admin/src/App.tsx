@@ -28,6 +28,12 @@ function App() {
           colorLink: theme.primary,
           colorText: "#666",
         },
+        components: {
+          Card: {
+            bodyPadding: 16,
+            headerPadding: 16
+          },
+        },
       }}
     >
       <AntdApp>

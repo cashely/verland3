@@ -2,10 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom"
 import { Button, Modal, Flex, message } from "antd";
 import { searchItems, tableColums, formConfig } from './config.tsx'
-import { list, del } from '@/apis/modules/bookGood'
+import { list, del, edit, add } from '@/apis/modules/bookGood'
 import MyPage from '@/components/BasicPage'
 import ModalForm from '@/components/ModalForm'
-import { edit, add } from '@/apis/modules/bookGood'
+import { FILE_URL } from "@/apis/request.ts";
 import { produce } from "immer";
 
 export default function appointManagement() {
@@ -44,45 +44,33 @@ export default function appointManagement() {
       //先清空
       formConfig.formModel = {}
       if (record?.id) {
-        formConfig.formModel = record
+        formConfig.formModel = {
+          ...record,
+          thumb: record?.thumb?.path ? (FILE_URL + record?.thumb?.path) : ''
+        }
       }
     }))
   }
 
   const handleOk = async (values: any) => {
     console.log(values, '+++form的值')
-    const id = formConfig.formModel?.id
+    const id = values?.id
+    setModalConfig(produce(draft => {
+      draft.confirmLoading = true
+    }))
     try {
       if (id) {
-        setModalConfig(produce(draft => {
-          draft.confirmLoading = true
-        }))
-        //等待2秒
-        // await new Promise((resolve) => {
-        //   setTimeout(resolve, 2000);
-        // })
-        edit({
-          ...values,
-          id
-        }).then(() => {
-          message.success('编辑成功')
-          setModalConfig(produce(draft => {
-            draft.isOpen = false
-            draft.confirmLoading = false
-          }))
-        })
+        await edit(id, values)
+        message.success('编辑成功')
       } else {
-        add({
-          ...values,
-        }).then(() => {
-          message.success('添加成功')
-        })
+        await add(values)
+        message.success('添加成功')
       }
-    } finally {      
+      pageRef.current?.load()
+    } finally {
       setModalConfig(produce(draft => {
         draft.isOpen = false
         draft.confirmLoading = false
-        pageRef.current?.load()
       }))
     }
   }

@@ -8,13 +8,8 @@ const SearchTools = (props: any) => {
 
     return <div className='search-tools' style={{ textAlign: 'right' }}>
         <Space size="small">
-            <Button
-                shape="round"
-                onClick={resetForm}
-            >
-                重置
-            </Button>
-            <Button type="primary" htmlType="submit" shape="round">
+            <Button onClick={resetForm}> 重置 </Button>
+            <Button type="primary" htmlType="submit">
                 查询
             </Button>
             {
@@ -28,7 +23,6 @@ const SearchTools = (props: any) => {
                 </a> : null
             }
         </Space>
-
     </div>
 }
 

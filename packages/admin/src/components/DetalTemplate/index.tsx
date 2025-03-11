@@ -1,12 +1,20 @@
-import { useState } from "react";
-import {  Descriptions } from 'antd';
+import { Descriptions, Card } from 'antd';
 
 export default function DetailTemplate(props: any) {
-    const {items} = props
+    const { items, detailInfo = {} } = props
+
+    const formateData = (obj: any) => {
+        if (!obj?.id) return [];
+        return items.map((item: any) => ({
+            key: item.prop,
+            label: item.label,
+            children: obj[item.prop] || '-'
+        }))
+    }
     return (
-        <section className={'bg-white rounded p-[16px] pt-[20px]'}>
-           
-           <Descriptions title="User Info" items={items} />
-           </section>
+        <Card className='page-detail' title="详情">
+            <Descriptions layout='vertical' items={formateData(detailInfo)} />
+        </Card>
+
     );
 }

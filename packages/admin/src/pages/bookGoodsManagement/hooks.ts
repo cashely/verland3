@@ -1,6 +1,4 @@
-import { Space, Typography, Button, Image, Modal, Flex, message } from "antd";
-import { NavLink } from 'react-router-dom'
-import { timeFormatDateTime } from '@/utils/timeUtils'
+import { Modal, message } from "antd";
 import { del } from '@/apis/modules/bookGood'
 import { useEffect, useState } from 'react'
 import { produce } from 'immer'
@@ -55,9 +53,7 @@ const tableColumns = [
         title: '缩略图',
         dataIndex: 'thumb',
         key: 'thumb',
-        render(val: string) {
-            return val ? <Image src={ val } alt = "缩略图" width = { 100} height = { 100} /> : '-'
-        }
+        slot: 'image'
     },
     {
         title: '价格',
@@ -73,27 +69,13 @@ const tableColumns = [
         title: '创建时间',
         dataIndex: 'createdAt',
         key: 'createdAt',
-        render(val: string) {
-            return timeFormatDateTime(val) || '-'
-        }
+        slot: "datetime"
     },
-    {
-        title: '操作',
-        key: 'action',
-        width: 120,
-        fixed: 'right',
-        render: (_, record) => {
-            const route = `/bookGoodsManagement/detail/${record.id}`
-            return <Flex gap="small" >
-                <NavLink to={ route }> 详情 < /NavLink>
-            </Flex>
-        },
-    }
 ]
 
 
 const useForm = ({ getList }) => {
-    
+
     const [data, setData] = useState([])
 
 

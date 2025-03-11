@@ -1,6 +1,7 @@
 import axios from "axios";
 import { getTokenFromLocalStorage } from '@/utils';
 import { notification, message } from 'antd';
+export const FILE_URL = import.meta.env.VITE_API_BASE_URI + '/';
 
 //axios实例
 const request = axios.create();
@@ -26,7 +27,7 @@ request.interceptors.request.use((config) => {
 
 request.interceptors.response.use((response) => {
     console.log(response.data, 'responseData')
-   
+
     if (response.data.code === 401) {
         message.error("未获取到授权信息,请重新登录!");
         // 清除token

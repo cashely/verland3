@@ -4,25 +4,27 @@ import type { PaginationProps, TableColumnsType, TableProps } from 'antd';
 import { timeFormatDateTime } from '@/utils/timeUtils'
 import { getLabelByValue } from '@/constants'
 import { createStyles } from 'antd-style';
+import { FILE_URL } from '@/apis/request'
 import _ from 'lodash-es'
 import './index.scss'
 
 interface DataType {
   key: string;
-  dataIndex?: string;
-  fixed: 'left' | 'right' | false;
-  title: string;
-  render: () => React.ReactNode;
+  slot?: string;
+  // dataIndex?: string;
+  // fixed: 'left' | 'right' | false;
+  // title: string;
+  // render: () => React.ReactNode;
   [key: string]: any
 }
 
 type IProps = {
-  children?: (visible: boolean, setVisible: React.Dispatch<React.SetStateAction<boolean>>) => React.ReactNode;
+  children?: any;
 } & {
   pagination?: PaginationProps | boolean;
   columns: TableColumnsType<DataType>;
   dataSource: DataType[];
-  loading: boolean;
+  loading: TableProps<DataType>['loading'];
   rowSelection?: TableProps<DataType>['rowSelection'];
 }
 
@@ -76,13 +78,14 @@ export default (props: IProps) => {
     if (otherConfig?.rowSelection?.defaultSelectedRowKeys) {
       setSelectedRowKeys(otherConfig?.rowSelection?.defaultSelectedRowKeys)
     }
+    console.log(columns, '---columns', dataSource, '---dataSource')
   }, [])
 
 
   const tableConfig: any = {
     rowKey: "id",
     bordered: true,
-    loading: otherConfig.loading ?? false,
+    loading: otherConfig.loading,
     size: 'large',
     scroll: { x: 'max-content', y: '100%' },
     //表格行选择
@@ -134,15 +137,16 @@ export default (props: IProps) => {
   }
 
   //渲染列内容
-  const handleColumnRender = (item, { value }) => {
+  const columnRender = (item: DataType, { value }) => {
     if (value) {
       if (item?.slot === 'datetime') {
         return timeFormatDateTime(value)
       } else if (item?.slot === 'image') {
-        return <Image src={value} alt="缩略图" width={100} height={100} />
+        return <Image src={FILE_URL + value?.path} alt="缩略图" width={100} height={100} />
       } else if (item.slot === 'select') {
         return getLabelByValue(item?.options || [], value)
       }
+
     }
     return value || '-'
   }
@@ -152,8 +156,8 @@ export default (props: IProps) => {
     <div className='table-body'>
       <Table<DataType> className={styles.customTable} dataSource={dataSource}   {...tableConfig} >
         {
-          columns?.map((item, index) =>
-            <Table.Column width={160} fixed={item.fixed} title={item.title} dataIndex={item.key} key={index} render={(value, record) => handleColumnRender(item, { value, record })} />
+          columns?.map((item) =>
+            <Table.Column width={160} fixed={item.fixed} title={item.title} dataIndex={item.dataIndex} key={item.key} render={(value, record) => columnRender(item, { value })} />
           )
         }
         <Table.Column

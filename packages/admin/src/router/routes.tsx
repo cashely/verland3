@@ -12,7 +12,7 @@ const Page404 = loadable(() => import("../pages/errorPage/404"));
 const Layout = loadable(() => import("../layout"));
 const ProjectList = loadable(() => import("../pages/projects/list"));
 const AppointManagement = loadable(() => import("../pages/appointManagement"));
-const SaleManagement = loadable(() => import("../pages/saleManagement"));
+const SaleManagement = loadable(() => import("../pages/petManagement/index.tsx"));
 const AccountManagement = loadable(() => import("../pages/accountManagement"));
 const AppointManagementDetail = loadable(() => import("../pages/appointManagement/detail"));
 const EditOrAdd = loadable(() => import("../pages/appointManagement/editOrAdd"));
@@ -21,6 +21,7 @@ const TickManagement = loadable(() => import("../pages/tickManagement"));
 const AdviceManagement = loadable(() => import("../pages/adviceManagement"));
 const hasToken = getTokenFromLocalStorage();
 const BookGoodsDetail = lazy(() => import("../pages/bookGoodsManagement/detail"));
+const AccountDetail = lazy(() => import("../pages/accountManagement/detail"));
 console.log("🚀 ~ hasToken:", hasToken);
 // const AuthComponent = ({ children }: Props) => {
 //   // 检查权限是否通过的逻辑
@@ -194,19 +195,19 @@ const anyncRoutesList = [
     ],
   },
   {
-    path: "/saleManagement",
-    title: "售后管理",
+    path: "/petManagement",
+    title: "宠物管理",
     element: <Layout />,
     icon: <CustomerServiceOutlined style={{
       fontSize: 16
     }} />,
-    handle: { title: "售后管理" },
+    handle: { title: "宠物管理" },
     children: [
       {
-        path: "/saleManagement/list",
-        title: "列表",
+        path: "/petManagement/list",
+        title: "宠物库",
         handle: {
-          title: "列表",
+          title: "宠物库",
         },
         element: <SaleManagement />,
       },
@@ -228,6 +229,15 @@ const anyncRoutesList = [
         },
         title: "列表",
         element: <AccountManagement />,
+      },
+      {
+        path: "/accountManagement/detail/:id",
+        handle: {
+          title: "详情",
+        },
+        hidden: true,
+        title: "详情",
+        element: <AccountDetail />,
       },
     ],
   },

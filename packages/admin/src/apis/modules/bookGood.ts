@@ -30,10 +30,8 @@ export async function add<T>(data: T): Promise<RequestResult<T>> {
  * @name 修改
  */
 
-export async function edit<T>(data: {
-    id: string;
-}): Promise<RequestResult<T>> {
-    return request.put("/bookGood", data);
+export async function edit<T>(id: string, data: T): Promise<RequestResult<T>> {
+    return request.put(`/bookGood/${id}`, data);
 }
 
 

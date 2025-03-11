@@ -19,7 +19,7 @@ export default function accountManagement() {
         {
           showColumnActions: (_, record) => {
             const id = record.id
-            const detailRoute = `/bookGoodsManagement/detail/${id}`;
+            const detailRoute = `/accountManagement/detail/${id}`;
             return <Flex gap="small">
               <Button onClick={() => navigate(detailRoute)} size="small" color="primary" variant="link">详情</Button>
             </Flex>

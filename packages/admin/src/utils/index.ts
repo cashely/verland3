@@ -660,3 +660,8 @@ export default {
   //   window.open(url, '_blank');
   // },
 };
+
+        //等待2秒
+        // await new Promise((resolve) => {
+        //   setTimeout(resolve, 2000);
+        // })

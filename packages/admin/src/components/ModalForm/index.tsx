@@ -28,9 +28,13 @@ const ModalForm = (props: IProps) => {
 
   const handleOk = () => {
     //获取表单数据
-    const FormInstance = formRef?.current?.form
-    console.log(FormInstance.getFieldsValue(), '+++')
-    onOk?.(FormInstance.getFieldsValue())
+    const FormInstance = formRef?.current
+    onOk?.(FormInstance?.formData || {})
+    console.log(FormInstance.formData, 'FormInstance.formData')
+    //调用子组件的submit方法
+    // FormInstance.submit()
+    //这也是获取表单值的一种方法
+    // console.log(FormInstance.getFieldsValue(), '+++')
   }
 
   const handleCancel = () => {
