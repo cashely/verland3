@@ -60,15 +60,16 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const { id, statu } = req.user;
-        const whereCOndition = {
+        const { id } = req.user;
+        const { statu } = req.query;
+        const whereCondition = {
             userId: id
         }
         if (Number.isInteger(statu)) {
-            whereCOndition.statu = statu;
+            whereCondition.statu = statu;
         }
         const books = await prisma.book.findMany({
-            where: whereCOndition,
+            where: whereCondition,
             include: {
                 address: true,
                 pet: true,
