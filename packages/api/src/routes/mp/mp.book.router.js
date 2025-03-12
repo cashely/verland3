@@ -59,13 +59,16 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-    // todo: 增加订单类型去查询订单列表
     try {
-        const { id } = req.user;
+        const { id, statu } = req.user;
+        const whereCOndition = {
+            userId: id
+        }
+        if (Number.isInteger(statu)) {
+            whereCOndition.statu = statu;
+        }
         const books = await prisma.book.findMany({
-            where: {
-                userId: id
-            },
+            where: whereCOndition,
             include: {
                 address: true,
                 pet: true,

@@ -68,6 +68,7 @@ model Pet {
   bookId    String?
   book      Book?
   statu     Int      @default(1) // 宠物的状态 1-活着 2-死亡
+  petImage  PetImage[]
 }
 
 model Image {
@@ -82,6 +83,7 @@ model Image {
   bookGood   BookGood? // 关联字段-预约附加服务产品
   ticketId   String?   @unique
   ticket     Ticket?
+  petImage   PetImage[]
 }
 
 // 预约附加服务产品
@@ -172,4 +174,13 @@ model Evaluate {
   user    User   @relation(fields: [userId], references: [id])
   bookId  String @unique
   book    Book   @relation(fields: [bookId], references: [id])
+}
+
+// 宠物跟图片的关联表
+model PetImage {
+  id      String @id @default(uuid())
+  petId   String
+  pet     Pet    @relation(fields: [petId], references: [id])
+  imageId String
+  image   Image  @relation(fields: [imageId], references: [id])
 }

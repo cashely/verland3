@@ -13,7 +13,8 @@ router.get('/', async (req, res) => {
             userId: id
         },
         include: {
-            book: true
+            book: true,
+            petImage: true
         }
     });
     res.response.success(books);
@@ -26,7 +27,8 @@ router.get('/:id', async (req, res) => {
             id
         },
         include: {
-            book: true
+            book: true,
+            petImage: true
         }
     });
     res.response.success(pet);
@@ -47,8 +49,23 @@ router.post('/', async (req, res) => {
                 statu
             }
         });
-        // todo: 关联宠物和图片
-        res.response.success(pet);
+        const _ = await prisma.petImage.createMany({
+            data: imageIds.map((imageId) => ({
+                petId: pet.id,
+                imageId
+            })) 
+        })
+
+        const petInfo = await prisma.pet.findUnique({
+            where: {
+                id: pet.id
+            },
+            include: {
+                book: true,
+                petImage: true
+            }
+        });
+        res.response.success(petInfo);
     }   catch (error) {
         res.response.error(error);
     }
@@ -69,6 +86,10 @@ router.put('/:id', async (req, res) => {
                 type,
                 subType,
                 statu
+            },
+            include: {
+                book: true,
+                petImage: true
             }
         });
         res.response.success(pet);
