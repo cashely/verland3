@@ -123,6 +123,8 @@ model Book {
   ticketId        String?    @unique
   ticket          Ticket?
   createdAt       DateTime    @default(now())
+  phone           String?
+  username        String?
   evaluateId      String?
   evaluate        Evaluate?
 }
@@ -149,8 +151,8 @@ model Advise {
   id            String   @id @default(uuid())
   type          Int      @default(1) // 投诉建议类型 1-建议 2-投诉
   content       String
-  replayAt      DateTime
-  replayContent String
+  replayAt      DateTime?
+  replayContent String?
   userId        String
   user          User     @relation(fields: [userId], references: [id])
 }
