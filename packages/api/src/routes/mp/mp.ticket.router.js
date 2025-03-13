@@ -11,6 +11,9 @@ router.get('/', async (req, res) => {
         const tickets = await prisma.ticket.findMany({
             where: {
                 userId: id
+            },
+            include: {
+                book: true
             }
         });
         res.response.success(tickets);
