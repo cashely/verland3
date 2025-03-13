@@ -11,6 +11,7 @@ Response.prototype.success = function (data = true) {
 };
 
 Response.prototype.error = function (message, code = 400) {
+    console.log(message, 'error')
     this.res.json({
         code: code,
         message: message
