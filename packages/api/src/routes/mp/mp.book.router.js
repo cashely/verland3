@@ -32,6 +32,7 @@ router.post('/', async (req, res) => {
             }
         });
 
+        
 
         const { id: addressId } = address;
         const { id: petId } = pet;
@@ -56,6 +57,17 @@ router.post('/', async (req, res) => {
                 username
             }
         });
+
+        const { bookGoodIds = []} = req.body;
+
+        if (bookGoodIds.length > 0) {
+            await prisma.BookRelationBookGood.createMany({
+                data: bookGoodIds.map((bookGoodId) => ({
+                    bookGoodId,
+                    bookId: book.id
+                })) 
+            })
+        }
         res.response.success(book);
     }, res);
 })

@@ -95,7 +95,7 @@ model BookGood {
   thumbId String? @unique // 缩略图
   thumb   Image?  @relation(fields: [thumbId], references: [id])
   content String // 产品描述
-  book    Book[]
+  book    BookRelationBookGood[]
 }
 
 // 预约单
@@ -114,7 +114,7 @@ model Book {
   totalAmount     Int // 总金额
   payAmount       Int // 付款金额
   payChannel      Int        @default(1) // 付款渠道 1-微信
-  bookGoods       BookGood[]
+  bookGoods       BookRelationBookGood[]
   mark            String? // 备注
   channel         Int        @default(1) // 订单渠道来源 1-平台
   statu           Int        @default(0) // 待付款  已预约  待寄送  已完成  已取消
@@ -127,6 +127,15 @@ model Book {
   username        String?
   evaluateId      String?
   evaluate        Evaluate?
+}
+
+// 订单关联的附加服务 多对多中间表
+model BookRelationBookGood {
+  id          String  @id @default(uuid())
+  bookId      String
+  book        Book     @relation(fields: [bookId], references: [id])
+  bookGoodId  String
+  bookGood    BookGood @relation(fields: [bookGoodId], references: [id])
 }
 
 // 发票
