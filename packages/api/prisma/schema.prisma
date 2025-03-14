@@ -164,6 +164,7 @@ model Advise {
   replayContent String?
   userId        String
   user          User     @relation(fields: [userId], references: [id])
+  createdAt     DateTime @default(now())
 }
 
 // 微信token临时存储表
