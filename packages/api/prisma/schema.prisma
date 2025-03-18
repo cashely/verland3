@@ -118,7 +118,7 @@ model Book {
   mark            String? // 备注
   channel         Int        @default(1) // 订单渠道来源 1-平台
   statu           Int        @default(0) // 待付款  已预约  待寄送  已完成  已取消
-  userId          String     @unique // 下单用户
+  userId          String     // 下单用户
   user            User       @relation(fields: [userId], references: [id])
   ticketId        String?    @unique
   ticket          Ticket?
