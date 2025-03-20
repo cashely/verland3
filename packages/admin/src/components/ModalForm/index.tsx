@@ -5,7 +5,6 @@ import AddForm from '../AddForm';
 interface IProps {
   isOpen: boolean;
   title: string,
-  confirmLoading?: boolean,
   setModalOpen: (open: boolean) => void,
   modalConfig?: {
     width?: number,
@@ -23,13 +22,19 @@ interface IProps {
 
 const ModalForm = (props: IProps) => {
   const formRef = useRef<any>()
-  const { formConfig, confirmLoading, title = '编辑', isOpen = false, onOk, onCancel } = props
+  const { formConfig, title = '编辑', isOpen = false, onOk, onCancel } = props
   const [isOpenState, setIsOpenState] = useState(false)
-
-  const handleOk = () => {
+  const [confirmLoading, setConfirmLoading] = useState(false)
+  const handleOk = async () => {
     //获取表单数据
     const FormInstance = formRef?.current
-    onOk?.(FormInstance?.formData || {})
+    try {
+      const values = await FormInstance.form?.validateFields();
+      onOk?.(FormInstance?.formData || {})
+      console.log('Success:', values);
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
     console.log(FormInstance.formData, 'FormInstance.formData')
     //调用子组件的submit方法
     // FormInstance.submit()
@@ -65,7 +70,8 @@ const ModalForm = (props: IProps) => {
           }
         }
       }>
-      <AddForm {...formConfig} ref={formRef}></AddForm>
+      <AddForm {...formConfig} ref={formRef} setFormLoading={setConfirmLoading}>
+      </AddForm>
     </Modal>
   )
 

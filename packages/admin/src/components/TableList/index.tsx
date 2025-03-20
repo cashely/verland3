@@ -157,7 +157,7 @@ export default (props: IProps) => {
       <Table<DataType> className={styles.customTable} dataSource={dataSource}   {...tableConfig} >
         {
           columns?.map((item) =>
-            <Table.Column width={160} fixed={item.fixed} title={item.title} dataIndex={item.dataIndex} key={item.key} render={(value, record) => columnRender(item, { value })} />
+            <Table.Column width={160} fixed={item.fixed} title={item.title} dataIndex={item.dataIndex} key={item.key} render={(value, record) => item?.render?.(value, record) ?? columnRender(item, { value })} />
           )
         }
         <Table.Column

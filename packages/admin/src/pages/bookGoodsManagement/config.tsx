@@ -114,6 +114,7 @@ const formConfig = {
       prop: 'content',
       type: 'textarea',
       span: 24,
+      rules: [{ required: true, message: '请输入产品内容' }],
       itemProps: {
         placeholder: '请输入服务内容',
         // readonly: true,

@@ -42,6 +42,7 @@ export default forwardRef<CustomFormRef, CustomFormProps>(({
   formList = [],
   onSubmit = () => { },
   onReset = () => { },
+  setFormLoading = () => { },
   submitText = '提交',
   resetText = '重置',
   rules = []
@@ -76,6 +77,7 @@ export default forwardRef<CustomFormRef, CustomFormProps>(({
   //图片上传成功
   const handleUploadSuccess = (fileObj: any) => {
     console.log('上传成功', fileObj)
+    setFormLoading(false)
     setFormData(produce((draft: any) => {
       draft['thumbId'] = fileObj.id
     }))
@@ -103,9 +105,9 @@ export default forwardRef<CustomFormRef, CustomFormProps>(({
   return (
     <Form layout="vertical" labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }} initialValues={formData} form={detailForm} name="detailForm" onFinish={handleSubmit} labelAlign="left" onValuesChange={handleValueChange}>
-      formModal--  {JSON.stringify(formModel)}
+      {/* formModal--  {JSON.stringify(formModel)}
       <hr></hr>
-      formData-- {JSON.stringify(formData)}
+      formData-- {JSON.stringify(formData)} */}
       <Row gutter={24}>
         {
           formList.map((item, index) =>
@@ -128,9 +130,9 @@ export default forwardRef<CustomFormRef, CustomFormProps>(({
                 </Select> : null}
                 {
                   item.type === 'upload' ?
-                    <UploadButton name={item.prop} onUploadSuccess={handleUploadSuccess} _fileList={[{
+                    <UploadButton name={item.prop} onUploadSuccess={handleUploadSuccess} setFormLoading={setFormLoading} _fileList={formModel.thumb ? [{
                       url: formModel.thumb
-                    }]}>
+                    }] : []}>
                       {/* {
                       (isUploading: boolean) => {
                         setBtnLoading(isUploading)

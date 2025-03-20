@@ -14,5 +14,5 @@ export async function list<T>(): Promise<RequestResult<T>> {
  */
 
 export async function detail<T>(id: string): Promise<RequestResult<T>> {
-    return request.get(`/bookGood/${id}`);
+    return request.get(`/book/${id}`);
 }

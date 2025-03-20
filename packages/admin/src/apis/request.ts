@@ -26,8 +26,6 @@ request.interceptors.request.use((config) => {
 })
 
 request.interceptors.response.use((response) => {
-    console.log(response.data, 'responseData')
-
     if (response.data.code === 401) {
         message.error("未获取到授权信息,请重新登录!");
         // 清除token
@@ -41,7 +39,7 @@ request.interceptors.response.use((response) => {
             message: "请求失败",
             description: `${response.data.message}`
         })
-        return {};
+        return Promise.reject();
     }
     return response.data;
 }, error => {
