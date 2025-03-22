@@ -45,7 +45,11 @@ const tableColumns = [
         title: '套餐类型',
         key: 'menu',
         dataIndex: 'menu',
-        fixed: 'left'
+        fixed: 'left',
+        render(_) {
+            if (!_) return;
+            return _ === 1 ? '上门服务' : '预约服务'
+        }
     },
     {
         title: '预约上门时间',
@@ -67,8 +71,11 @@ const tableColumns = [
     },
     {
         title: '快递地址',
-        key: 'addressId',
-        dataIndex: 'addressId',
+        key: 'address',
+        dataIndex: 'address',
+        render(_) {
+            return `${_.province || ''}${_.city || ''}${_.area || ''}${_.detail || ''}`
+        }
     },
     {
         title: '是否需要仪式',
