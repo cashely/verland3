@@ -17,6 +17,7 @@ import mpTicket from './mp/mp.ticket.router';
 import mpUser from './mp/mp.user.router';
 import mpBookGood from './mp/mp.bookGood.router';
 import mpEvaluateRouter from './mp/mp.evaluate.router';
+import mpWxRouter from './mp/mp.wx.router';
 
 export default function routes(app) {
     app.use('/hello', helloRouter);
@@ -38,4 +39,5 @@ export default function routes(app) {
     app.use('/mp/user', mpUser);
     app.use('/mp/bookGood', mpBookGood);
     app.use('/mp/evaluate', mpEvaluateRouter);
+    app.use('/mp/wx', mpWxRouter);
 }
