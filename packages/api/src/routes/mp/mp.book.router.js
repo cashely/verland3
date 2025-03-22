@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
 
         const { id: addressId } = address;
         const { id: petId } = pet;
-        const { menu, bookDateTime, isExpress, expressDateTime, isRite, riteDateTime, totalAmount, payChannel = 1, mark, phone, username } = req.body;
+        const { menu, bookDateTime, hadnleWay, handleDateTime, isRite, riteDateTime, totalAmount, payChannel = 1, mark, phone, username } = req.body;
 
         const book = await prisma.book.create({
             data: {
@@ -44,8 +44,8 @@ router.post('/', async (req, res) => {
                 addressId,
                 menu,
                 bookDateTime,
-                isExpress,
-                expressDateTime,
+                hadnleWay,
+                handleDateTime,
                 isRite,
                 riteDateTime,
                 totalAmount,
@@ -74,6 +74,7 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const { id } = req.user;
+        console.log('>>>>>>>>>>>', id)
         const { statu } = req.query;
         const whereCondition = {
             userId: id
@@ -89,6 +90,8 @@ router.get('/', async (req, res) => {
                 bookGoods: true
             }
         });
+
+        console.log(books)
         res.response.success(books);
     } catch (error) {
         res.response.error(error);

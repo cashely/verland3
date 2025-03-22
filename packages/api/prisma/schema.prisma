@@ -103,8 +103,9 @@ model Book {
   id              String     @id @default(uuid(7))
   menu            Int        @default(1) // 套餐类型,默认为套餐1
   bookDateTime    DateTime // 预约上门时间
-  isExpress       Int        @default(2) // 是否需要快递
-  expressDateTime DateTime? // 快递时间
+  handleWay       Int        @default(1) // 处理方式 1-邮寄 2-自行提取 3-放弃处理
+  handleDateTime  DateTime?   // 邮寄时间/提取时间
+  // expressDateTime DateTime? // 快递时间
   addressId       String
   address         Address?   @relation(fields: [addressId], references: [id])
   isRite          Int        @default(2) // 是否需要仪式
@@ -122,6 +123,7 @@ model Book {
   user            User       @relation(fields: [userId], references: [id])
   ticketId        String?    @unique
   ticket          Ticket?
+  outTradeNo      String?    // 支付订单号
   transactionId   String?  // 支付结果订单号
   createdAt       DateTime    @default(now())
   phone           String?

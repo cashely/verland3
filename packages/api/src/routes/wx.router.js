@@ -79,11 +79,13 @@ router.post('/notify_url', async (req, res) => {
 
         const decodeResource = await payment.decodeResource(resource);
 
+        console.log(decodeResource)
+
         const { transaction_id, amount, out_trade_no } = decodeResource;
 
-        const book = await prisma.book.findUnique({
+        const book = await prisma.book.findFirst({
             where: {
-                id: out_trade_no
+                outTradeNo: out_trade_no
             }
         });
 
@@ -98,7 +100,7 @@ router.post('/notify_url', async (req, res) => {
         // 更新订单状态
         await prisma.book.update({
             where: {
-                id: out_trade_no
+                id: book.id
             },
             data: {
                 transactionId: transaction_id,

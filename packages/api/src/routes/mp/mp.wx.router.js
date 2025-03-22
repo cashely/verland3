@@ -20,24 +20,39 @@ router.post('/prepay', async (req, res) => {
             }
         });
 
+        const outTradeNo = String(+new Date());
+
         if (book) {
             const { totalAmount, id: bookId, user } =  book;
             let result = await payment.jsapi({
                 description: '它念预约支付',
-                out_trade_no: bookId,
+                out_trade_no: outTradeNo,
                 amount: {
                     total: totalAmount
                 },
                 payer: {
                     openid: user.wxid
                 },
+            });
+            
+            if (result.status !== 200) {
+                throw new Error('生成prepay_id失败');
+            }
+
+            await prisma.book.update({
+                where: {
+                    id: bookId
+                },
+                data: {
+                    outTradeNo,
+                } 
             })
             // 微信支付返回
             // prepay_id是返回给前台下单
             // {
             //     "prepay_id": "wx201410272009395522657a690389285100"
             // }
-            res.response.success(result);
+            res.response.success(JSON.parse(result.data));
         } else {
             throw new Error('订单不存在');
         }
@@ -48,24 +63,30 @@ router.post('/prepay', async (req, res) => {
 
 router.post('/pay', async (req, res) => {
     try {
-        const { prepay_id } = req.body;
+        const { prepayId } = req.body;
 
-        let timeStamp = Math.floor(Date.now() / 1000);
+        const timeStamp = String(Math.floor(Date.now() / 1000));
+        
+        const nonceStr = payment.generate();
 
-        const signParams = [
-            `appid=${payment.appid}`,
-            `timeStamp=${timeStamp}`,
-            `nonceStr=${payment.generate()}`,
-            `package=prepay_id=${prepay_id}`,
-        ];
+        // console.log(`${payment.appid}\n${timeStamp}\n${payment.generate()}\nprepay_id=${prepayId}\n`, '<<<<')
 
-        const signature = payment.rsaSign(`${signParams.join('\n')}\n`, payment.private_key, 'SHA256withRSA');
+        const signatureStr = `${payment.appid}\n${timeStamp}\n${nonceStr}\nprepay_id=${prepayId}\n`;
 
+        // payment.rsaSign(`${appid}\n${timestamp}\n${noncestr}\n${pkg}\n`, private_key, 'SHA256withRSA')
+
+        // let buff = Buffer.from(signature);
+        const signature = payment.rsaSign(signatureStr, payment.private_key);
+
+        let buff = Buffer.from(signature);
+        let base64data = buff.toString('base64');
+
+        console.log(signature, '<<<<')
         res.response.success({
             appid: payment.appid,
             timeStamp,
-            nonceStr: payment.generate(),
-            package: `prepay_id=${prepay_id}`,
+            nonceStr,
+            package: `prepay_id=${prepayId}`,
             signType: 'RSA',
             paySign: signature
         });

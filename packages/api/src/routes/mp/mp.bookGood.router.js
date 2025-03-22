@@ -8,7 +8,11 @@ const router = new Router({
 
 router.get('/', async (req, res) => {
     try {
-        const bookGoods = await prisma.bookGood.findMany();
+        const bookGoods = await prisma.bookGood.findMany({
+            include: {
+                thumb: true
+            }
+        });
         res.response.success(bookGoods);
     } catch (error) {
         res.response.error(error);

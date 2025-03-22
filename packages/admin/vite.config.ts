@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://api.verlantum.cn',
+        target: 'http://localhost:3000',
         changeOrigin: true,
         rewrite(path) {
           return path.replace(/^\/api/, '')
