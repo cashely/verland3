@@ -49,7 +49,6 @@ router.post('/', async (req, res) => {
                 isRite,
                 riteDateTime,
                 totalAmount,
-                payAmount: totalAmount,
                 payChannel,
                 mark,
                 petId,

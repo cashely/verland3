@@ -112,16 +112,17 @@ model Book {
   petId           String     @unique // 宠物
   pet             Pet        @relation(fields: [petId], references: [id])
   totalAmount     Int // 总金额
-  payAmount       Int // 付款金额
+  payAmount       Int? // 付款金额
   payChannel      Int        @default(1) // 付款渠道 1-微信
   bookGoods       BookRelationBookGood[]
   mark            String? // 备注
   channel         Int        @default(1) // 订单渠道来源 1-平台
-  statu           Int        @default(0) // 待付款  已预约  待寄送  已完成  已取消
+  statu           Int        @default(0) // 0待付款  1已预约  2待寄送  3已完成  4已取消 5异常 6退款中
   userId          String     // 下单用户
   user            User       @relation(fields: [userId], references: [id])
   ticketId        String?    @unique
   ticket          Ticket?
+  transactionId   String?  // 支付结果订单号
   createdAt       DateTime    @default(now())
   phone           String?
   username        String?

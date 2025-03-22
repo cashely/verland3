@@ -13,9 +13,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://2tazqs6e-sigl3pxa-5xid4gz8z4cm.vcc3p.mcprev.cn',
+        target: 'http://localhost:3000',
         changeOrigin: true,
-        // rewrite: (path) => path.replace(/^\/api/, '')
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     },
     allowedHosts: ['7y8tfhse-8ia31j7p-27x9fy74j2l7.vcc3p.mcprev.cn']
