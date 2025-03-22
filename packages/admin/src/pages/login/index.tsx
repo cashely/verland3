@@ -1,6 +1,5 @@
-import { Form, Input, Button } from "antd";
+import { App, Form, Input, Button } from "antd";
 import { useNavigate } from "react-router-dom";
-import { message, App } from "antd";
 import { z } from "zod";
 import Logo from "../../layout/components/sidebar/logo";
 // import LocaleButton from "../../components/common/LocaleButton";

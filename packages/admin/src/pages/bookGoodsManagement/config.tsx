@@ -17,6 +17,10 @@ const tableColums = [
     title: '价格',
     dataIndex: 'price',
     key: 'price',
+    render(_) {
+      if (!_) return '-'
+      return (_ / 100).toLocaleString()
+    }
   },
   {
     title: '产品内容',

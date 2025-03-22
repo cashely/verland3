@@ -13,31 +13,53 @@ const tableColumns = [
     {
         title: '发票抬头',
         key: 'header',
-        fixed: 'left'
+        prop: 'header',
     },
     {
         title: '发票类型',
         key: 'type',
+        prop: "type",
+        render(_) {
+            return _ === '1' ? '个人' : '企业'
+        }
     },
     {
         title: '附加服务',
         key: 'book',
+        prop: 'book'
     },
     {
         title: '税号',
-        key: 'number'
+        key: 'number',
+        prop: 'number'
     },
     {
         title: '发票金额',
-        key: 'amount'
+        key: 'amount',
+        prop: 'amount',
+        render(_) {
+            if (!_) return '-'
+            return (_ / 100).toLocaleString()
+        }
     },
     {
         title: '开票状态',
         key: 'statu',
+        prop: 'statu',
+        render(_) {
+            return _ === '2' ? '未开票' : '已开票'
+        }
     },
     {
         title: '邮箱',
-        key: 'email'
+        key: 'email',
+        prop: 'email'
+    },
+    {
+        title: '开票时间',
+        key: 'createdAt',
+        prop: 'createdAt',
+        slot: 'datetime'
     },
     {
         title: '操作',

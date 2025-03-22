@@ -11,33 +11,20 @@ const searchItems = [
 
 const tableColumns = [
     {
-        title: '发票抬头',
-        key: 'header',
+        title: 'ID',
+        key: 'petId',
+        prop: 'petId',
         fixed: 'left'
     },
     {
-        title: '发票类型',
-        key: 'type',
+        title: '宠物名称',
+        key: 'pet',
+        prop: 'pet'
     },
     {
-        title: '附加服务',
-        key: 'book',
-    },
-    {
-        title: '税号',
-        key: 'number'
-    },
-    {
-        title: '发票金额',
-        key: 'amount'
-    },
-    {
-        title: '开票状态',
-        key: 'statu',
-    },
-    {
-        title: '邮箱',
-        key: 'email'
+        title: '缩略图',
+        key: 'image',
+        prop: 'image'
     },
     {
         title: '操作',
