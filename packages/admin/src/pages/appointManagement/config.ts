@@ -88,7 +88,7 @@ const tableColumns = [
         key: 'totalAmount',
         dataIndex: 'totalAmount',
         render(_) {
-            if (!_) return '-'
+            if (!Number.isInteger(_)) return '-'
             return (_ / 100).toLocaleString()
         }
     },
@@ -97,7 +97,7 @@ const tableColumns = [
         dataIndex: 'payAmount',
         key: 'payAmount',
         render(_) {
-            if (!_) return '-'
+            if (!Number.isInteger(_)) return '-'
             return (_ / 100).toLocaleString()
         }
     },

@@ -7,10 +7,12 @@
     "dev": "node --watch index.js",
     "start": "node index.js",
     "api:dev": "pnpm run -F @verland3.0/api api:dev",
-    "admin:dev": "pnpm run -F @verland3.0/admin dev"
+    "admin:dev": "pnpm run -F @verland3.0/admin dev",
+    "editFile": "node ./nodeUtils/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {},
+  "anthor": "chenhaihu"
 }

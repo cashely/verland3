@@ -13,11 +13,13 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'https://api.verlantum.cn',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        rewrite(path) {
+          return path.replace(/^\/api/, '')
+        }
       }
     },
-    allowedHosts: ['b5rcpcqg-h6rgksmx-lnebtzaxyx0b.vcc3p.mcprev.cn']
+    allowedHosts: ['api.verlantum.cn', '3f6rvhz7-frciwj1f-n4tuj2bcxotv.vcc3p.mcprev.cn']
   },
 })
