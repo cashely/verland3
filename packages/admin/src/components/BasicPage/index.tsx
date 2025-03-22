@@ -53,12 +53,11 @@ const BasicPage = ({
         const { code, data, } = await pageApi(obj);
         setTableLoading(false)
         if (code === 200) {
-          console.log(data, '---data200')
           setPageData({
             ...pageData,
             total: data?.length || 0,
-            data:data.map(item=>({
-             ...item,
+            data: data.map(item => ({
+              ...item,
               key: item.id
             }))
           });

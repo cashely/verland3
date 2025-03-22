@@ -28,7 +28,7 @@ interface UniversalUploadProps {
 
 const UploadButton: React.FC<UniversalUploadProps> = ({
   maxSize = 10,
-  maxCount = 1,
+  setFormLoading = () => { },
   accept = acceptFileTypes.join(','),
   multiple = false,
   _fileList = [],
@@ -122,6 +122,7 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
     const formData = new FormData();
     formData.append('file', file);
     try {
+      setFormLoading(true)
       const res: any = await request.post('/file', formData,
         {
           onUploadProgress(progressEvent: ProgressEvent) {
@@ -160,6 +161,7 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
   }
 
   useEffect(() => {
+    console.log(fileList, _fileList)
     setFileList([...fileList, ..._fileList])
   }, [])
 

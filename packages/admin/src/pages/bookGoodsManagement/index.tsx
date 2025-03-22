@@ -18,14 +18,10 @@ export default function appointManagement() {
       cancelText: '取消',
       centered: true,
       onOk() {
-        console.log('OK');
         del(id).then(res => {
-          console.log(res, '+++')
           message.success('删除成功')
+          pageRef.current?.load()
         })
-      },
-      onCancel() {
-        console.log('Cancel');
       },
     })
   }
@@ -63,7 +59,8 @@ export default function appointManagement() {
         await edit(id, values)
         message.success('编辑成功')
       } else {
-        await add(values)
+        const result = await add(values)
+        console.log(result)
         message.success('添加成功')
       }
       pageRef.current?.load()

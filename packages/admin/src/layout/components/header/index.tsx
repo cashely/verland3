@@ -50,10 +50,10 @@ function Header() {
    * @name 获取当前用户信息
    */
   async function getCurrentUser() {
-    // const { data: userInfo } = await adminUser();
-    // useStore.setState({
-    //   userInfo,
-    // });
+    const { data: userInfo } = await adminUser();
+    useStore.setState({
+      userInfo,
+    });
   }
 
   /**
