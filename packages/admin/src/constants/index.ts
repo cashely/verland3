@@ -67,6 +67,44 @@ const COMPLAINT_TYPE = [
     },
 ]
 
+const HANDLE_WAYS = [
+    {
+        label: '邮寄',
+        value: 1
+    },
+    {
+        label: '自行提取',
+        value: 2
+    },
+    {
+        label: '放弃处理',
+        value: 3
+    }
+]
+
+const SERVICE_TYPE = [
+    {
+        label: '上门服务',
+        value: 1
+    },
+    {
+        label: '预约服务',
+        value: 2
+    }
+]
+
+//是否需要仪式
+const RITE_TYPE = [
+    {
+        label: '是',
+        value: 1
+    },
+    {
+        label: '否',
+        value: 2
+    }
+]
+
 function getLabelByValue(arr: any[], value: any) {
     let label = ''
     arr.forEach(item => {
@@ -83,5 +121,8 @@ export {
     ORDER_CHANNEL,
     INVOICE_STATUS,
     COMPLAINT_TYPE,
+    HANDLE_WAYS,
+    SERVICE_TYPE,
+    RITE_TYPE,
     getLabelByValue
 }

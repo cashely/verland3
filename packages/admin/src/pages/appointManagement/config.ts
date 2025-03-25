@@ -1,3 +1,4 @@
+import { HANDLE_WAYS, SERVICE_TYPE, RITE_TYPE } from '@/constants'
 const searchItems = [
     {
         label: '姓名',
@@ -46,9 +47,9 @@ const tableColumns = [
         key: 'menu',
         dataIndex: 'menu',
         fixed: 'left',
-        render(_) {
+        render(_: number) {
             if (!_) return;
-            return _ === 1 ? '上门服务' : '预约服务'
+            return SERVICE_TYPE.find((item) => item.value === _)?.label || '-'
         }
     },
     {
@@ -57,16 +58,18 @@ const tableColumns = [
         slot: 'datetime'
     },
     {
-        title: '是否需要快递',
-        dataIndex: 'isExpress',
-        render(_) {
-            return _ === 1 ? '是' : '否'
+        title: '遗物处理方式',
+        dataIndex: 'handleWay',
+        render(_: number) {
+            if (!_) return;
+            return HANDLE_WAYS.find(item => item.value === _)?.label || '-'
+
         }
     },
     {
-        title: '快递时间',
-        dataIndex: 'expressDateTime',
-        key: 'expressDateTime',
+        title: '遗物处理时间',
+        dataIndex: 'handleDateTime',
+        key: 'handleDateTime',
         slot: "datetime"
     },
     {
@@ -81,7 +84,8 @@ const tableColumns = [
         title: '是否需要仪式',
         dataIndex: 'isRite',
         render(_) {
-            return _ === 1 ? '是' : '否'
+            if (!_) return '-'
+            return RITE_TYPE.find(item => item.value === _)?.label || '-'
         }
     },
     {
@@ -205,6 +209,10 @@ const detailItems = [
     {
         label: '套餐类型',
         prop: 'menu',
+        render(_) {
+            if (!_) return;
+            return _ === 1 ? '上门服务' : '预约服务'
+        }
     },
     {
         label: '预约上门时间',
@@ -213,14 +221,15 @@ const detailItems = [
     },
     {
         label: '是否需要快递',
-        prop: 'isExpress',
+        prop: 'handleWay',
         render(_) {
-            return _ === 1 ? '是' : '否'
+            if (!_) return;
+            return HANDLE_WAYS.find(_ => _.value === _)?.label || '-'
         }
     },
     {
         label: '快递时间',
-        prop: 'expressDateTime',
+        prop: 'handleDateTime',
         type: "datetime"
     },
     {
