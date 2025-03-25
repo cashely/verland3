@@ -1,6 +1,7 @@
 import Router from "../../middles/route";
 import prisma from "../../configs/prisma";
 import payment from "../../utils/wechat.pay.sdk";
+import { boolean } from "zod";
 
 const router = new Router({
     auth: true
@@ -100,9 +101,9 @@ router.post('/pay', async (req, res) => {
 /**
  * 退款
  */
-router.post('/refund/:id', async (req, res) => {
+router.post('/refund/:bookId', async (req, res) => {
     try {
-        const { id } = req.params;
+        const { bookId: id } = req.params;
         const book = await prisma.book.findUnique({
             where: {
                 id
@@ -113,10 +114,15 @@ router.post('/refund/:id', async (req, res) => {
             throw new Error('订单不存在');
         }
 
+        if (book.statu !== 1) {
+            throw new Error('订单状态不正确，不支持退款');
+        }
+
         const { transactionId } = book;
+        const outRefundNo = String(+new Date());
         const refundResult = await payment.refund({
             transaction_id: transactionId,
-            out_refund_no: id,
+            out_refund_no: outRefundNo,
             amount: {
                 total: book.payAmount,
                 refund: book.payAmount,
@@ -130,7 +136,7 @@ router.post('/refund/:id', async (req, res) => {
             },
             data: {
                 statu: 6
-            } 
+            }
         });
 
         res.response.success(refundResult);

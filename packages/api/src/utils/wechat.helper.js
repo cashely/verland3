@@ -23,7 +23,7 @@ async function getAccessToken() {
 /**
  * 调用微信模版发送模版消息
  */
-async function sendTemplateMessage({
+export async function sendTemplateMessage({
     openid,
     templateId,
     url,

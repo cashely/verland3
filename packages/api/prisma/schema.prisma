@@ -124,6 +124,7 @@ model Book {
   ticketId        String?    @unique
   ticket          Ticket?
   outTradeNo      String?    // 支付订单号
+  outRefundNo     String?     // 退款订单号
   transactionId   String?  // 支付结果订单号
   createdAt       DateTime    @default(now())
   phone           String?
@@ -147,7 +148,7 @@ model Ticket {
   bookId    String   @unique
   book      Book     @relation(fields: [bookId], references: [id])
   createdAt DateTime @default(now())
-  statu     Int      @default(2) //  开票状态 2 - 未开票
+  statu     Int      @default(2) //  开票状态 2 - 未开票 1 - 已开票 3 - 用户催票
   header    String? // 发票抬头
   type      Int      @default(1) // 发票类型 1-个人 2 - 企业
   number    String? // 税号

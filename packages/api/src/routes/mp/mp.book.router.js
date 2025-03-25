@@ -1,5 +1,6 @@
 import Router from "../../middles/route";
 import prisma, { transaction } from "../../configs/prisma";
+import payment from "../../utils/wechat.pay.sdk";
 
 const router = new Router({
     auth: true
