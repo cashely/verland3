@@ -75,7 +75,6 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const { id } = req.user;
-        console.log('>>>>>>>>>>>', id)
         const { statu } = req.query;
         const whereCondition = {
             userId: id
@@ -88,7 +87,11 @@ router.get('/', async (req, res) => {
             include: {
                 address: true,
                 pet: true,
-                bookGoods: true
+                bookGoods: {
+                    include: {
+                        bookGood: true 
+                    }
+                }
             }
         });
 
@@ -109,7 +112,11 @@ router.get('/:id', async (req, res) => {
             include: {
                 address: true,
                 pet: true,
-                bookGoods: true
+                bookGoods: {
+                    include: {
+                        bookGood: true 
+                    }
+                }
             }
         });
         res.response.success(book);

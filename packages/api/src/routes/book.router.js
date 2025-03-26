@@ -14,7 +14,11 @@ router.get('/', async (req, res) => {
                 pet: true,
                 evaluate: true,
                 ticket: true,
-                bookGoods: true
+                bookGoods: {
+                    include: {
+                       bookGood: true 
+                    }
+                }
             }
         });
         res.response.success(books);
@@ -36,7 +40,11 @@ router.get('/:id', async (req, res) => {
                 pet: true,
                 evaluate: true,
                 ticket: true,
-                bookGoods: true
+                bookGoods: {
+                    include: {
+                       bookGood: true 
+                    }
+                }
             }
         });
         res.response.success(book);
