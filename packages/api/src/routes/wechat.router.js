@@ -61,39 +61,22 @@ router.post('/wxpay/notify_url', async (req, res) => {
                 templateId,
                 openid: wxid,
                 data: {
+                    // 商品
                     thing1: {
                         value: '预约成功'
                     },
-                    thing2: {
+                    // 金额
+                    amount2: {
                         value: '预约时间'
                     },
-                    thing3: {
+                    // 时间
+                    date3: {
                         value: '预约人'
                     },
-                    thing4: {
+                    // 订单编号
+                    character_string8: {
                         value: '预约人电话'
-                    },
-                    thing5: {
-                        value: '预约人地址'
-                    },
-                    thing6: {
-                        value: '预约人宠物'
-                    },
-                    thing7: {
-                        value: '预约人宠物品种'
-                    },
-                    thing8: {
-                        value: '预约人宠物年龄'
-                    },
-                    thing9: {
-                        value: '预约人宠物性别'
-                    },
-                    thing10: {
-                        value: '预约人宠物颜色'
-                    },
-                    thing11: {
-                        value: '预约人宠物数量'
-                    },
+                    }
                 }
             })
 
@@ -129,24 +112,22 @@ router.post('/wxpay/notify_url', async (req, res) => {
                 templateId,
                 openid: wxid,
                 data: {
-                    thing1: {
-                        value: '退款成功'
+                    // 退款状态
+                    phrase1: {
+                        value: '预约成功'
                     },
-                    thing2: {
-                        value: '退款时间'
+                    // 订单编号
+                    character_string2: {
+                        value: '预约时间'
                     },
+                    // 商品名称
                     thing3: {
-                        value: '退款人'
+                        value: '预约人'
                     },
-                    thing4: {
-                        value: '退款人电话'
-                    },
-                    thing5: {
-                        value: '退款人地址'
-                    },
-                    thing6: {
-                        value: '退款人宠物'
-                    },
+                    // 退款金额
+                    amount4: {
+                        value: '预约人电话'
+                    }
                 }
             })
 
