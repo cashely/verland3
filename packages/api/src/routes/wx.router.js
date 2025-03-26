@@ -180,9 +180,20 @@ router.post('/wxpay/notify_url', async (req, res) => {
             console.log('收到微信支付通知', payResult)
             // 2. 更新订单状态
             const { out_trade_no } = payResult;
-            const updateBook = await prisma.book.update({
+
+            const book = await prisma.book.findFirst({
                 where: {
                     outTradeNo: out_trade_no
+                }
+            })
+
+            if (!book) {
+                throw new Error("订单不存在");
+            }
+
+            const updateBook = await prisma.book.update({
+                where: {
+                    id: book.id
                 },
                 data: {
                     statu: 1 // 已预约
@@ -232,10 +243,20 @@ router.post('/wxpay/notify_url', async (req, res) => {
             console.log('收到微信退款通知', refundResult)
             const { out_refund_no } = refundResult;
 
+            const book = await prisma.book.findFirst({
+                where: {
+                    outRefundNo: out_refund_no
+                }
+            })
+
+            if (!book) {
+                throw new Error("订单不存在");
+            }
+
             // 2. 更新订单状态
             const updateBook = await prisma.book.update({
                 where: {
-                    outRefundNo: out_refund_no
+                    id: book.id
                 },
                 data: {
                     statu: 4 // 已退款
