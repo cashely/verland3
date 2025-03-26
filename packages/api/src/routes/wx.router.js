@@ -185,7 +185,7 @@ router.post('/wxpay/notify_url', async (req, res) => {
                     outTradeNo: out_trade_no
                 },
                 data: {
-                    status: 1 // 已预约
+                    statu: 1 // 已预约
                 },
                 include: {
                     user: true
@@ -238,7 +238,7 @@ router.post('/wxpay/notify_url', async (req, res) => {
                     outRefundNo: out_refund_no
                 },
                 data: {
-                    status: 4 // 已退款
+                    statu: 4 // 已退款
                 },
                 include: {
                     user: true
