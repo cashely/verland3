@@ -15,5 +15,5 @@ export default {
     apiv3_private_key: '2MEA8rnt9pg2mea8rnt9pg2mea8rnt99', // 微信商户apiv3私钥
     notify_url: 'https://api.verlantum.cn/wx/wxpay/notify_url', // 微信支付回调地址
     payTemplateId: 'fIijh96IYidJFYVTWwW2FsvEu2b7yKaQ7MO9FDv8M7U',
-    refundTemplateId: 'fIijh96IYidJFYVTWwW2FsvEu2b7yKaQ7MO9FDv8M7U',
+    refundTemplateId: 'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY',
 }
