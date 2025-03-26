@@ -188,7 +188,7 @@ model Evaluate {
   score  Int     @default(5)
   userId  String
   user    User   @relation(fields: [userId], references: [id])
-  bookId  String @unique
+  bookId  String  @unique
   book    Book   @relation(fields: [bookId], references: [id])
 }
 

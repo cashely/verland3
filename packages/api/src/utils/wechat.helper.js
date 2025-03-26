@@ -38,7 +38,10 @@ export async function sendTemplateMessage(options = {
     }
     try {
         const response = await axios.post(`https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=${accessToken}`, params);
-        console.log('消息发送成功:', response.data)
+        
+        if (response.data.errcode !== 0) {
+            console.log('消息发送失败:', response.data.errmsg)
+        }
         return response.data;
     } catch (error) {
         console.log('消息发送失败:', error)

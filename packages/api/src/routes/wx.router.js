@@ -297,7 +297,7 @@ router.post('/wxpay/notify_url', async (req, res) => {
         } else {
             throw new Error("接受微信支付失败");
         }
-        req.response.success("接受微信支付/退款回调成功", event_type);
+        res.response.success("接受微信支付/退款回调成功", event_type);
     } catch (error) {
         res.response.error(error);
     }

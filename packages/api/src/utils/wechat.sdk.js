@@ -4,7 +4,6 @@ import loginRouter from "../routes/login";
 
 
 function WechatSDK(options) {
-    console.log(options)
     this.appid = options.appid;
     this.secret = options.secret;
     this.prefix = 'https://api.weixin.qq.com';
