@@ -1,0 +1,21 @@
+.page-complain-create {
+  padding: 32px;
+  .title {
+    color: #1c3762;
+  }
+  .cls-textarea {
+    text-align: left;
+    background-color: rgba(232, 232, 232, 1);
+    border-radius: 30px;
+    border: 0;
+    .at-textarea__textarea {
+      font-size: 28px;
+      height: 300px !important;
+    }
+  }
+
+  .btn {
+    background-color: #ffce81;
+    color: #dc7115;
+  }
+}

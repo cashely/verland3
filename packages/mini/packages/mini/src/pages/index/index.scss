@@ -1,0 +1,27 @@
+.index {
+  background-image: url(../../subpackages/assets/images/mainBg.png);
+  background-size: 100% 100%;
+  padding-top: 80px;
+  height: 100%;
+  .avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+  }
+  .btnBox {
+    width: 500px;
+    overflow: hidden;
+    margin: 80px auto 0;
+    height: 80px;
+    line-height: 80px;
+    border-radius: 100px;
+    color: rgba(28, 55, 98, 1);
+    font-size: 32px;
+    background: linear-gradient(
+      179.82deg,
+      rgba(255, 255, 255, 0.79) 18.86%,
+      rgba(226, 135, 56, 0.64) 160.46%
+    );
+    border: none;
+  }
+}

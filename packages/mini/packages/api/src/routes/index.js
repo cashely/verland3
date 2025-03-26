@@ -1,0 +1,43 @@
+import helloRouter from './hello';
+import loginRouter from './login';
+import adminUserRouter from './adminUser.router';
+import fileRouter from './file.router';
+import bookGoodRouter from './bookGood.router';
+import adviseRouter from './advise.router';
+import ticketRouter from './ticket.router';
+import book from './book.router';
+import user from './user.router';
+import pet from './pet.router';
+import wxRouter from './wx.router';
+// 小程序路由
+import mpAdviseRouter from './mp/mp.advise.router';
+import mpBookRouter from './mp/mp.book.router';
+import mpPet from './mp/mp.pet.router';
+import mpTicket from './mp/mp.ticket.router';
+import mpUser from './mp/mp.user.router';
+import mpBookGood from './mp/mp.bookGood.router';
+import mpEvaluateRouter from './mp/mp.evaluate.router';
+import mpWxRouter from './mp/mp.wx.router';
+
+export default function routes(app) {
+    app.use('/hello', helloRouter);
+    app.use('/login', loginRouter);
+    app.use('/adminUser', adminUserRouter);
+    app.use('/file', fileRouter);
+    app.use('/bookGood', bookGoodRouter);
+    app.use('/advise', adviseRouter);
+    app.use('/ticket', ticketRouter);
+    app.use('/book', book);
+    app.use('/user', user);
+    app.use('/pet', pet);
+    app.use('/wx', wxRouter);
+    // 小程序路由
+    app.use('/mp/advise', mpAdviseRouter);
+    app.use('/mp/book', mpBookRouter);
+    app.use('/mp/pet', mpPet);
+    app.use('/mp/ticket', mpTicket);
+    app.use('/mp/user', mpUser);
+    app.use('/mp/bookGood', mpBookGood);
+    app.use('/mp/evaluate', mpEvaluateRouter);
+    app.use('/mp/wx', mpWxRouter);
+}

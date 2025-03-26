@@ -1,0 +1,43 @@
+.page-invoiceList {
+  background-color: #f5f5f5;
+  padding: 40px;
+  min-height: 100%;
+  .item {
+    margin-bottom: 20px;
+    padding: 18px 24px;
+    background-color: #9ddafb;
+    font-size: 32px;
+    overflow: hidden;
+    border-radius: 16px;
+    &.kpsq {
+      background-color: #ffce81;
+    }
+    .ticket-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 20px;
+      font-size: 28px;
+    }
+  }
+  .title {
+    font-size: 28px;
+    color: #101010;
+    margin-bottom: 10px;
+    .time {
+      color: #1c3762;
+    }
+  }
+  .priceCon {
+    background-color: #fff;
+    border-radius: 20px;
+    height: 160px;
+    line-height: 160px;
+    text-align: center;
+    font-size: 80px;
+    .unit {
+      font-size: 36px;
+      margin-left: 10px;
+    }
+  }
+}

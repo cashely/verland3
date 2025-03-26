@@ -1,0 +1,24 @@
+.page-payResult {
+  position: relative;
+  height: 100%;
+  .image-box {
+    left: 0;
+    right: 0;
+    top: -200px;
+  }
+  .con {
+    margin-top: 30px;
+    .title {
+      font-size: 44px;
+    }
+    .desc {
+      margin-top: 20px;
+      color: #154e7b;
+      text-decoration: underline;
+      font-size: 32px;
+    }
+  }
+}
+.result-image {
+  width: 100%;
+}

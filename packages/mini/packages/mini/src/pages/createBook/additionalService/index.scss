@@ -1,0 +1,115 @@
+.page-additionalService {
+  padding: 20px;
+  background-color: #f7f7f9;
+  height: 100%;
+  // background-image: url('../../../assets/images/service-bg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  .content {
+    overflow: hidden;
+    border-radius: 30px;
+    padding: 16px;
+    background-color: #f3f3f1;
+  }
+  .inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+    grid-auto-flow: row;
+    grid-gap: 30px;
+  }
+  .as-item {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    border-radius: 24px 24px 0 0;
+    padding: 20px 20px 0;
+    box-shadow: 0 0 6px 0 rgba(255, 206, 129, 0.39);
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    overflow: hidden;
+    &.selected {
+      position: relative;
+      background: linear-gradient(
+        137.39deg,
+        rgba(255, 247, 237, 1) 6.34%,
+        rgba(255, 206, 129, 1) 41.25%,
+        rgba(255, 249, 231, 1) 74.04%
+      );
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        width: 60px;
+        height: 60px;
+        background-image: url('../../../subpackages/assets/images/service-selected.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+    }
+    &__image {
+      margin-bottom: 12px;
+      width: 100%;
+      .image {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    &__content {
+      font-size: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      &-name {
+        font-size: 26px;
+        color: #154e7b;
+        margin-bottom: 8px;
+      }
+      &-price {
+        font-size: 28px;
+        font-weight: 600;
+        line-height: 2;
+        color: #ffaa5f;
+      }
+      .goDetail {
+        color: #154e7b;
+        align-self: flex-start;
+        background: #c1e9ee;
+        border-radius: 16px;
+        border: 2px solid #154e7b;
+        text-align: center;
+        font-size: 24px;
+        display: inline-block;
+        padding: 12px 16px;
+        line-height: 1;
+      }
+    }
+  }
+}
+
+.footer {
+  position: fixed;
+  bottom: 40px;
+  left: 40px;
+  right: 40px;
+  .btn {
+    color: #dc7115;
+    background-color: #ffce81;
+    border: none;
+    border-radius: 40px;
+    &:first-child {
+      background-color: #fff;
+      color: #8d8d8d;
+    }
+  }
+}
+
+.book-content {
+  padding: 32px;
+  text-align: left;
+}

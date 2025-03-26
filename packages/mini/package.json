@@ -1,0 +1,19 @@
+{
+  "name": "verland3.0",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "dev": "node --watch index.js",
+    "start": "node index.js",
+    "api:dev": "pnpm run -F @verland3.0/api api:dev",
+    "api:prod": "pnpm run -F @verland3.0/api api:prod",
+    "admin:dev": "pnpm run -F @verland3.0/admin dev",
+    "editFile": "node ./nodeUtils/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "anthor": "chenhaihu"
+}

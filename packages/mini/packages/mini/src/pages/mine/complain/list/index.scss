@@ -1,0 +1,56 @@
+.page-complain-list {
+  padding: 32px 32px 0;
+  background-color: #f7f7f9;
+  height: 100%;
+  .item {
+    background: linear-gradient(
+      179.97deg,
+      rgba(157, 218, 251, 1) -89.32%,
+      rgba(255, 255, 255, 1) 46.69%
+    );
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    font-size: 24px;
+    border-radius: 20px;
+    position: relative;
+    &-head {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #ddd;
+      .status-bg {
+        position: absolute;
+        right: 0;
+        top: 0;
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 132px;
+        height: 52px;
+        text-align: center;
+        line-height: 52px;
+        color: #fff;
+        &.yy {
+          background-image: url('../../../../assets/imgs/yyy.png');
+        }
+        &.wc {
+          background-image: url('../../../../assets/imgs/ywc.png');
+        }
+        .txt {
+          position: relative;
+          left: 6px;
+        }
+      }
+    }
+    .content {
+      background-color: #e8e8e8;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .bottom {
+      margin-top: 30px;
+      color: #2c3762;
+      text-align: center;
+    }
+  }
+}

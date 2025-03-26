@@ -1,0 +1,13 @@
+.pages-complain {
+  background-color: #f5f5f5;
+  padding: 20px;
+  height: 100%;
+  .listItem {
+    box-shadow: 0px 2px 6px 0px rgba(232, 232, 232, 1);
+    border-radius: 10px;
+    color: #101010;
+    .item-content__info-title {
+      font-size: 32px;
+    }
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
+  "projectname": "miniapp",
+  "setting": {
+    "compileHotReLoad": true,
+    "urlCheck": false,
+    "skylineRenderEnable": true
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/createBook/payResult/index",
+          "pathName": "pages/createBook/payResult/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/index/index",
+          "pathName": "pages/index/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/createBook/order/index",
+          "pathName": "pages/createBook/order/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/mine/pets/add/index",
+          "pathName": "pages/mine/pets/add/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/mine/afterSales/as-invoiceApply/index",
+          "pathName": "pages/mine/afterSales/as-invoiceApply/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/mine/complain/create/index",
+          "pathName": "pages/mine/complain/create/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/mine/appointList/index",
+          "pathName": "pages/mine/appointList/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/mine/profile/index",
+          "pathName": "pages/mine/profile/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/mine/index",
+          "pathName": "pages/mine/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/createBook/index",
+          "pathName": "pages/createBook/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/mine/pets/index",
+          "pathName": "pages/mine/pets/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/mine/index",
+          "pathName": "pages/mine/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/createBook/additionalService/index",
+          "pathName": "pages/createBook/additionalService/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/createBook/index",
+          "pathName": "pages/createBook/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
+  },
+  "libVersion": "3.7.11"
+}

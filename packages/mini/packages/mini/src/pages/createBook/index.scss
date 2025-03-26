@@ -1,0 +1,41 @@
+.page-createBox {
+  padding: 40px;
+  padding-bottom: 80px;
+  background-color: rgba(157, 218, 251, 1);
+  .formCon {
+    overflow: hidden;
+    border-radius: 30px;
+    margin-bottom: 44px;
+    padding: 12px;
+    background-color: #fff;
+  }
+  .at-form {
+    &::after {
+      border: none;
+    }
+    .at-input {
+      &:last-child {
+        &::after {
+          border: none;
+        }
+      }
+    }
+  }
+  .btn {
+    border-radius: 40px;
+    background-color: rgba(255, 206, 129, 1);
+    color: rgba(220, 113, 21, 1);
+    border: none;
+  }
+  .checkboxLabel {
+    color: #154e7b;
+    vertical-align: middle;
+    font-size: 24px;
+    .checkbox {
+      zoom: 0.7;
+    }
+    .txt {
+      vertical-align: middle;
+    }
+  }
+}

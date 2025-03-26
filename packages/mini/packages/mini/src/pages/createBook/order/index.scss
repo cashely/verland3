@@ -1,0 +1,80 @@
+.page-order {
+  padding: 40px 40px 200px;
+  background-color: #f7f7f9;
+  min-height: 100%;
+  .at-list {
+    background-color: transparent;
+    .at-list__item {
+      // padding: 24px 0;
+    }
+    .item-content__info-title {
+      color: #1c3762;
+    }
+    .item-extra__info {
+      padding-right: 0;
+    }
+    &::after {
+      border: none;
+    }
+  }
+  .subInfo {
+    padding: 24px 24px;
+    position: relative;
+    &.first-child {
+      border-bottom: 1px solid #ebebeb;
+    }
+    .sub-item {
+      color: #bbb;
+      font-size: 28px;
+    }
+  }
+  .checkbox {
+    zoom: 0.7;
+    vertical-align: middle;
+  }
+  .txt {
+    vertical-align: middle;
+    color: #154e7b;
+    text-decoration: underline;
+  }
+
+  .footer {
+    border-top: 1px solid #ebebeb;
+    padding-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 24px;
+    .right {
+      color: #bbb;
+    }
+  }
+
+  .payTools {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 36px 48px;
+    gap: 80px;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
+    .payPrice {
+      color: #ff4a4a;
+      font-size: 32px;
+      .price {
+        font-size: 40px;
+      }
+    }
+    .payBtn {
+      background-color: #ff4a4a;
+      font-size: 32px;
+      color: #fff;
+      border: none;
+      flex: 1;
+    }
+  }
+}

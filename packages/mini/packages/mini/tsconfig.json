@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "lib",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "rootDir": ".",
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      // TS5090 leading './'
+      "@/*": [
+        "./src/*"
+      ],
+      "components/*": [
+        "./src/components/*"
+      ], // 将 components/ 映射到 src/components/ 目录
+      "utils/*": [
+        "./src/utils/*"
+      ] // 将 utils/ 映射到 src/utils/ 目录
+    }
+  },
+  "include": [
+    "./src",
+    "./types",
+    "./config"
+  ],
+  "compileOnSave": false
+}

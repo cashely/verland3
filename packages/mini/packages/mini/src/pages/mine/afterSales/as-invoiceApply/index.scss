@@ -1,0 +1,89 @@
+.page-invoiceApply {
+  padding: 32px;
+  background-color: #f7f7f9;
+  height: 100%;
+  .at-form {
+    background-color: inherit;
+    &::after {
+      border: none;
+    }
+  }
+  .content-simple {
+    font-size: 32px;
+    color: #1c3762;
+  }
+  .at-input {
+    background-color: transparent;
+    padding-left: 0;
+    &__title {
+      color: #101010;
+    }
+    &__input {
+      color: #bbb;
+      text-align: right;
+      font-size: 28px !important;
+      .weui-input {
+        color: #bbb;
+        font-size: 28px !important;
+        text-align: right;
+      }
+    }
+  }
+  .subBtn {
+    margin-top: 100px;
+    color: #dc7115;
+    background-color: #ffce81;
+    border: none;
+    font-size: 32px;
+    height: 88px;
+    line-height: 88px;
+  }
+
+  .customItem {
+    padding: 32px;
+    position: relative;
+    border-bottom: 1px solid #ebebeb;
+    .radioItem {
+      zoom: 0.8;
+      &:first-child {
+        margin-right: 32px;
+      }
+    }
+    .label {
+      display: block;
+      margin-right: 32rpx;
+      width: 172rpx;
+      font-size: 32px;
+      line-height: 1.5;
+      color: #333;
+    }
+  }
+
+  .at-modal {
+    &__container {
+      padding-top: 40px;
+      border-radius: 30px;
+      background: linear-gradient(
+        179.75deg,
+        rgba(157, 218, 251, 1) -13.02%,
+        rgba(255, 255, 255, 1) 9.58%
+      );
+    }
+    &__footer {
+      &::before {
+        border-top: none;
+      }
+    }
+    &__action {
+      padding: 0 60px 40px;
+      button {
+        background-color: #ffce81 !important;
+        color: #dc7115 !important;
+        border-radius: 44px !important;
+        height: auto !important;
+        line-height: 100% !important;
+        padding: 20px 0;
+      }
+    }
+  }
+}

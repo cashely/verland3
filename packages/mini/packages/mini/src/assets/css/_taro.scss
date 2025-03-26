@@ -1,0 +1,13 @@
+// $at-list-extra-width: 480px !important;
+.at-list__item {
+  &-extra {
+    max-width: 400px !important;
+    .item-extra__info {
+      font-size: 28px !important;
+    }
+  }
+}
+
+.at-input__input {
+  font-size: 28px !important;
+}

@@ -1,0 +1,61 @@
+.page-appointDetail {
+  background-color: #f7f7f9;
+  .header {
+    padding: 32px;
+    margin-bottom: 30px;
+  }
+  .body {
+    overflow: hidden;
+    border-radius: 20px;
+    padding: 60px 32px 0;
+    background: linear-gradient(
+      182.25deg,
+      rgba(157, 218, 251, 1) -13.55%,
+      rgba(167, 222, 251, 1) -6.94%,
+      rgba(255, 255, 255, 1) 7.26%
+    );
+    .at-list {
+      background-color: transparent;
+      .subInfo {
+        padding: 24px 24px;
+        position: relative;
+        .sub-item {
+          color: #bbb;
+          font-size: 28px;
+        }
+        &::after {
+          content: '';
+          border-bottom: 1px solid #d6e4ef;
+          transform: scaleY(0.5);
+          position: absolute;
+          transform-origin: center;
+          pointer-events: none;
+          top: auto;
+          left: 0.6rem;
+          right: 0;
+          bottom: 0;
+        }
+      }
+      &::after {
+        border: none;
+      }
+    }
+    .item-content__info-title {
+      color: #1c3742;
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .item-extra {
+      font-size: 28px;
+      color: #bbb;
+      &__info {
+        padding-right: 0;
+      }
+    }
+    .footer {
+      padding: 20px 20px 40px;
+      font-size: 32px;
+    }
+  }
+}

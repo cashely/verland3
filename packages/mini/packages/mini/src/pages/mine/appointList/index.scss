@@ -1,0 +1,111 @@
+.page-appointList {
+  background-color: #f1f1f1;
+  min-width: none;
+  min-height: 100%;
+}
+.tab-content {
+  padding: 40px;
+  .item {
+    background: linear-gradient(
+      179.97deg,
+      rgba(157, 218, 251, 0.36) -89.32%,
+      rgba(255, 255, 255, 1) 46.69%
+    );
+    font-size: 24px;
+    padding: 20px 20px 80px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    &-head {
+      padding-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      color: #ddd;
+      .status-bg {
+        position: absolute;
+        right: 0;
+        top: 0;
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 132px;
+        height: 52px;
+        text-align: center;
+        line-height: 52px;
+        color: #fff;
+        &.yy {
+          background-image: url('../../../assets/imgs/yyy.png');
+        }
+        &.js {
+          background-image: url('../../../assets/imgs/djs.png');
+        }
+        &.wc {
+          background-image: url('../../../assets/imgs/ywc.png');
+        }
+        &.qx {
+          background-image: url('../../../assets/imgs/qx.png');
+        }
+        .txt {
+          position: relative;
+          left: 6px;
+        }
+      }
+    }
+    &-body {
+      display: flex;
+      &-right {
+        flex: 1;
+        text-align: left;
+        margin-left: 16px;
+        .title {
+          font-size: 32px;
+          .text-price {
+            margin-left: 20px;
+            font-size: 24px;
+          }
+        }
+      }
+    }
+    &-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      .btn-item {
+        padding: 14px 20px;
+        flex: 1;
+        text-align: center;
+        color: #101010;
+      }
+    }
+  }
+}
+.at-action-sheet__body {
+  text-align: left;
+}
+.at-tabs__header {
+  overflow-x: scroll !important;
+}
+.at-tabs__item {
+  flex: none;
+}
+.sheetImage {
+  left: 50%;
+  transform: translate(-50%, -90%);
+}
+.sheetContent {
+  background: linear-gradient(
+    180.93deg,
+    rgba(157, 218, 251, 1) -11.02%,
+    rgba(255, 255, 255, 1) 16.13%
+  );
+
+  .cls-textarea {
+    text-align: left;
+    textarea {
+      font-size: 28px;
+    }
+  }
+  .submitBtn {
+    margin-top: 40px;
+  }
+}
