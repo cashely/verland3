@@ -37,7 +37,7 @@ export async function sendTemplateMessage(options = {
         data: options.data,
     }
     try {
-        const response = await axios.post(`https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${accessToken}`, params);
+        const response = await axios.post(`https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=${accessToken}`, params);
         console.log('消息发送成功:', response.data)
         return response.data;
     } catch (error) {
