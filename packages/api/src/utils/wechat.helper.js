@@ -2,7 +2,7 @@
  * 微信相关功能
  */
 import axios from "axios"
-import wxconf from '../configs/wechat.config.js';
+import wxconf from '../configs/wx.config'
 /**
  * 获取sccess_token
  */
