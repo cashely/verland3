@@ -94,8 +94,6 @@ router.get('/', async (req, res) => {
                 }
             }
         });
-
-        console.log(books)
         res.response.success(books);
     } catch (error) {
         res.response.error(error);
