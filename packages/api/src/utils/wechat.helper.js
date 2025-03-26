@@ -23,7 +23,7 @@ async function getAccessToken() {
 /**
  * 调用微信模版发送模版消息
  */
-export async function sendTemplateMessage({
+export async function sendTemplateMessage(options = {
     openid,
     templateId,
     url,
@@ -31,10 +31,10 @@ export async function sendTemplateMessage({
 }) {
     const accessToken = await getAccessToken(); // 获取 access_token
     let params = {
-        touser: openid,
-        template_id: templateId,
-        url,
-        data: data,
+        touser: options.openid,
+        template_id: options.templateId,
+        url: options.url,
+        data: options.data,
     }
     try {
         const response = await axios.post(`https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${accessToken}`, params);

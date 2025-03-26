@@ -227,7 +227,8 @@ router.post('/wxpay/notify_url', async (req, res) => {
                     character_string8: {
                         value: '预约人电话'
                     }
-                }
+                },
+                url: `pages/mine/appointList/detail/index?id=${updateBook.id}`
             })
 
         } else if (event_type === 'REFUND.SUCCESS') {
