@@ -90,7 +90,7 @@ router.post('/wxpay/notify_url', async (req, res) => {
             // 1. 解密resource
             const { resource } = req.body;
             const refundResult = await payment.decodeResource(resource);
-            console.log(refundResult)
+            console.log('收到微信退款通知', refundResult)
             const { out_refund_no } = refundResult;
 
             // 2. 更新订单状态
