@@ -63,7 +63,7 @@ function useLogin() {
   };
 
   // 获取用户信息
-  const fetchUserInfo = async (code) => {
+  const fetchUserInfo = async (code, initUserInfo: any) => {
     try {
       mpLogin({ code }).then(async (res) => {
         if (res.code === 200) setStorageSync('token', res.data);
@@ -74,7 +74,7 @@ function useLogin() {
           //如果当前用户没有头像或者名称那就从微信获取
           if (!data.avatar || !data.username) {
             //取微信用户信息
-            const { userInfo: wxUserInfo } = await getUserInfo();
+            const { userInfo: wxUserInfo } = initUserInfo;
             console.log(wxUserInfo, 'wxUserInfo');
             data.avatar = wxUserInfo.avatarUrl;
             data.username = wxUserInfo.nickName;

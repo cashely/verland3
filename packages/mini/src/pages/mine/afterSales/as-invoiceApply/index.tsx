@@ -4,6 +4,7 @@ import { AtForm, AtInput, AtButton, AtModal } from 'taro-ui';
 import { TICKET_TYPE } from '@/constants';
 import { add } from '@/apis/ticket';
 import { useLoad, navigateBack } from '@tarojs/taro';
+import { formatPrice } from '@/utils';
 import './index.scss';
 
 const textTemplate = {
@@ -32,11 +33,11 @@ export default function AsApplyInvoice() {
 
   useLoad((option) => {
     console.log(option);
-    const { payAmount, id } = option;
+    const { totalAmount, id } = option;
     setFormData({
       ...formData,
       bookId: id,
-      price: Number(payAmount) / 100,
+      price: formatPrice(totalAmount),
     });
   });
 
@@ -95,7 +96,7 @@ export default function AsApplyInvoice() {
           placeholder="请选择开票类型"
           value={formData.type}
         /> */}
-        <View className="flex customItem items-center justify-between">
+        <View className="flex items-center justify-between customItem">
           <View className="label">
             <Text>开票类型</Text>
           </View>

@@ -1,10 +1,5 @@
 import { View, Text, Image } from '@tarojs/components';
-import {
-  getStorageSync,
-  showToast,
-  navigateTo,
-  removeStorageSync,
-} from '@tarojs/taro';
+import { getStorageSync, showToast, navigateTo } from '@tarojs/taro';
 import { AtButton, AtActionSheet } from 'taro-ui';
 import { Suspense, useEffect, useState } from 'react';
 import { list } from '@/apis/bookGood';
@@ -157,17 +152,17 @@ export default function AdditionalService() {
           )}
         </View>
 
-        <View className="footer mt-40 flex gap-4">
+        <View className="flex gap-4 mt-40 footer">
           <AtButton
             type="secondary"
-            className="btn flex-1"
+            className="flex-1 btn"
             onClick={handleNextStep}
           >
             跳过
           </AtButton>
           <AtButton
             type="primary"
-            className="btn flex-1"
+            className="flex-1 btn"
             onClick={handleNextStep}
           >
             下一步

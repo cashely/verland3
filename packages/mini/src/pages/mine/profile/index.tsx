@@ -71,7 +71,7 @@ export default function Profile() {
       return;
     }
     setFormData((d) => {
-      console.log(val, key)
+      console.log(val, key);
       return {
         ...d,
         [key]: val,
@@ -141,7 +141,7 @@ export default function Profile() {
             <Image src={editIcon} mode="widthFix" className="edit-icon"></Image>
           </View>
         </View>
-        <View className="header-title">家长姓名{formData['username']}</View>
+        <View className="header-title">家长姓名</View>
         <AtInput
           name="username"
           title="名字"
@@ -171,6 +171,7 @@ export default function Profile() {
             name="gender"
             title="性别"
             placeholder="请选择您的性别"
+            editable={false}
             value={formData['genderDesc']}
           />
         </Picker>

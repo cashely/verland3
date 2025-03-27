@@ -4,6 +4,8 @@ import { navigateTo, useLoad } from '@tarojs/taro';
 import { list as bookList } from '@/apis/book';
 import { list } from '@/apis/ticket';
 import dayjs from 'dayjs';
+import { BASE_SERVICES } from '@/constants';
+import { formatPrice } from '@/utils';
 import './index.scss';
 
 export default function Index() {
@@ -35,23 +37,23 @@ export default function Index() {
     console.log(item);
     if (pageType === 'wdsq') {
       navigateTo({
-        url: `./detail/index?id=${item.id}&payAmount=${item?.book?.payAmount}`,
+        url: `./detail/index?id=${item.id}&totalAmount=${item?.book?.totalAmount}`,
       });
       return;
     }
     navigateTo({
-      url: `../as-invoiceApply/index?id=${item.id}&type=${pageType}&payAmount=${item?.payAmount}`,
+      url: `../as-invoiceApply/index?id=${item.id}&type=${pageType}&totalAmount=${item?.totalAmount}`,
     });
-  };
-
-  const formatPrice = (price) => {
-    if (!price) return '0';
-    return Number(price / 100).toLocaleString();
   };
 
   const formatTime = (time) => {
     if (!time) return '';
     return dayjs(time).format('YYYY-MM-DD HH:mm:ss');
+  };
+
+  const getMenuLabel = (menu) => {
+    if (!menu) return '-';
+    return BASE_SERVICES.find((iten) => iten.value === menu)?.label;
   };
 
   return (
@@ -62,14 +64,17 @@ export default function Index() {
           onClick={() => handleClick(item)}
           key={index}
         >
-          <View className="flex title justify-between items-center">
-            <Text>{item.menu || item.book?.menu || '-'}</Text>
+          <View className="flex items-center justify-between title">
+            <Text>
+              {getMenuLabel(item.menu) || getMenuLabel(item.book?.menu) || '-'}
+            </Text>
             <Text className="time">
-              {formatTime(item.bookDateTime || item.createdAt) || +new Date()}
+              {formatTime(item.bookDateTime || item.createdAt)}
             </Text>
           </View>
-          <View className="priceCon text-price font-bold">
-            {formatPrice(item.payAmount || item.book?.payAmount)}
+          <View className="font-bold priceCon text-price">
+            {formatPrice(item.totalAmount) ||
+              formatPrice(item.book?.totalAmount)}
             <Text className="unit">元</Text>
           </View>
           {pageType === 'wdsq' && (

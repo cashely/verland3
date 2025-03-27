@@ -44,8 +44,7 @@ export default function Index() {
 
   return (
     <View className="index">
-      <Text>商1城</Text>
-      <Button onClick={handleLogin}>登录 </Button>
+      <Text>商城</Text>
     </View>
   );
 }

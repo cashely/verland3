@@ -1,6 +1,7 @@
 export default defineAppConfig({
   pages: [
     'pages/index/index',
+    'pages/login/index',
     'pages/shop/index',
     'pages/mine/index',
     'pages/createBook/index',

@@ -1,30 +1,49 @@
 import { View, Text } from '@tarojs/components';
-import Taro, { useDidShow } from '@tarojs/taro';
+import Taro, { getStorageSync, navigateTo } from '@tarojs/taro';
 import { AtAvatar, AtListItem, AtList } from 'taro-ui';
 import { menuList } from './config';
-import useLogin from '@/hooks/useLogin';
 import './index.scss';
+import { useEffect, useState } from 'react';
 
 export default function Index() {
-  const { isLoggedIn, userInfo, toLogin } = useLogin();
-
+  const [userInfo, setUserInfo] = useState({
+    avatar: '',
+    username: '',
+  });
+  const token = getStorageSync('token');
   const handleGoPage = (item: Record<string, any>) => {
-    //判断有没有登录
-    if (isLoggedIn) {
-      if (item?.pagePath) {
-        Taro.navigateTo({ url: item.pagePath });
-      } else {
-        Taro.makePhoneCall({ phoneNumber: item.value });
-      }
+    if (!token) return goLogin();
+    if (item?.pagePath) {
+      Taro.navigateTo({ url: item.pagePath });
     } else {
-      toLogin();
+      Taro.makePhoneCall({ phoneNumber: item.value });
     }
   };
 
+  const goLogin = () => {
+    navigateTo({ url: `../login/index?type=2` });
+  };
+
+  const handleCheckLogin = () => {
+    if (!token) goLogin();
+  };
+
+  useEffect(() => {
+    const userInfo = getStorageSync('userInfo');
+    if (userInfo) {
+      setUserInfo({
+        ...userInfo,
+        username: userInfo.username,
+        avatar: userInfo.avatar,
+        gender: userInfo.gender,
+      });
+    }
+  }, []);
+
   return (
-    <View className="page-mine">
+    <View className="page-mine" onClick={handleCheckLogin}>
       <View className="content">
-        <View className="header" onClick={toLogin}>
+        <View className="header">
           <AtAvatar
             image={userInfo.avatar}
             circle

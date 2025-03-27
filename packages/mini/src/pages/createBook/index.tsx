@@ -1,13 +1,21 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { View, Label, Checkbox, Text, CheckboxGroup } from '@tarojs/components';
-import { useLoad, showToast, navigateTo, setStorageSync } from '@tarojs/taro';
+import {
+  useLoad,
+  showToast,
+  navigateTo,
+  setStorageSync,
+  getStorageSync,
+} from '@tarojs/taro';
 import { AtButton } from 'taro-ui';
 import { otherFormList, baseInfoFormList } from './model';
 import AddForm from '@/components/AddForm';
 import './index.scss';
 
 export default () => {
-  const [formModel] = useState({});
+  const [formModel, setformModel] = useState({
+    username: '',
+  });
   const baseInfoRef = useRef(null);
   const otherInfoRef = useRef(null);
   const [agreement, setAggreement] = useState('');
@@ -17,7 +25,17 @@ export default () => {
   const handleSubmit = () => {
     const baseInfo = baseInfoRef.current?.getFormValues() || {};
     const otherInfo = otherInfoRef.current?.getFormValues() || {};
-    if (!baseInfo?.type) {
+    if (!baseInfo?.username) {
+      return showToast({
+        title: '联系人不为空',
+        icon: 'none',
+      });
+    } else if (!baseInfo?.phone) {
+      return showToast({
+        title: '联系电话不为空',
+        icon: 'none',
+      });
+    } else if (!baseInfo?.type) {
       return showToast({
         title: '爱宠类型不为空',
         icon: 'none',
@@ -56,9 +74,7 @@ export default () => {
         isRite: +combineInfo.isRite,
         bookDateTime: new Date(combineInfo.bookDateTime),
         riteDateTime: new Date(combineInfo.riteDateTime),
-        // bookDateTime: new Date(),
         handleDateTime: new Date(combineInfo.expressDateTime),
-        // totalAmount: 1000, //10元
       })
     );
     navigateTo({
@@ -71,12 +87,18 @@ export default () => {
   };
   const handleRiteChange = (val) => {
     console.log('handleRiteChangex--------s', val);
-
-    // setFo([...fo]);s
   };
 
+  useEffect(() => {
+    const userInfo = getStorageSync('userInfo');
+    console.log('userInfo', userInfo);
+    if (userInfo?.username) {
+      setformModel({ ...formModel, username: userInfo?.username });
+    }
+  }, []);
+
   return (
-    <View className="page-createBox pt-20">
+    <View className="pt-20 page-createBox">
       <View className="formCon">
         <AddForm
           ref={baseInfoRef}

@@ -38,9 +38,7 @@ export default forwardRef((props, ref) => {
     },
   });
   const [_formList, setFormList] = useState(formList);
-  const [formData, setFormData] = useState({
-    ...formModel,
-  });
+  const [formData, setFormData] = useState({});
   const [tabIndex, setTabIndex] = useState(0);
   const handleChange = (e, formItem: Record<string, any>) => {
     console.log(e, formItem, 'handleChange');
@@ -270,7 +268,7 @@ export default forwardRef((props, ref) => {
 
   //初始化数据
   useEffect(() => {
-    console.log('初始化');
+    console.log('初始化', formModel);
     const collectData = {};
     _formList?.forEach((item) => {
       if (item.type === 'radio') {
@@ -290,6 +288,7 @@ export default forwardRef((props, ref) => {
 
         setFormData({
           ...formData,
+          ...formModel,
           ...collectData,
         });
       }
@@ -310,6 +309,8 @@ export default forwardRef((props, ref) => {
                 name={formItem.prop}
                 type={formItem.type}
                 error={formItem?.error || false}
+                cursor={1000}
+                clear
                 title={formItem.label}
                 placeholder={formItem.itemProps.placeholder}
                 required={formItem.itemProps?.required || false}
@@ -323,6 +324,9 @@ export default forwardRef((props, ref) => {
                 name={formItem.prop}
                 type="phone"
                 title={formItem.label}
+                clear
+                maxlength={11}
+                cursor={1000}
                 error={formItem?.error || false}
                 placeholder={formItem.itemProps.placeholder}
                 value={formData[formItem.prop]}
@@ -333,7 +337,7 @@ export default forwardRef((props, ref) => {
             ) : null}
             {formItem.type === 'radio' ? (
               <View
-                className="flex customItem items-center justify-between"
+                className="flex items-center justify-between customItem"
                 key={index}
               >
                 <View className="label">
@@ -363,7 +367,7 @@ export default forwardRef((props, ref) => {
             ) : null}
             {formItem.type === 'checkbox' && !formItem.hidden ? (
               <View
-                className="flex customItem items-center justify-between"
+                className="flex items-center justify-between customItem"
                 key={index}
               >
                 <Text></Text>
@@ -380,7 +384,7 @@ export default forwardRef((props, ref) => {
             ) : null}
             {formItem.type === 'textarea' ? (
               <View className="customItem" key={index}>
-                <View className="label mb-20">
+                <View className="mb-20 label">
                   {formItem.itemProps?.required ? (
                     <Text className="error-dot text-color-red">* </Text>
                   ) : null}
@@ -411,7 +415,7 @@ export default forwardRef((props, ref) => {
                   />
                 </AtList>
               </Picker> */}
-                <AtList className="flex justify-between items-center">
+                <AtList className="flex items-center justify-between">
                   <AtListItem
                     onClick={() => handleListClick(formItem)}
                     title={
@@ -446,7 +450,7 @@ export default forwardRef((props, ref) => {
             ) : null}
             {formItem.type === 'location' ? (
               <View className="formItemView" key={index}>
-                <AtList className="flex justify-between items-center">
+                <AtList className="flex items-center justify-between">
                   <AtListItem
                     onClick={() => handleListClick(formItem)}
                     title={
