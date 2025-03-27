@@ -9,6 +9,7 @@ import {
 } from '@tarojs/taro';
 import { useState } from 'react';
 import { mpLogin, getUser, putUser } from '@/apis/user';
+import regexObj from '@/utils/regexObj';
 import './index.scss';
 export default function Index() {
   const [userInfo, setUserInfo] = useState({
@@ -44,8 +45,10 @@ export default function Index() {
             data.nickname = initUserInfo.nickname;
             data.gender = initUserInfo.gender || 0;
             data.phone = initUserInfo.phone; //手机号
-            await putUser(data);
           }
+          console.log(data);
+
+          putUser(data);
           setStorageSync('userInfo', data);
           showToast({ title: '登录成功', icon: 'none' });
           setLoading(false);
@@ -70,9 +73,17 @@ export default function Index() {
       showToast({
         title: '请选择头像和昵称',
         icon: 'none',
-        duration: 2000,
+        duration: 1000,
       });
       return;
+    }
+    if (!regexObj.phone.test(userInfo.phone)) {
+      showToast({
+        title: '请输入正确的手机号',
+        icon: 'none',
+        duration: 1000,
+      });
+      return false;
     }
     // 登录逻辑
     const res = await login();
