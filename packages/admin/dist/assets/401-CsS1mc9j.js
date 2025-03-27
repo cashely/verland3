@@ -1,1 +1,0 @@
-import{j as r}from"./index-Di-cDqbK.js";const o=()=>r.jsxs("div",{children:[r.jsx("h1",{children:"401 - Unauthorized"}),r.jsx("p",{children:"Sorry, you are not authorized to view this page."})]});export{o as default};
