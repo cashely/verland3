@@ -4,8 +4,12 @@ import bodyParser from "body-parser";
 import path from 'node:path';
 import response from "./middles/response";
 import routes from './routes';
+import morganMiddleware from "./middles/morgan";
+import console from "./utils/console";
 
 const app = express();
+
+app.use(morganMiddleware);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -7,7 +7,17 @@ const router = new Router({
 
 router.get('/', async (req, res) => {
     try {
-        const advises = await prisma.advise.findMany();
+        const { pageSize, pageNo } = req.query;
+        const advises = await prisma.advise.findMany({
+            orderBy: {
+                createdAt: 'desc'
+            },
+            skip: (pageNo - 1) * pageSize,
+            take: Number(pageSize),
+            include: {
+                user: true,
+            }
+        });
         res.response.success(advises);
     } catch (error) {
         res.response.error(error);

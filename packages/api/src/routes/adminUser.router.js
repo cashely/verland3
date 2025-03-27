@@ -13,7 +13,7 @@ const adminUserRouter = new Router({
                 id: true,
                 username: true,
                 createdAt: true,
-            }
+            },
         });
         res.response.success(user);
     }, res);

@@ -7,7 +7,7 @@ const bookGoodRouter = new Router({
 })
 .get('/', (req, res) => {
     transaction(async (prisma) => {
-        const { title } = req.query;
+        const { title, pageSize = 10, pageNo = 1 } = req.query;
         const bookGood = await prisma.bookGood.findMany({
             where: {
                 title: {
@@ -17,7 +17,12 @@ const bookGoodRouter = new Router({
             include: {
                 thumb: true,
                 thumbId: false
-            }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            skip: (pageNo - 1) * pageSize,
+            take: Number(pageSize),
             
         });
         res.response.success(bookGood);

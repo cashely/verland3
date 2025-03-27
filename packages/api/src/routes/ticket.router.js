@@ -7,7 +7,19 @@ const router = new Router({
 
 router.get('/', async (req, res) => {
     try {
-        const tickets = await prisma.ticket.findMany();
+        const { pageSize, pageNo } = req.query;
+        const tickets = await prisma.ticket.findMany({
+            orderBy: {
+                createdAt: 'desc'
+            },
+            skip: (pageNo - 1) * pageSize,
+            take: Number(pageSize),
+            include: {
+                book: true,
+                file: true,
+                user: true,
+            }
+        });
         res.response.success(tickets);
     } catch (error) {
         res.response.error(error);

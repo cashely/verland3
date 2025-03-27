@@ -20,6 +20,6 @@ export default defineConfig({
         }
       }
     },
-    allowedHosts: ['api.verlantum.cn', '3f6rvhz7-frciwj1f-n4tuj2bcxotv.vcc3p.mcprev.cn']
+    allowedHosts: ['api.verlantum.cn', 'kwgok32o-6dwd7hhp-w1loxh6erdtv.vcc3p.mcprev.cn']
   },
 })

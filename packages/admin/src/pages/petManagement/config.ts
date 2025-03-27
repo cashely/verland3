@@ -1,4 +1,5 @@
 import { TICKET_TYPE } from '@/constants'
+
 const searchItems = [
     {
         label: '发票类型',
@@ -12,24 +13,51 @@ const searchItems = [
 const tableColumns = [
     {
         title: 'ID',
-        key: 'petId',
-        prop: 'petId',
+        key: 'id',
+        dataIndex: 'id',
         fixed: 'left'
     },
     {
         title: '宠物名称',
-        key: 'pet',
-        prop: 'pet'
+        key: 'petname',
+        dataIndex: 'petname'
     },
     {
         title: '缩略图',
         key: 'image',
-        prop: 'image'
+        dataIndex: 'image'
     },
     {
-        title: '操作',
-        key: 'action',
-    }
+        title: '宠物子类',
+        key: 'subType',
+        dataIndex: 'subType'
+    },
+    {
+        title: '年龄',
+        key: 'age',
+        dataIndex: 'age'
+    },
+    {
+        title: '体重',
+        key: 'weight',
+        dataIndex: 'weight'
+    },
+    {
+        title: '宠物状态',
+        key: 'statu',
+        dataIndex: 'statu',
+        render(_) {
+            if (!_) return '-'
+            return _ === 1 ? '活着' : '死亡'
+        }
+    },
+    {
+        title: '创建时间',
+        key: 'createdAt',
+        dataIndex: 'createdAt',
+        type: 'datetime'
+    },
+
 ]
 
 const detailItems = [

@@ -24,12 +24,24 @@ const detailItems = [
     prop: 'wxid',
   },
   {
+    label: '昵称',
+    prop: 'nickname',
+  },
+  {
     label: '用户名',
     prop: 'username',
   },
   {
     label: '头像',
     prop: 'thumb',
+  },
+  {
+    label: '性别',
+    key: 'gender',
+    dataIndex: 'gender',
+    render(d: number) {
+        return d === 0 ? '男' : '女'
+    }
   },
   {
     label: '手机号',

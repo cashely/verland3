@@ -17,7 +17,7 @@ function Logo(props: IProps) {
   return (
     <div className={className}>
       <img src={logoImage} className={`block`} style={{ width }} alt="logo" />
-      <div
+      {/* <div
         className={`flex items-baseline ml-2`}
         style={{
           fontSize: `${fontSize}px`,
@@ -32,7 +32,7 @@ function Logo(props: IProps) {
         </span>
         <span className="text-[#00e1b8]">m</span>
         <span className="text-[#c696da]">ocker</span>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -8,6 +8,7 @@ const router = new Router({
 
 router.get('/', async (req, res) => {
     const { id } = req.user;
+    const { pageSize = 10, pageNo = 1 } = req.query;
     const books = await prisma.pet.findMany({
         where: {
             userId: id
@@ -15,7 +16,12 @@ router.get('/', async (req, res) => {
         include: {
             book: true,
             petImage: true
-        }
+        },
+        orderBy: {
+            createdAt: 'desc'
+        },
+        skip: (pageNo - 1) * pageSize,
+        take: Number(pageSize),
     });
     res.response.success(books);
 })

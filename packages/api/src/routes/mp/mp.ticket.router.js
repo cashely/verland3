@@ -8,13 +8,19 @@ const router = new Router({
 router.get('/', async (req, res) => {
     try {
         const { id } = req.user;
+        const { pageSize = 10, pageNo = 1 } = req.query;
         const tickets = await prisma.ticket.findMany({
             where: {
                 userId: id
             },
             include: {
                 book: true
-            }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            skip: (pageNo - 1) * pageSize,
+            take: Number(pageSize),
         });
         res.response.success(tickets);
     } catch (error) {

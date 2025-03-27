@@ -11,13 +11,18 @@ const router = new Router({
 router.get('/', async (req, res) => {
     try {
 
-        const { userIds } = req.query;
+        const { userIds, pageSize = 10, pageNo = 1 } = req.query;
         const pets = await prisma.pet.findMany({
             where: {
                 userId: {
                     in: userIds
                 }
-            }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            skip: (pageNo - 1) * pageSize,
+            take: Number(pageSize),
         });
         res.response.success(pets);
     } catch (error) {

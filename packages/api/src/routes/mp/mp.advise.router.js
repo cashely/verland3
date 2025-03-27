@@ -25,9 +25,18 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const { id } = req.user;
+        const { pageSize = 10, pageNo = 1 } = req.query;
         const advises = await prisma.advise.findMany({
             where: {
                 userId: id
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            skip: (pageNo - 1) * pageSize,
+            take: Number(pageSize),
+            include: {
+                user: true,
             }
         });
         res.response.success(advises);

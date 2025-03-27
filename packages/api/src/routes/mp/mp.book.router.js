@@ -75,7 +75,7 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const { id } = req.user;
-        const { statu } = req.query;
+        const { statu, pageSize = 10, pageNo = 1 } = req.query;
         const whereCondition = {
             userId: id
         }
@@ -92,7 +92,12 @@ router.get('/', async (req, res) => {
                         bookGood: true 
                     }
                 }
-            }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            skip: (pageNo - 1) * pageSize,
+            take: Number(pageSize),
         });
         res.response.success(books);
     } catch (error) {

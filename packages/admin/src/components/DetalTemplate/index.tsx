@@ -6,13 +6,16 @@ export default function DetailTemplate(props: any) {
 
     const childrenRender = (obj, item) => {
         const value = obj[item.prop]
-        if (!value) return '-'
         if (item.type === 'datetime') {
-            return dayjs(value).format('YYYY-MM-DD HH:mm:ss')
+            console.log(value)
+            return value ? dayjs(value).format('YYYY-MM-DD HH:mm:ss') : '-'
         } else if (item.type === 'price') {
-            return `¥${(value / 100).toFixed(2).toLocaleString()}`
+            if (Number.isInteger(value)) {
+                return `¥${(value / 100).toFixed(2).toLocaleString()}`
+            }
+            return '-';
         }
-        return value
+        return value || '-'
     }
 
     const formateData = (obj: any) => {

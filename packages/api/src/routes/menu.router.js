@@ -1,0 +1,170 @@
+/**
+ * 导入路由中间件
+ */
+import Router from "../middles/route";
+/**
+ * 导入 prisma 配置
+ */
+import prisma from "../configs/prisma";
+
+/**
+ * 创建一个新的路由实例，并设置需要进行身份验证
+ * @type {Router}
+ */
+const router = new Router({
+    auth: true
+});
+
+/**
+ * 获取菜单列表
+ * @route GET /api/menus
+ * @group 菜单 - 操作菜单的相关接口
+ * @param {number} pageSize - 每页显示的数量，默认值为 10
+ * @param {number} pageNo - 当前页码，默认值为 1
+ * @param {string} name - 菜单名称，用于模糊搜索
+ * @returns {object} 200 - 成功响应，包含菜单列表
+ * @returns {object} 500 - 服务器内部错误
+ */
+router.get('/', async (req, res) => {
+    try {
+        const { pageSize = 10, pageNo = 1, name } = req.query;
+        const whereCondition = {};
+
+        if (!!name) {
+            whereCondition.name = {
+                contains: name
+            }
+        }
+        const menus = await prisma.menu.findMany({
+            where: whereCondition,
+            orderBy: {
+                createdAt: 'desc'
+            },
+            skip: (pageNo - 1) * pageSize,
+            take: Number(pageSize),
+        });
+        res.response.success(menus);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
+/**
+ * 获取指定 ID 的菜单详情
+ * @route GET /api/menus/:id
+ * @group 菜单 - 操作菜单的相关接口
+ * @param {string} id - 菜单的唯一标识符
+ * @returns {object} 200 - 成功响应，包含菜单详情
+ * @returns {object} 500 - 服务器内部错误
+ */
+router.get('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const menu = await prisma.menu.findUnique({
+            where: {
+                id
+            }
+        });
+        res.response.success(menu);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
+/**
+ * 创建新的菜单
+ * @route POST /api/menus
+ * @group 菜单 - 操作菜单的相关接口
+ * @param {string} name - 菜单名称
+ * @param {number} price - 菜单价格
+ * @param {string} description - 菜单描述
+ * @param {string[]} imageIds - 关联的图片 ID 列表
+ * @returns {object} 200 - 成功响应，包含创建的菜单
+ * @returns {object} 500 - 服务器内部错误
+ */
+router.post('/', async (req, res) => {
+    try {
+        const { name, price, description, imageIds = [] } = req.body;
+        const menu = await prisma.menu.create({
+            data: {
+                name,
+                price,
+                description,
+                image: {
+                    createMany: {
+                        data: imageIds.map((imageId) => ({
+                            imageId
+                        }))
+                    }
+                }
+            }
+        });
+        res.response.success(menu);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
+/**
+ * 更新指定 ID 的菜单
+ * @route PUT /api/menus/:id
+ * @group 菜单 - 操作菜单的相关接口
+ * @param {string} id - 菜单的唯一标识符
+ * @param {string} name - 菜单名称
+ * @param {number} price - 菜单价格
+ * @param {string} description - 菜单描述
+ * @param {string[]} imageIds - 关联的图片 ID 列表
+ * @returns {object} 200 - 成功响应，包含更新的菜单
+ * @returns {object} 500 - 服务器内部错误
+ */
+router.put('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, price, description, imageIds = [] } = req.body;
+        const menu = await prisma.menu.update({
+            where: {
+                id
+            },
+            data: {
+                name,
+                price,
+                description,
+                image: {
+                    deleteMany: {},
+                    createMany: {
+                        data: imageIds.map((imageId) => ({
+                            imageId
+                        }))
+                    }
+                }
+            }
+        });
+        res.response.success(menu);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
+/**
+ * 删除指定 ID 的菜单
+ * @route DELETE /api/menus/:id
+ * @group 菜单 - 操作菜单的相关接口
+ * @param {string} id - 菜单的唯一标识符
+ * @returns {object} 200 - 成功响应，包含删除的菜单
+ * @returns {object} 500 - 服务器内部错误
+ */
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const menu = await prisma.menu.delete({
+            where: {
+                id
+            }
+        });
+        res.response.success(menu);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
+export default router;

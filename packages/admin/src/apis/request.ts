@@ -13,8 +13,8 @@ request.interceptors.request.use((config) => {
     config.signal = controller.signal;
     const token = getTokenFromLocalStorage();
     if (token) {
-        config.url = `${config.url}?token=Bearer ${token}`
-        // config.headers.Authorization = `Bearer ${token}`;
+        // config.url = `${config.url}?token=Bearer ${token}`
+        config.headers.token = `Bearer ${token}`;
     }
     return config;
 }, error => {

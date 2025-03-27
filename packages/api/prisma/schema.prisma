@@ -84,6 +84,7 @@ model Image {
   ticketId   String?   @unique
   ticket     Ticket?
   petImage   PetImage[]
+  menuImage   MenuRelationImage[]
 }
 
 // 预约附加服务产品
@@ -199,4 +200,24 @@ model PetImage {
   pet     Pet    @relation(fields: [petId], references: [id])
   imageId String
   image   Image  @relation(fields: [imageId], references: [id])
+}
+
+// 套餐表
+model Menu {
+  id      String  @id @default(uuid())
+  name    String
+  price   Int   
+  description String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  images  MenuRelationImage[]
+}
+
+// 套餐图片关联表
+model MenuRelationImage {
+  id    String  @id @default(uuid())
+  menuId  String
+  menu   Menu   @relation(fields: [menuId], references: [id])
+  imageId String
+  image   Image @relation(fields: [imageId], references: [id])
 }

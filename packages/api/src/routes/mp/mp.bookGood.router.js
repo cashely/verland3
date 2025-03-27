@@ -8,10 +8,16 @@ const router = new Router({
 
 router.get('/', async (req, res) => {
     try {
+        const { pageSize, pageNo } = req.query;
         const bookGoods = await prisma.bookGood.findMany({
             include: {
                 thumb: true
-            }
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+            skip: (pageNo - 1) * pageSize,
+            take: Number(pageSize),
         });
         res.response.success(bookGoods);
     } catch (error) {

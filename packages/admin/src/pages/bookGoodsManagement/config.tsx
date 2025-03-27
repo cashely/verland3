@@ -65,6 +65,7 @@ const detailItems = [
   {
     label: '价格',
     prop: 'price',
+    type: 'price'
   },
   {
     label: '产品内容',

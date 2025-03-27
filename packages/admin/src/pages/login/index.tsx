@@ -63,7 +63,7 @@ function Login() {
         <LocaleButton />
       </div> */}
       <div className="m-auto">
-        <Logo className="flex items-center justify-center mb-2" />
+        <Logo className="flex items-center justify-center mb-4" />
         <Form
           layout="vertical"
           form={form}
