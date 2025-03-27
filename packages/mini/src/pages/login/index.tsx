@@ -6,10 +6,12 @@ import {
   login,
   reLaunch,
   useLoad,
+  uploadFile,
 } from '@tarojs/taro';
 import { useState } from 'react';
 import { mpLogin, getUser, putUser } from '@/apis/user';
 import regexObj from '@/utils/regexObj';
+import { baseUrl } from '@/apis';
 import './index.scss';
 export default function Index() {
   const [userInfo, setUserInfo] = useState({
@@ -26,6 +28,33 @@ export default function Index() {
     //1是预约页面 2是我的页面
     setPageFlag(type);
   });
+
+  const _uploadFile = (filePath) => {
+    return new Promise((resolve, reject) => {
+      console.log(`${baseUrl}/file`, '上传图片');
+      uploadFile({
+        url: `${baseUrl}/file`,
+        name: 'file',
+        filePath,
+        success: (res) => {
+          console.log(res, '上传图片成功');
+
+          if (res?.statusCode == 200) {
+            const { data = {} } = res?.data ? JSON.parse(res.data) : {};
+            console.log(data);
+            resolve(baseUrl + '/' + data?.path);
+          }
+        },
+        fail: () => {
+          reject('上传失败');
+          showToast({
+            title: '上传失败',
+            icon: 'none',
+          });
+        },
+      });
+    });
+  };
 
   // 获取用户信息
   const fetchUserInfo = async (code, initUserInfo: any) => {
@@ -46,9 +75,8 @@ export default function Index() {
             data.gender = initUserInfo.gender || 0;
             data.phone = initUserInfo.phone; //手机号
           }
-          console.log(data);
-
-          putUser(data);
+          //更新用户信息
+          await putUser(data);
           setStorageSync('userInfo', data);
           showToast({ title: '登录成功', icon: 'none' });
           setLoading(false);
@@ -65,7 +93,6 @@ export default function Index() {
       });
     } catch (error) {
       setLoading(false);
-      console.error('获取用户信息失败', error);
     }
   };
   const handleLogin = async () => {
@@ -92,10 +119,11 @@ export default function Index() {
     }
   };
 
-  const handleChoseAvatar = (e) => {
+  const handleChoseAvatar = async (e) => {
     console.log('选择头像', e);
     const { avatarUrl } = e.detail;
-    setUserInfo({ ...userInfo, avatar: avatarUrl });
+    const fileUrl = (await _uploadFile(avatarUrl)) as string;
+    setUserInfo({ ...userInfo, avatar: fileUrl });
   };
   const handlePhoneChange = (e) => {
     const { value } = e.detail;

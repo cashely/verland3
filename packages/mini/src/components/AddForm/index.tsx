@@ -38,7 +38,7 @@ export default forwardRef((props, ref) => {
     },
   });
   const [_formList, setFormList] = useState(formList);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ ...formModel });
   const [tabIndex, setTabIndex] = useState(0);
   const handleChange = (e, formItem: Record<string, any>) => {
     console.log(e, formItem, 'handleChange');
@@ -288,7 +288,6 @@ export default forwardRef((props, ref) => {
 
         setFormData({
           ...formData,
-          ...formModel,
           ...collectData,
         });
       }

@@ -10,14 +10,14 @@ import {
 import { AtButton } from 'taro-ui';
 import { otherFormList, baseInfoFormList } from './model';
 import AddForm from '@/components/AddForm';
+import { BASE_SERVICES } from '@/constants';
 import './index.scss';
 
 export default () => {
-  const [formModel, setformModel] = useState({
-    username: '',
-  });
+  const [formModel, setformModel] = useState({});
   const baseInfoRef = useRef(null);
   const otherInfoRef = useRef(null);
+  const [menu, setMenu] = useState(null);
   const [agreement, setAggreement] = useState('');
   useLoad(() => {
     console.log('Page loaded.');
@@ -42,6 +42,13 @@ export default () => {
       });
     }
     if (otherInfo?.handleWay) {
+      if (!otherInfo?.bookDateTime) {
+        return showToast({
+          title: '服务时间不为空',
+          icon: 'none',
+        });
+      }
+
       if (!otherInfo?.handleDateTime) {
         return showToast({
           title: '遗物处理不为空',
@@ -87,14 +94,15 @@ export default () => {
   };
   const handleRiteChange = (val) => {
     console.log('handleRiteChangex--------s', val);
+    setMenu(val?.menu);
   };
 
   useEffect(() => {
     const userInfo = getStorageSync('userInfo');
     console.log('userInfo', userInfo);
-    if (userInfo?.username) {
-      setformModel({ ...formModel, username: userInfo?.username });
-    }
+    // if (userInfo?.username) {
+    //  setformModel({ ...formModel, username: userInfo?.username });
+    //}
   }, []);
 
   return (

@@ -3,7 +3,7 @@ import { View, Text } from '@tarojs/components';
 import { navigateTo, useDidShow } from '@tarojs/taro';
 import { AtAvatar, AtButton } from 'taro-ui';
 import { list } from '@/apis/pet';
-import petImage from '@/assets/imgs/pet-avatar.png';
+import petImage from '../../../assets/imgs/pet-avatar.png';
 import './index.scss';
 
 export default function Pets() {
