@@ -11,7 +11,7 @@ const router = new Router({
 router.get('/', async (req, res) => {
     try {
 
-        const { userIds, pageSize = 10, pageNo = 1 } = req.query;
+        const { userIds, pageSize = 20, pageNo = 1 } = req.query;
         const pets = await prisma.pet.findMany({
             where: {
                 userId: {

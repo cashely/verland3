@@ -27,7 +27,7 @@ const router = new Router({
  */
 router.get('/', async (req, res) => {
     try {
-        const { pageSize = 10, pageNo = 1, name } = req.query;
+        const { pageSize = 20, pageNo = 1, name } = req.query;
         const whereCondition = {};
 
         if (!!name) {

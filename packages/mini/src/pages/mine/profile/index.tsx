@@ -156,6 +156,7 @@ export default function Profile() {
           name="phone"
           title="联系电话"
           type="phone"
+          cursor={1000}
           placeholder="请输入电话号码"
           value={formData['phone']}
           onChange={(e) => handleChange(e, 'phone')}

@@ -7,7 +7,7 @@ const bookGoodRouter = new Router({
 })
 .get('/', (req, res) => {
     transaction(async (prisma) => {
-        const { title, pageSize = 10, pageNo = 1 } = req.query;
+        const { title, pageSize = 20, pageNo = 1 } = req.query;
         const bookGood = await prisma.bookGood.findMany({
             where: {
                 title: {

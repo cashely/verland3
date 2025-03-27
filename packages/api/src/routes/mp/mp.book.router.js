@@ -75,7 +75,7 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const { id } = req.user;
-        const { statu, pageSize = 10, pageNo = 1 } = req.query;
+        const { statu, pageSize = 20, pageNo = 1 } = req.query;
         const whereCondition = {
             userId: id
         }
