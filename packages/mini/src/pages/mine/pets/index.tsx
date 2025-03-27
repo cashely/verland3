@@ -3,6 +3,7 @@ import { View, Text } from '@tarojs/components';
 import { navigateTo, useDidShow } from '@tarojs/taro';
 import { AtAvatar, AtButton } from 'taro-ui';
 import { list } from '@/apis/pet';
+import petImage from '@/assets/imgs/pet-avatar.png';
 import './index.scss';
 
 export default function Pets() {
@@ -31,9 +32,9 @@ export default function Pets() {
     <View className="page-pets">
       {pets.map((item, index) => (
         <View className="pet-item" key={index}>
-          <AtAvatar className="avatar" circle></AtAvatar>
-          <View className="info flex justify-between">
-            <Text className="name font-bold">{item.petname}</Text>
+          <AtAvatar className="avatar" image={petImage} circle></AtAvatar>
+          <View className="flex justify-between info">
+            <Text className="font-bold name">{item.petname}</Text>
             <Text className="age">{item.age}</Text>
           </View>
         </View>

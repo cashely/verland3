@@ -42,7 +42,7 @@ const baseInfoFormList = [
     rules: [],
   },
   {
-    label: '爱宠体重',
+    label: '爱宠体重(kg)',
     prop: 'weight',
     type: 'digit',
     itemProps: {

@@ -1,8 +1,6 @@
 import { View } from '@tarojs/components';
 import Taro, { navigateTo, useLoad } from '@tarojs/taro';
 import { AtAvatar, AtButton } from 'taro-ui';
-import useLogin from '@/hooks/useLogin';
-import { useEffect } from 'react';
 import './index.scss';
 
 export default function Index() {
@@ -14,7 +12,10 @@ export default function Index() {
 
   const userInfo = Taro.getStorageSync('userInfo'); // 获取用户信息
   const handleLogin = () => {
-    if (!token) navigateTo({ url: '../login/index?type=1' });
+    if (!token) {
+      navigateTo({ url: '../login/index?type=1' });
+      return;
+    }
     Taro.navigateTo({ url: `/pages/createBook/index` });
   };
 

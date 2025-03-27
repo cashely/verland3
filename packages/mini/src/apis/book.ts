@@ -7,7 +7,7 @@ const APIS = {
   PREPAY: '/mp/wx/prepay',
   PAY: '/mp/wx/pay',
   EVALUATE: '/mp/evaluate',
-  CANCEL: '/mp/refund',
+  CANCEL: '/mp/book/refund',
 };
 
 const add = (data) => {
