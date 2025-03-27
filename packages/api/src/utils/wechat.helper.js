@@ -33,7 +33,7 @@ export async function sendTemplateMessage(options = {
     let params = {
         touser: options.openid,
         template_id: options.templateId,
-        url: options.url,
+        page: options.url,
         data: options.data,
     }
     try {
