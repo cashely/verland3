@@ -30,7 +30,7 @@ export async function sendTemplateMessage(options = {
     data
 }) {
     const accessToken = await getAccessToken(); // 获取 access_token
-    console.log(data, '<<<<')
+    console.log(options.data, '<<<<')
     let params = {
         touser: options.openid,
         template_id: options.templateId,
