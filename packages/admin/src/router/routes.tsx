@@ -20,8 +20,8 @@ const BookGoodsManagement = loadable(() => import("../pages/bookGoodsManagement"
 const TickManagement = loadable(() => import("../pages/tickManagement"));
 const AdviceManagement = loadable(() => import("../pages/adviceManagement"));
 const hasToken = getTokenFromLocalStorage();
-const BookGoodsDetail = lazy(() => import("../pages/bookGoodsManagement/detail"));
-const AccountDetail = lazy(() => import("../pages/accountManagement/detail"));
+const BookGoodsDetail = loadable(() => import("../pages/bookGoodsManagement/detail"));
+const AccountDetail = loadable(() => import("../pages/accountManagement/detail"));
 console.log("🚀 ~ hasToken:", hasToken);
 // const AuthComponent = ({ children }: Props) => {
 //   // 检查权限是否通过的逻辑

@@ -150,59 +150,7 @@ const tableColumns = [
     },
 ]
 
-const tableDataSource = [
-    {
-        id: '1',
-        key: '1',
-        menu: 'John Brown', //套餐类型
-        bookDateTime: 32, //上门时间
-        isExpress: 1,   //是否需要快递
-        expressDateTime: '快递时间',
-        address: '',
-        isRite: 1,  //是否需要仪式
-        riteDateTIme: '',  //仪式时间
-        totalAmount: "",  //总金额
-        payAmount: "",   //付款金额
-        payChannel: 1,  //付款渠道 微信1  支付宝2
-        channel: 1,  //订单渠道来源   1平台  2小程序
-        statu: 0,  //0未付款
-        user: "" //下单用户
-    },
-    {
-        id: '2',
-        key: '2',
-        menu: 'John Brown', //套餐类型
-        bookDateTime: 32, //上门时间
-        isExpress: 1,   //是否需要快递
-        expressDateTime: '快递时间',
-        address: '',
-        isRite: 2,  //是否需要仪式
-        riteDateTIme: '',  //仪式时间
-        totalAmount: "",  //总金额
-        payAmount: "",   //付款金额
-        payChannel: 1,  //付款渠道 微信1  支付宝2
-        channel: 1,  //订单渠道来源   1平台  2小程序
-        statu: 0,  //0未付款
-        user: "" //下单用户
-    },
-    {
-        id: '3',
-        key: '3',
-        menu: 'John Brown', //套餐类型
-        bookDateTime: 32, //上门时间
-        isExpress: 1,   //是否需要快递
-        expressDateTime: '快递时间',
-        address: '',
-        isRite: 1,  //是否需要仪式
-        riteDateTIme: '',  //仪式时间
-        totalAmount: "",  //总金额
-        payAmount: "",   //付款金额
-        payChannel: 1,  //付款渠道 微信1  支付宝2
-        channel: 1,  //订单渠道来源   1平台  2小程序
-        statu: 0,  //0未付款
-        user: "" //下单用户
-    },
-];
+
 
 
 const detailItems = [
@@ -223,7 +171,7 @@ const detailItems = [
         label: '是否需要快递',
         prop: 'handleWay',
         render(_) {
-            if (!_) return;
+            if (!_) return '-';
             return HANDLE_WAYS.find(_ => _.value === _)?.label || '-'
         }
     },
@@ -234,7 +182,11 @@ const detailItems = [
     },
     {
         label: '快递地址',
-        prop: 'addressId',
+        prop: 'address',
+        render(_) {
+            if (!_) return;
+            return `${_.province || ''}${_.city || ''}${_.area || ''}${_.detail || ''}`
+        }
     },
     {
         label: '是否需要仪式',
@@ -246,7 +198,7 @@ const detailItems = [
     {
         label: '仪式时间',
         prop: 'riteDateTime',
-        slot: "datetime"
+        type: "datetime"
     },
     {
         label: '总金额（元）',
@@ -297,6 +249,5 @@ const detailItems = [
 export {
     searchItems,
     tableColumns,
-    tableDataSource,
     detailItems
 }
