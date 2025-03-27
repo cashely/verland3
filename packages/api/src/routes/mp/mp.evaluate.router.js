@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const { bookIds = [] } = req.query;
+        const { bookIds = [], pageSize = 10, pageNo = 1 } = req.query;
         const { id } = req.user;
         const evaluates = await prisma.evaluate.findMany({
             where: {
@@ -37,7 +37,12 @@ router.get('/', async (req, res) => {
             include: {
                 book: true,
                 user: true
-            }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            skip: (pageNo - 1) * pageSize,
+            take: Number(pageSize),
         });
         res.response.success(evaluates);
     } catch (error) {

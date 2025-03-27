@@ -7,6 +7,7 @@ const router = new Router({
 
 router.get('/', async (req, res) => {
     try {
+        const { pageSize = 10, pageNo = 1 } = req.query;
         const books = await prisma.book.findMany({
             include: {
                 user: true,
@@ -19,7 +20,12 @@ router.get('/', async (req, res) => {
                        bookGood: true 
                     }
                 }
-            }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            skip: (pageNo - 1) * pageSize,
+            take: Number(pageSize),
         });
         res.response.success(books);
     } catch (error) {
