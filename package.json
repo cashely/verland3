@@ -9,6 +9,8 @@
     "api:dev": "pnpm run -F @verland3.0/api api:dev",
     "api:prod": "pnpm run -F @verland3.0/api api:prod",
     "admin:dev": "pnpm run -F @verland3.0/admin dev",
+    "mini:dev": "pnpm run -F @verland3.0/miniapp dev:weapp",
+    "admin:build": "pnpm run -F @verland3.0/admin build",
     "editFile": "node ./nodeUtils/index.js"
   },
   "keywords": [],

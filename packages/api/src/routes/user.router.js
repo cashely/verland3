@@ -7,7 +7,7 @@ const router = new Router({
 
 router.get('/', async (req, res) => {
     try {
-        const { pageSize, pageNo } = req.query;
+        const { pageSize = 20, pageNo = 1 } = req.query;
         const users = await prisma.user.findMany({
             orderBy: {
                 createdAt: 'desc'
