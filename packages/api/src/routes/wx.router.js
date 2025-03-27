@@ -130,7 +130,7 @@ router.post('/wxpay/notify_url', async (req, res) => {
                         value: '预约时间'
                     },
                     // 时间
-                    data3: {
+                    date3: {
                         value: '预约人'
                     },
                     // 订单编号
