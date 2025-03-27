@@ -10,7 +10,7 @@ import {
   AtTextarea,
   AtButton,
 } from 'taro-ui';
-import { evaluate, getEvaluate, list } from '@/apis/book';
+import { evaluate, getEvaluate, list, cancel } from '@/apis/book';
 import sheetCat from '../../../subpackages/assets/images/sheetCat.png';
 import dayjs from 'dayjs';
 import { BASE_SERVICES } from '@/constants';
@@ -105,6 +105,23 @@ export default function Index() {
     });
   };
 
+  const onCancel = (item) => {
+    console.log(item);
+    cancel(item.id).then((res) => {
+      if (res.code === 200) {
+        showToast({
+          title: '取消成功',
+          icon: 'success',
+          success() {
+            setTimeout(() => {
+              getlist();
+            }, 1000);
+          },
+        });
+      }
+    });
+  };
+
   const handleRateChange = (value) => {
     setRate(value);
   };
@@ -156,8 +173,8 @@ export default function Index() {
           <AtTabsPane current={current} index={index}>
             <View className="tab-content">
               {getData(current - 1).map((item, index) => (
-                <View className="item relative  bg-red-700" key={index}>
-                  <View className="item-head items-center">
+                <View className="relative bg-red-700 item" key={index}>
+                  <View className="items-center item-head">
                     <View className="text-888">
                       预约日期：{item.bookDateTime}
                     </View>
@@ -169,7 +186,7 @@ export default function Index() {
                       image="https://img.yzcdn.cn/vant/cat.jpeg"
                     ></AtAvatar>
                     <View className="ml-20 item-body-right">
-                      <View className="title mb-10">
+                      <View className="mb-10 title">
                         {
                           BASE_SERVICES.find((n) => n.value === item.menu)
                             ?.label
@@ -178,7 +195,7 @@ export default function Index() {
                           ¥{formatPrice(item.totalAmount)}
                         </Text>
                       </View>
-                      <View className="info mb-10">
+                      <View className="mb-10 info">
                         附加服务：
                         <Text className="text-888">
                           {item?.bookGoods
@@ -194,10 +211,11 @@ export default function Index() {
                       </View>
                     </View>
                   </View>
-                  <View className="item-foot absolute bottom-0 left-0 right-0">
+                  <View className="absolute bottom-0 left-0 right-0 item-foot">
                     {[1, 2].includes(item.statu) && (
                       <View
                         className="btn-item"
+                        onClick={() => onCancel(item)}
                         style="background-color:#C1E9EE"
                       >
                         取消预约

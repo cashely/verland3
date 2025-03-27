@@ -7,6 +7,7 @@ const APIS = {
   PREPAY: '/mp/wx/prepay',
   PAY: '/mp/wx/pay',
   EVALUATE: '/mp/evaluate',
+  CANCEL: '/refund',
 };
 
 const add = (data) => {
@@ -59,4 +60,11 @@ const getEvaluate = (id: string) => {
   });
 };
 
-export { add, list, detail, prepay, pay, evaluate, getEvaluate };
+//取消预约
+const cancel = (id) => {
+  return request(APIS.CANCEL + `/${id}`, {
+    method: 'post',
+  });
+};
+
+export { add, list, detail, prepay, pay, cancel, evaluate, getEvaluate };
