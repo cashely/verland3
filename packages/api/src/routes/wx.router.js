@@ -131,7 +131,7 @@ router.post('/wxpay/notify_url', async (req, res) => {
                     },
                     // 时间
                     date3: {
-                        value: '预约人'
+                        value: '2019-12-25 09:42'
                     },
                     // 订单编号
                     character_string8: {
