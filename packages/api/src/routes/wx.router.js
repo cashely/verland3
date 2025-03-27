@@ -135,7 +135,7 @@ router.post('/wxpay/notify_url', async (req, res) => {
                     },
                     // 订单编号
                     character_string8: {
-                        value: '预约人电话'
+                        value: '15013306010'
                     }
                 },
                 url: `pages/mine/appointList/detail/index?id=${updateBook.id}`
