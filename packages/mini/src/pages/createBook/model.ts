@@ -45,6 +45,7 @@ const baseInfoFormList = [
     label: '爱宠体重(kg)',
     prop: 'weight',
     type: 'digit',
+    maxLength: 2,
     itemProps: {
       placeholder: '请输入数值',
     },
@@ -55,24 +56,13 @@ const baseInfoFormList = [
 const otherFormList = [
   {
     label: '基础服务',
-    prop: 'menu',
+    prop: 'menuId',
     type: 'tabs',
     itemProps: {
       placeholder: '请输入用户名',
     },
-    tabsTitle: ['上门服务', '预约服务'],
-    tabsOptions: [
-      {
-        id: 1,
-        label: '上门服务',
-        content: '我是上门服务',
-      },
-      {
-        id: 2,
-        Label: '预约服务',
-        content: '我是预约服务',
-      },
-    ],
+    tabsTitle: [],
+    tabsOptions: [],
     rules: [],
   },
   {
@@ -131,7 +121,7 @@ const otherFormList = [
   },
   {
     label: '遗物处理方式',
-    prop: 'legcyWay',
+    prop: 'handleWay',
     type: 'radio',
     options: [
       {
@@ -152,7 +142,7 @@ const otherFormList = [
   },
   {
     label: '',
-    prop: 'legcyWayCheck',
+    prop: 'handleWayCheck',
     type: 'checkbox',
     options: [
       {

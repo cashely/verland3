@@ -1,96 +1,104 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import { produce, Immutable } from 'immer';
 import { nanoid } from 'nanoid';
 import type { ZodSchema } from 'zod';
 
-export function formatDate(date: Date | string | number): (timeMate: string) => string {
-      return (timeMate) => {
-
-            if (!timeMate) return "";
-            return dayjs(date).format(timeMate);
-      }
+export function formatDate(
+  date: Date | string | number
+): (timeMate: string) => string {
+  return (timeMate) => {
+    if (!timeMate) return '';
+    return dayjs(date).format(timeMate);
+  };
 }
 
-export function editArray<T>(data: T[], callback: (item: Immutable<T[]>) => void): T[] {
-      return produce(data, (draft: Immutable<T[]>) => {
-            callback(draft);
-      });
+export function editArray<T>(
+  data: T[],
+  callback: (item: Immutable<T[]>) => void
+): T[] {
+  return produce(data, (draft: Immutable<T[]>) => {
+    callback(draft);
+  });
 }
 
 export function getId(): string {
-      return nanoid();
+  return nanoid();
 }
 
 /**
  * @name 从本地存储中获取token
  */
 export function getTokenFromLocalStorage(): string | undefined {
-      return localStorage.getItem("token") || undefined;
+  return localStorage.getItem('token') || undefined;
 }
 
 /**
  * @name 写入token到本地存储
  */
 export function setTokenToLocalStorage(token: string | undefined): void {
-      if (!token) {
-            return;
-      }
-      localStorage.setItem("token", token);
+  if (!token) {
+    return;
+  }
+  localStorage.setItem('token', token);
 }
 
 /**
  * @name 从本地存储中移除token
  */
 export function removeTokenFromLocalStorage(): void {
-      localStorage.removeItem("token");
+  localStorage.removeItem('token');
 }
 /**
  * @name 设置本地语言
  */
 export function setLocaleToLocalStorage(locale: string): void {
-      localStorage.setItem("locale", locale) || 'zh';
+  localStorage.setItem('locale', locale) || 'zh';
 }
 
 /**
  * @name 获取本地语言
  */
 export function getLocaleToLocalStorage(): string | null {
-      return localStorage.getItem("locale");
+  return localStorage.getItem('locale');
 }
 
 /**
  * @name 导出document
  */
 export function exportDocument(data: any) {
-      const file = new File([data.schema.content], `${data.name}.json`, { type: 'json' });
-      const url = URL.createObjectURL(file);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${data.name}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+  const file = new File([data.schema.content], `${data.name}.json`, {
+    type: 'json',
+  });
+  const url = URL.createObjectURL(file);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${data.name}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 /**
  * @name antd form表单结合zod验证
  */
-export function formFieldValidator<T>(scehma: ZodSchema<any>, errorMessage?: string): () => { validator: (rule: any, value: T) => Promise<void> } {
-      //返回一个验证器返回promise
-      return () => {
-            return {
-                  validator(_: unknown, value: T) {
-                        const result: any = scehma.safeParse(value);
-                        if (result.success) {
-                              return Promise.resolve();
-                        } else {
-                              return Promise.reject(errorMessage || result.error.issues[0]);
-                        }
-                  }
-            }
-      }
+export function formFieldValidator<T>(
+  scehma: ZodSchema<any>,
+  errorMessage?: string
+): () => { validator: (rule: any, value: T) => Promise<void> } {
+  //返回一个验证器返回promise
+  return () => {
+    return {
+      validator(_: unknown, value: T) {
+        const result: any = scehma.safeParse(value);
+        if (result.success) {
+          return Promise.resolve();
+        } else {
+          return Promise.reject(errorMessage || result.error.issues[0]);
+        }
+      },
+    };
+  };
 }
-
 
 export function commaSeparated(data) {
   const poArr = data
@@ -158,14 +166,15 @@ export default {
   setOptions(list, key, value) {
     list.forEach((item) => {
       if (item.model === key && key !== 'deliveryPlace') item.options = value;
-      if (item.model === key && item.model === 'deliveryPlace') item.options = { children: value };
+      if (item.model === key && item.model === 'deliveryPlace')
+        item.options = { children: value };
     });
   },
   // 树结构属性值修改
   mapTree(data) {
     const mapTree = (org) => {
-      const haveChildren
-        = Array.isArray(org.childList) && org.childList.length > 0;
+      const haveChildren =
+        Array.isArray(org.childList) && org.childList.length > 0;
       return {
         label: org.name,
         value: org.code,
@@ -221,8 +230,8 @@ export default {
   // 检查权限是否存在
   permissionCheck(permission) {
     // 获取缓存的权限
-    const permissions
-      = JSON.parse(localStorage.getItem('montgomeryPermissions')) || [];
+    const permissions =
+      JSON.parse(localStorage.getItem('montgomeryPermissions')) || [];
     // 权限是否存在
     if (!permissions || permissions.length <= 0) {
       return false;
@@ -264,8 +273,8 @@ export default {
             params[`${item.model}End`] = item.value[1] || '';
           }
         } else if (item.type === 'input' && item.bindingConfig.isBatch) {
-          params[item.model]
-            = item.value && item.value.length ? item.value.split(',') : [];
+          params[item.model] =
+            item.value && item.value.length ? item.value.split(',') : [];
         } else {
           // eslint-disable-next-line no-unused-expressions, no-undefined
           item.value !== undefined ? (params[item.model] = item.value) : '';
@@ -333,8 +342,8 @@ export default {
       templateType: self.basicConfig.templateType,
       fileUrl: file,
     };
-    const res
-      = self.basicConfig.sysCode === 'car'
+    const res =
+      self.basicConfig.sysCode === 'car'
         ? await window.apisMap.common.importCarExcel(params)
         : await window.apisMap.common.importExcel(params);
     self.uploadVisible = false;
@@ -362,11 +371,11 @@ export default {
     let menuItems = [];
     montgomeryUserRouters.forEach((item) => {
       menuItems.push(item.urlPath);
-      item.children
-        && item.children.forEach((ele) => {
+      item.children &&
+        item.children.forEach((ele) => {
           menuItems.push(ele.urlPath);
-          ele.children
-            && ele.children.forEach((list) => {
+          ele.children &&
+            ele.children.forEach((list) => {
               menuItems.push(list.urlPath);
             });
         });
@@ -441,8 +450,8 @@ export default {
   genFilesMap(files) {
     const filesMap = {};
     files.keys().forEach((key) => {
-      filesMap[key.replace(/\//g, '_').slice(2).slice(0, -3)]
-        = files(key).default;
+      filesMap[key.replace(/\//g, '_').slice(2).slice(0, -3)] =
+        files(key).default;
     });
     return filesMap;
   },
@@ -524,8 +533,8 @@ export default {
     self.listQuery = {};
     self.formItems.forEach((item) => {
       if (item.type === 'input' && item.value !== '') {
-        self.listQuery[item.model]
-          = item.value && item.value.length ? item.value.split(',') : [];
+        self.listQuery[item.model] =
+          item.value && item.value.length ? item.value.split(',') : [];
       }
       if (item.type === 'select' && item.value && item.value.length) {
         self.listQuery[item.model] = item.value;
@@ -661,7 +670,13 @@ export default {
   // },
 };
 
-        //等待2秒
-        // await new Promise((resolve) => {
-        //   setTimeout(resolve, 2000);
-        // })
+//等待2秒
+// await new Promise((resolve) => {
+//   setTimeout(resolve, 2000);
+// })
+
+//格式化金额 分为单位
+const formatPrice = (price: number) => {
+  return (price / 100).toLocaleString() || 0;
+};
+export { formatPrice };

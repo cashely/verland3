@@ -37,4 +37,46 @@ const BASE_SERVICES = [
   },
 ];
 
-export { ORDER_STATUS, PET_TYPES, GENDER, BASE_SERVICES, TICKET_TYPE };
+const APPOINTMENT_TYPES = {
+  0: {
+    label: '待付款',
+    bgClass: 'js',
+  },
+  1: {
+    label: '已预约',
+    bgClass: 'yy',
+  },
+  2: {
+    label: '待寄送',
+    bgClass: 'js',
+  },
+  3: {
+    label: '已完成',
+    bgClass: 'wc',
+  },
+  4: {
+    label: '已取消',
+    bgClass: 'qx',
+  },
+  5: {
+    label: '异常',
+    bgClass: 'yc',
+  },
+  6: {
+    label: '退款中',
+    bgClass: 'js',
+  },
+};
+
+const DEFAULT_IMAGE =
+  'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0';
+
+export {
+  APPOINTMENT_TYPES,
+  ORDER_STATUS,
+  PET_TYPES,
+  GENDER,
+  BASE_SERVICES,
+  TICKET_TYPE,
+  DEFAULT_IMAGE,
+};

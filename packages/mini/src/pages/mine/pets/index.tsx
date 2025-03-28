@@ -4,6 +4,7 @@ import { navigateTo, useDidShow } from '@tarojs/taro';
 import { AtAvatar, AtButton } from 'taro-ui';
 import { list } from '@/apis/pet';
 import petImage from '../../../assets/imgs/pet-avatar.png';
+import { DEFAULT_IMAGE } from '@/constants';
 import './index.scss';
 
 export default function Pets() {
@@ -32,10 +33,15 @@ export default function Pets() {
     <View className="page-pets">
       {pets.map((item, index) => (
         <View className="pet-item" key={index}>
-          <AtAvatar className="avatar" image={petImage} circle></AtAvatar>
+          <AtAvatar className="avatar" image={DEFAULT_IMAGE} circle></AtAvatar>
           <View className="flex justify-between info">
             <Text className="font-bold name">{item.petname}</Text>
-            <Text className="age">{item.age}</Text>
+            <View>
+              {item.age && <Text className="age">{item.age}个月</Text>}
+              {item.weight && (
+                <Text className="ml-2 age">{item.weight || '-'}kg</Text>
+              )}
+            </View>
           </View>
         </View>
       ))}

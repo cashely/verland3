@@ -1,12 +1,9 @@
 import { View } from '@tarojs/components';
-import Taro, { navigateTo, useLoad } from '@tarojs/taro';
+import Taro, { navigateTo } from '@tarojs/taro';
 import { AtAvatar, AtButton } from 'taro-ui';
 import './index.scss';
 
 export default function Index() {
-  useLoad(() => {
-    console.log('Page loaded.');
-  });
   // const { isLoggedIn, toLogin } = useLogin();
   const token = Taro.getStorageSync('token'); // 获取token
 

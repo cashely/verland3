@@ -1,25 +1,25 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'https://api.verlantum.cn',
         changeOrigin: true,
         rewrite(path) {
-          return path.replace(/^\/api/, '')
-        }
-      }
+          return path.replace(/^\/api/, '');
+        },
+      },
     },
-    allowedHosts: ['api.verlantum.cn', 'kwgok32o-6dwd7hhp-w1loxh6erdtv.vcc3p.mcprev.cn']
+    allowedHosts: [],
   },
-})
+});

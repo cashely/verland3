@@ -1,28 +1,47 @@
-import { lazy } from "react";
-import loadable from "@loadable/component";
-import { Navigate, redirect } from "react-router-dom";
+import { lazy } from 'react';
+import loadable from '@loadable/component';
+import { Navigate, redirect } from 'react-router-dom';
 import { TeamOutlined, CustomerServiceOutlined } from '@ant-design/icons';
-import { getTokenFromLocalStorage } from "../utils/index.ts";
-import IcontFont from "@/components/IcontFont";
-import useUrlQuery from "../hooks/useUrlQuery.ts";
+import { getTokenFromLocalStorage } from '../utils/index.ts';
+import IcontFont from '@/components/IcontFont';
+import useUrlQuery from '../hooks/useUrlQuery.ts';
 //按需加载
-const Login = loadable(() => import("../pages/login"));
-const Page401 = loadable(() => import("../pages/errorPage/401"));
-const Page404 = loadable(() => import("../pages/errorPage/404"));
-const Layout = loadable(() => import("../layout"));
-const ProjectList = loadable(() => import("../pages/projects/list"));
-const AppointManagement = loadable(() => import("../pages/appointManagement"));
-const SaleManagement = loadable(() => import("../pages/petManagement/index.tsx"));
-const AccountManagement = loadable(() => import("../pages/accountManagement"));
-const AppointManagementDetail = loadable(() => import("../pages/appointManagement/detail"));
-const EditOrAdd = loadable(() => import("../pages/appointManagement/editOrAdd"));
-const BookGoodsManagement = loadable(() => import("../pages/bookGoodsManagement"));
-const TickManagement = loadable(() => import("../pages/tickManagement"));
-const AdviceManagement = loadable(() => import("../pages/adviceManagement"));
+const Login = loadable(() => import('../pages/login'));
+const Page401 = loadable(() => import('../pages/errorPage/401'));
+const Page404 = loadable(() => import('../pages/errorPage/404'));
+const Layout = loadable(() => import('../layout'));
+const ProjectList = loadable(() => import('../pages/projects/list'));
+const MenuManagement = loadable(() => import('../pages/menuManagement'));
+const MenuManagementDetail = loadable(
+  () => import('../pages/menuManagement/detail')
+);
+const MenuEditOrAdd = loadable(
+  () => import('../pages/menuManagement/editOrAdd')
+);
+const AppointManagement = loadable(() => import('../pages/appointManagement'));
+const SaleManagement = loadable(
+  () => import('../pages/petManagement/index.tsx')
+);
+const AccountManagement = loadable(() => import('../pages/accountManagement'));
+const AppointManagementDetail = loadable(
+  () => import('../pages/appointManagement/detail')
+);
+const EditOrAdd = loadable(
+  () => import('../pages/appointManagement/editOrAdd')
+);
+const BookGoodsManagement = loadable(
+  () => import('../pages/bookGoodsManagement')
+);
+const TickManagement = loadable(() => import('../pages/tickManagement'));
+const AdviceManagement = loadable(() => import('../pages/adviceManagement'));
 const hasToken = getTokenFromLocalStorage();
-const BookGoodsDetail = loadable(() => import("../pages/bookGoodsManagement/detail"));
-const AccountDetail = loadable(() => import("../pages/accountManagement/detail"));
-console.log("🚀 ~ hasToken:", hasToken);
+const BookGoodsDetail = loadable(
+  () => import('../pages/bookGoodsManagement/detail')
+);
+const AccountDetail = loadable(
+  () => import('../pages/accountManagement/detail')
+);
+console.log('🚀 ~ hasToken:', hasToken);
 // const AuthComponent = ({ children }: Props) => {
 //   // 检查权限是否通过的逻辑
 //   console.log("🚀 ~ hasToken:", hasToken);
@@ -36,10 +55,10 @@ console.log("🚀 ~ hasToken:", hasToken);
 // };
 const constantRoutesList = [
   {
-    path: "/login",
+    path: '/login',
     element: <Login />,
     handle: {
-      title: "登录",
+      title: '登录',
     },
     // loader: () => {
     //   // alert(1);
@@ -49,33 +68,33 @@ const constantRoutesList = [
   },
 
   {
-    path: "/401",
+    path: '/401',
     element: <Page401 />,
   },
   {
-    path: "/404",
+    path: '/404',
     element: <Page404 />,
   },
 ];
 
 const anyncRoutesList = [
   {
-    path: "/",
+    path: '/',
     errorelement: <Page404 />,
     element: <Layout />,
-    title: "首页",
+    title: '首页',
     icon: <IcontFont type="icon-dashboard"></IcontFont>,
     handle: {
-      title: "首页",
+      title: '首页',
     },
     children: [
       {
         hidden: true,
         // index: true,
-        path: "/dashboard",
+        path: '/dashboard',
         element: <ProjectList />,
         handle: {
-          title: "首页",
+          title: '首页',
         },
       },
       //重定向
@@ -88,155 +107,210 @@ const anyncRoutesList = [
     ],
   },
   {
-    path: "/appointManagement",
-    title: "预约管理",
+    path: '/menuManagement',
+    title: '套餐管理',
     element: <Layout />,
     icon: <IcontFont type="icon-yuyueguanli"></IcontFont>,
-    handle: { title: "预约管理" },
-    redirect: "/a",
+    handle: { title: '套餐管理' },
+    redirect: '/a',
     children: [
       {
         index: true,
-        path: "/appointManagement/list",
-        title: "列表",
+        path: '/menuManagement/list',
+        title: '列表',
         handle: {
-          title: "列表",
+          title: '列表',
+        },
+        element: <MenuManagement />,
+        //lazy(),
+      },
+      {
+        path: '/menuManagement/detail/:id',
+        title: '预约详情',
+        handle: {
+          title: '预约详情',
+        },
+        hidden: true,
+        element: <MenuManagementDetail />,
+        //lazy(),
+      },
+      {
+        path: '/menuManagement/editAdd/:id?',
+        title: '套餐编辑', //编辑或者新增
+        handle: {
+          title: '套餐编辑',
+        },
+        hidden: true,
+        element: <MenuEditOrAdd />,
+        //lazy(),
+        loader: (e) => {
+          console.log(e, '-111');
+          // alert(1);
+          // return hasToken ? redirect("/dashboard") : null;
+          // return false;
+          return null;
+        },
+      },
+    ],
+  },
+  {
+    path: '/appointManagement',
+    title: '预约管理',
+    element: <Layout />,
+    icon: <IcontFont type="icon-yuyueguanli"></IcontFont>,
+    handle: { title: '预约管理' },
+    redirect: '/a',
+    children: [
+      {
+        index: true,
+        path: '/appointManagement/list',
+        title: '列表',
+        handle: {
+          title: '列表',
         },
         element: <AppointManagement />,
         //lazy(),
       },
       {
-        path: "/appointManagement/detail/:id",
-        title: "预约详情",
+        path: '/appointManagement/detail/:id',
+        title: '预约详情',
         handle: {
-          title: "预约详情",
+          title: '预约详情',
         },
         hidden: true,
         element: <AppointManagementDetail />,
         //lazy(),
       },
       {
-        path: "/appointManagement/editAdd/:id?",
-        title: "预约编辑",  //编辑或者新增
+        path: '/appointManagement/editAdd/:id?',
+        title: '预约编辑', //编辑或者新增
         handle: {
-          title: "预约编辑",
+          title: '预约编辑',
         },
         hidden: true,
         element: <EditOrAdd />,
         //lazy(),
         loader: (e) => {
-          console.log(e, '-111')
+          console.log(e, '-111');
           // alert(1);
           // return hasToken ? redirect("/dashboard") : null;
           // return false;
-          return null
+          return null;
         },
       },
     ],
   },
   {
-    path: "/ticketManagement",
-    title: "发票管理",
+    path: '/ticketManagement',
+    title: '发票管理',
     element: <Layout />,
     icon: <IcontFont type="icon-fapiaoguanli"></IcontFont>,
-    handle: { title: "发票管理" },
+    handle: { title: '发票管理' },
     children: [
       {
-        path: "/ticketManagement/list",
-        title: "列表",
+        path: '/ticketManagement/list',
+        title: '列表',
         handle: {
-          title: "列表",
+          title: '列表',
         },
         element: <TickManagement />,
       },
     ],
   },
   {
-    path: "/bookGoodsManagement",
-    title: "附加服务管理",
+    path: '/bookGoodsManagement',
+    title: '附加服务管理',
     element: <Layout />,
     icon: <IcontFont type="icon-fujiafuwu1"></IcontFont>,
-    handle: { title: "附加服务管理" },
+    handle: { title: '附加服务管理' },
     children: [
       {
-        path: "/bookGoodsManagement/list",
-        title: "列表",
+        path: '/bookGoodsManagement/list',
+        title: '列表',
         handle: {
-          title: "列表",
+          title: '列表',
         },
         element: <BookGoodsManagement />,
       },
       {
-        path: "/bookGoodsManagement/detail/:id?",
-        title: "详情",
+        path: '/bookGoodsManagement/detail/:id?',
+        title: '详情',
         hidden: true,
         handle: {
-          title: "详情",
+          title: '详情',
         },
         element: <BookGoodsDetail />,
       },
     ],
   },
   {
-    path: "/adviceManagement",
-    title: "投诉建议",
+    path: '/adviceManagement',
+    title: '投诉建议',
     element: <Layout />,
-    icon: <IcontFont type='icon-advice' />,
-    handle: { title: "投诉建议" },
+    icon: <IcontFont type="icon-advice" />,
+    handle: { title: '投诉建议' },
     children: [
       {
-        path: "/adviceManagement/list",
-        title: "列表",
+        path: '/adviceManagement/list',
+        title: '列表',
         handle: {
-          title: "列表",
+          title: '列表',
         },
         element: <AdviceManagement />,
       },
     ],
   },
   {
-    path: "/petManagement",
-    title: "宠物管理",
+    path: '/petManagement',
+    title: '宠物管理',
     element: <Layout />,
-    icon: <CustomerServiceOutlined style={{
-      fontSize: 16
-    }} />,
-    handle: { title: "宠物管理" },
+    icon: (
+      <CustomerServiceOutlined
+        style={{
+          fontSize: 16,
+        }}
+      />
+    ),
+    handle: { title: '宠物管理' },
     children: [
       {
-        path: "/petManagement/list",
-        title: "宠物库",
+        path: '/petManagement/list',
+        title: '宠物库',
         handle: {
-          title: "宠物库",
+          title: '宠物库',
         },
         element: <SaleManagement />,
       },
     ],
   },
   {
-    path: "/accountManagement",
-    title: "账号管理",
+    path: '/accountManagement',
+    title: '账号管理',
     element: <Layout />,
-    icon: <TeamOutlined style={{
-      fontSize: 16
-    }} />,
-    handle: { title: "账号管理" },
+    icon: (
+      <TeamOutlined
+        style={{
+          fontSize: 16,
+        }}
+      />
+    ),
+    handle: { title: '账号管理' },
     children: [
       {
-        path: "/accountManagement/list",
+        path: '/accountManagement/list',
         handle: {
-          title: "列表",
+          title: '列表',
         },
-        title: "列表",
+        title: '列表',
         element: <AccountManagement />,
       },
       {
-        path: "/accountManagement/detail/:id",
+        path: '/accountManagement/detail/:id',
         handle: {
-          title: "详情",
+          title: '详情',
         },
         hidden: true,
-        title: "详情",
+        title: '详情',
         element: <AccountDetail />,
       },
     ],

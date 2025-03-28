@@ -43,7 +43,7 @@ export default function Add() {
         }).then(() => {
           setTimeout(() => {
             navigateBack();
-          });
+          }, 1000);
         });
       }
     });
@@ -156,6 +156,7 @@ export default function Add() {
               name={item.key}
               title={item.title}
               type={item.type}
+              cursor={1000}
               placeholder={item.placeholder}
               value={formData[item.key]}
               onChange={(e) => handleChange(e, item.key)}
@@ -174,7 +175,7 @@ export default function Add() {
                 title={item.title}
                 placeholder={item.placeholder}
                 value={formData[item.key]}
-                // editable={false}
+                editable={false}
               />
             </Picker>
           )

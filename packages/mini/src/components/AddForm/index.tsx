@@ -37,8 +37,8 @@ export default forwardRef((props, ref) => {
       },
     },
   });
-  const [_formList, setFormList] = useState(formList);
-  const [formData, setFormData] = useState({ ...formModel });
+  const [_formList, setFormList] = useState([]);
+  const [formData, setFormData] = useState({});
   const [tabIndex, setTabIndex] = useState(0);
   const handleChange = (e, formItem: Record<string, any>) => {
     console.log(e, formItem, 'handleChange');
@@ -62,10 +62,11 @@ export default forwardRef((props, ref) => {
       if (formItem.prop === 'isRite') {
         _formList.find((item) => item.prop === 'riteDateTime').hidden =
           e.detail.value === '0';
-      } else if (formItem.prop === 'legcyWay') {
+        console.log('isRite', e.detail.value, '++++++');
+      } else if (formItem.prop === 'handleWay') {
         console.log(e.detail.value, 'e.detail.value');
-        formData['legcyWayCheck'] = '';
-        _formList.find((item) => item.prop === 'legcyWayCheck').hidden =
+        formData['handleWayCheck'] = '';
+        _formList.find((item) => item.prop === 'handleWayCheck').hidden =
           e.detail.value !== '3';
         if (e.detail.value === '3') formData['handleDateTime'] = null;
         _formList.find((item) => item.prop === 'handleDateTime').hidden =
@@ -78,7 +79,7 @@ export default forwardRef((props, ref) => {
       });
       setFormList([..._formList]);
     } else if (formItem?.type === 'checkbox') {
-      if (formItem.prop === 'legcyWayCheck') {
+      if (formItem.prop === 'handleWayCheck') {
         _formData[formItem.prop] = e.detail.value;
         const curObj = _formList.find((item) => item.prop === formItem.prop);
         console.log(curObj);
@@ -266,6 +267,14 @@ export default forwardRef((props, ref) => {
     },
   }));
 
+  useEffect(() => {
+    setFormList(formList);
+  }, [formList]);
+
+  useEffect(() => {
+    setFormData(formModel);
+  }, [formModel]);
+
   //初始化数据
   useEffect(() => {
     console.log('初始化', formModel);
@@ -310,6 +319,7 @@ export default forwardRef((props, ref) => {
                 error={formItem?.error || false}
                 cursor={1000}
                 clear
+                maxLength={formItem.itemProps?.maxLength || 100}
                 title={formItem.label}
                 placeholder={formItem.itemProps.placeholder}
                 required={formItem.itemProps?.required || false}
@@ -541,7 +551,7 @@ export default forwardRef((props, ref) => {
                 </View>
                 {
                   <View className="tab-content">
-                    {formItem.tabsOptions[tabIndex].content || '暫無內容'}
+                    {formItem.tabsOptions[tabIndex]?.content || '暫無內容'}
                   </View>
                 }
               </View>

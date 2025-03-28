@@ -5,7 +5,7 @@ import { AtAvatar, AtListItem, AtList } from 'taro-ui';
 import { detail } from '@/apis/book';
 import dayjs from 'dayjs';
 import { formatPrice } from '@/utils';
-import { BASE_SERVICES } from '@/constants';
+import { DEFAULT_IMAGE } from '@/constants';
 import './index.scss';
 
 const rowsData = [
@@ -55,7 +55,6 @@ export default function Index() {
   const [info, setInfo] = useState({});
   const [statuName, setStatuName] = useState('');
   useLoad((option) => {
-    console.log('Page loaded.', option);
     if (option?.id) {
       setStatuName(option?.statuName);
       detail(option.id).then((res) => {
@@ -85,12 +84,8 @@ export default function Index() {
 
   return (
     <View className="page-appointDetail">
-      <View className="header text-center">
-        <AtAvatar
-          circle
-          image="https://img.yzcdn.cn/vant/cat.jpeg"
-          className="mx-auto"
-        ></AtAvatar>
+      <View className="text-center header">
+        <AtAvatar circle image={DEFAULT_IMAGE} className="mx-auto"></AtAvatar>
         <View className="mt-10">{statuName}</View>
       </View>
       <View className="body">
@@ -101,14 +96,7 @@ export default function Index() {
                 <AtListItem
                   className="detail-item"
                   title={item.label}
-                  extraText={
-                    <>
-                      {
-                        BASE_SERVICES.find((it) => it.value === info[item.key])
-                          ?.label
-                      }
-                    </>
-                  }
+                  extraText={info?.[item.key]?.name || '-'}
                 ></AtListItem>
               ) : (
                 <AtListItem
@@ -136,7 +124,7 @@ export default function Index() {
             </View>
           ))}
         </AtList>
-        <View className="footer text-right">
+        <View className="text-right footer">
           <Text className="text-price">
             总金额: ¥{formatPrice(info.totalAmount)}
           </Text>

@@ -1,5 +1,5 @@
 import { View, Text, Image } from '@tarojs/components';
-import { getStorageSync, showToast, navigateTo } from '@tarojs/taro';
+import { getStorageSync, showToast, redirectTo } from '@tarojs/taro';
 import { AtButton, AtActionSheet } from 'taro-ui';
 import { Suspense, useEffect, useState } from 'react';
 import { list } from '@/apis/bookGood';
@@ -17,7 +17,7 @@ interface IDataItem {
 
 export default function AdditionalService() {
   //附加服务的价格加上基本服务的价格
-  const [totalAmount, setToalAmount] = useState(1); //1分钱
+  const [totalAmount, setToalAmount] = useState(0); //1分钱
   const [selectedIndex, setSelectedIndex] = useState([]);
   const [isOpened, setIsOpened] = useState(false);
   const [selectedItem, setSelectedItem] = useState<IDataItem>();
@@ -35,7 +35,6 @@ export default function AdditionalService() {
       return acc;
     }, totalAmount);
     setToalAmount(totalPrice);
-    console.log('selectedIndex', totalAmount, totalPrice);
   }, [selectedIndex]);
 
   const createAppointBill = () => {
@@ -55,7 +54,7 @@ export default function AdditionalService() {
           icon: 'none',
           success() {
             setTimeout(() => {
-              navigateTo({
+              redirectTo({
                 url: '../order/index?id=' + data.id,
               });
             }, 1000);
@@ -113,9 +112,9 @@ export default function AdditionalService() {
     <Suspense fallback={<Text>加载中...</Text>}>
       <View className="page-additionalService">
         <View className="content">
-          {data?.length ? (
-            data.map((item, index) => (
-              <View className="inner">
+          <View className="inner">
+            {data?.length ? (
+              data.map((item, index) => (
                 <View
                   className={`as-item ${
                     selectedIndex.includes(index) ? 'selected' : ''
@@ -133,23 +132,25 @@ export default function AdditionalService() {
                   </View>
                   <View className="as-item__content">
                     <View className="as-item__content-name">{item.title}</View>
-                    <View
-                      onClick={(e) => handleShowDetail(e, item.id)}
-                      className="goDetail"
-                    >
-                      查看详情
-                    </View>
+                    <View>
+                      <View
+                        onClick={(e) => handleShowDetail(e, item.id)}
+                        className="goDetail"
+                      >
+                        查看详情
+                      </View>
 
-                    <View className="as-item__content-price">
-                      ¥{formatPrice(item.price)}
+                      <View className="as-item__content-price">
+                        ¥{formatPrice(item.price)}
+                      </View>
                     </View>
                   </View>
                 </View>
-              </View>
-            ))
-          ) : (
-            <View>暂无附加服务数据</View>
-          )}
+              ))
+            ) : (
+              <View>暂无附加服务数据</View>
+            )}
+          </View>
         </View>
 
         <View className="flex gap-4 mt-40 footer">

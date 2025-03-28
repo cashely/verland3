@@ -13,7 +13,7 @@ import {
 import { evaluate, getEvaluate, list, cancel } from '@/apis/book';
 import sheetCat from '../../../subpackages/assets/images/sheetCat.png';
 import dayjs from 'dayjs';
-import { BASE_SERVICES } from '@/constants';
+import { APPOINTMENT_TYPES, DEFAULT_IMAGE } from '@/constants';
 import { formatPrice } from '@/utils';
 import './index.scss';
 
@@ -24,30 +24,9 @@ const tabList = [
   { title: '待寄送' },
   { title: '已完成' },
   { title: '已取消' },
+  { title: '异常' },
+  { title: '退款中' },
 ];
-const obj = {
-  0: {
-    label: '待付款',
-    bgClass: 'js',
-  },
-  1: {
-    label: '已预约',
-    bgClass: 'yy',
-  },
-  2: {
-    label: '待寄送',
-    bgClass: 'js',
-  },
-  3: {
-    label: '已完成',
-    bgClass: 'wc',
-  },
-  4: {
-    label: '已取消',
-    bgClass: 'qx',
-  },
-};
-const textClass = 'text-[#f00]';
 
 export default function Index() {
   useDidShow(() => {
@@ -87,8 +66,10 @@ export default function Index() {
   // 待付款  已预约  待寄送  已完成  已取消
   const getStatusBg = (current) => {
     return (
-      <View className={[obj[current]?.bgClass, 'status-bg'].join(' ')}>
-        <Text className="txt">{obj[current]?.label}</Text>
+      <View
+        className={[APPOINTMENT_TYPES[current]?.bgClass, 'status-bg'].join(' ')}
+      >
+        <Text className="txt">{APPOINTMENT_TYPES[current]?.label}</Text>
       </View>
     );
   };
@@ -111,7 +92,7 @@ export default function Index() {
       if (res.code === 200) {
         showToast({
           title: '取消成功',
-          icon: 'success',
+          icon: 'none',
           success() {
             setTimeout(() => {
               getlist();
@@ -162,7 +143,9 @@ export default function Index() {
     console.log(item);
     if (!item?.id) return;
     navigateTo({
-      url: `./detail/index?id=${item.id}&statuName=${obj[item.statu]?.label}`,
+      url: `./detail/index?id=${item.id}&statuName=${
+        APPOINTMENT_TYPES[item.statu]?.label
+      }`,
     });
   };
 
@@ -181,16 +164,10 @@ export default function Index() {
                     {getStatusBg(item.statu)}
                   </View>
                   <View className="item-body">
-                    <AtAvatar
-                      size="large"
-                      image="https://img.yzcdn.cn/vant/cat.jpeg"
-                    ></AtAvatar>
+                    <AtAvatar size="large" image={DEFAULT_IMAGE}></AtAvatar>
                     <View className="ml-20 item-body-right">
                       <View className="mb-10 title">
-                        {
-                          BASE_SERVICES.find((n) => n.value === item.menu)
-                            ?.label
-                        }
+                        {item.menu?.name}
                         <Text className="text-price">
                           ¥{formatPrice(item.totalAmount)}
                         </Text>

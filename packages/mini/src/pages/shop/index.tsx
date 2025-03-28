@@ -5,7 +5,7 @@ export default function Index() {
 
   return (
     <View className="index">
-      <Text>页面开发中...</Text>
+      <Text>功能开发中...</Text>
     </View>
   );
 }

@@ -4,6 +4,7 @@ const APIS = {
   LOGIN: '/login/mp',
   TEST: '/mp/user',
   File: '/file',
+  MENU: '/menu',
 };
 
 const loginApi = (data) => {
@@ -26,4 +27,11 @@ const testApi = () => {
   });
 };
 
-export { loginApi, testApi, uploadFile };
+//小程序菜单
+const menu = () => {
+  return request(APIS.MENU, {
+    methods: 'post',
+  });
+};
+
+export { loginApi, testApi, uploadFile, menu };

@@ -1,15 +1,15 @@
 import type { RequestResult } from '../..';
-import request from "../request";
+import request from '../request';
 
 /**
  * @name 登录
  */
 
 export async function loginApi<T>(data: {
-    username: string;
-    password: string;
+  username: string;
+  password: string;
 }): Promise<RequestResult<T>> {
-    return request.post("/login", data);
+  return request.post('/login', data);
 }
 
 /**
@@ -17,7 +17,7 @@ export async function loginApi<T>(data: {
  */
 
 export async function adminUser<T>(): Promise<RequestResult<T>> {
-    return request.get("/adminUser");
+  return request.get('/adminUser');
 }
 
 /**
@@ -25,7 +25,7 @@ export async function adminUser<T>(): Promise<RequestResult<T>> {
  */
 
 export async function logoutApi<T>(): Promise<RequestResult<T>> {
-    return request.post("/login");
+  return request.post('/login');
 }
 
 /**
@@ -33,5 +33,45 @@ export async function logoutApi<T>(): Promise<RequestResult<T>> {
  */
 
 export async function uploadFile<T>(): Promise<RequestResult<T>> {
-    return request.post("/file");
+  return request.post('/file');
+}
+
+//menu
+/**
+ * @name 菜单列表
+ */
+export function menuList<T>(): Promise<RequestResult<T>> {
+  return request.get('/menu');
+}
+
+//获取menu
+/**
+ * @name 获取菜单详情
+ */
+export function menuDetail<T>(id: number): Promise<RequestResult<T>> {
+  return request.get(`/menu/${id}`);
+}
+
+/**
+ * @name 创建菜单
+ */
+export function menuCreate<T>(data: any): Promise<RequestResult<T>> {
+  return request.post('/menu', data);
+}
+
+/**
+ * @name 更新菜单
+ */
+export function menuUpdate<T>(
+  id: number,
+  data: any
+): Promise<RequestResult<T>> {
+  return request.put(`/menu/${id}`, data);
+}
+
+/**
+ * @name 删除菜单
+ */
+export function menuDelete<T>(id: number): Promise<RequestResult<T>> {
+  return request.delete(`/menu/${id}`);
 }

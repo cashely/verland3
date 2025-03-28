@@ -2,7 +2,7 @@ import { Checkbox, View, CheckboxGroup, Label, Text } from '@tarojs/components';
 import { useState } from 'react';
 import { AtList, AtListItem, AtButton } from 'taro-ui';
 import {
-  redirectTo,
+  reLaunch,
   useLoad,
   removeStorageSync,
   showToast,
@@ -11,7 +11,6 @@ import {
   getSetting,
 } from '@tarojs/taro';
 import { detail, prepay, pay } from '@/apis/book';
-import { BASE_SERVICES } from '@/constants';
 import { formatPrice } from '@/utils';
 import dayjs from 'dayjs';
 import './index.scss';
@@ -25,8 +24,10 @@ export default () => {
     pet: {
       petname: '',
     },
+    menu: {
+      name: '',
+    },
     bookDateTime: '',
-    menuDesc: '',
     address: {
       detail: '',
     },
@@ -47,9 +48,6 @@ export default () => {
           setOrder({
             ...order,
             ...res.data,
-            menuDesc: BASE_SERVICES?.find(
-              (item) => item.value === res.data.menu
-            )?.label, //服务名称
           });
         }
       });
@@ -168,7 +166,7 @@ export default () => {
                   success: function () {
                     removeStorageSync('bookInfo');
                     setPayDisabled(true);
-                    redirectTo({
+                    reLaunch({
                       url: '/pages/createBook/payResult/index?id=' + order.id,
                     });
                   },
@@ -193,9 +191,9 @@ export default () => {
 
   return (
     <View className="page-order">
-      <View type="primary" onClick={handleTest}></View>
+      <View onClick={handleTest}></View>
       <AtList>
-        <AtListItem title="基础服务" extraText={<>{order.menuDesc || '-'}</>} />
+        <AtListItem title="基础服务" extraText={order.menu?.name || '-'} />
         <AtListItem title="联系人" extraText={<>{order.username || '-'}</>} />
         <AtListItem title="联系电话" extraText={<>{order.phone || '-'}</>} />
         <AtListItem

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import { View, Label, Checkbox, Text, CheckboxGroup } from '@tarojs/components';
 import {
   useLoad,
@@ -10,66 +10,72 @@ import {
 import { AtButton } from 'taro-ui';
 import { otherFormList, baseInfoFormList } from './model';
 import AddForm from '@/components/AddForm';
-import { BASE_SERVICES } from '@/constants';
+//import AppContext from '@/hooks/useContext';
+import { menu } from '@/apis/common';
 import './index.scss';
+import regexObj from '@/utils/regexObj';
 
 export default () => {
-  const [formModel, setformModel] = useState({});
   const baseInfoRef = useRef(null);
   const otherInfoRef = useRef(null);
-  const [menu, setMenu] = useState(null);
   const [agreement, setAggreement] = useState('');
+  const [menuList, setMenuList] = useState([]);
+  const [formModel, setformModel] = useState({
+    isRite: '1',
+    menuId: menuList?.[0]?.id,
+  });
   useLoad(() => {
     console.log('Page loaded.');
   });
+  const [_otherFormList, _setOtherFormList] = useState(otherFormList);
+  const toast = (text: string) => {
+    showToast({
+      title: text,
+      icon: 'none',
+    });
+  };
+
+  useEffect(() => {
+    menu().then((res) => {
+      console.log('menu', res);
+      if (res?.code === 200) {
+        setMenuList(res?.data || []);
+      }
+    });
+  }, []);
   const handleSubmit = () => {
     const baseInfo = baseInfoRef.current?.getFormValues() || {};
     const otherInfo = otherInfoRef.current?.getFormValues() || {};
     if (!baseInfo?.username) {
-      return showToast({
-        title: '联系人不为空',
-        icon: 'none',
-      });
-    } else if (!baseInfo?.phone) {
-      return showToast({
-        title: '联系电话不为空',
-        icon: 'none',
-      });
+      return toast('联系人不为空');
+    } else if (!baseInfo?.phone || !regexObj.phone.test(baseInfo.phone)) {
+      return toast('请输入正确的手机号');
     } else if (!baseInfo?.type) {
-      return showToast({
-        title: '爱宠类型不为空',
-        icon: 'none',
-      });
+      return toast('爱宠类型不为空');
+    } else if (!otherInfo?.bookDateTime) {
+      return toast('上门服务时间不为空');
+    } else if (otherInfo.isRite === '1' && !otherInfo.riteDateTime) {
+      return toast('仪式日期不为空');
+    } else if (
+      ['1', '2'].includes(otherInfo?.handleWay) &&
+      !otherInfo?.handleDateTime
+    ) {
+      return toast('遗物处理时间不为空');
     }
-    if (otherInfo?.handleWay) {
-      if (!otherInfo?.bookDateTime) {
-        return showToast({
-          title: '服务时间不为空',
-          icon: 'none',
-        });
-      }
-
-      if (!otherInfo?.handleDateTime) {
-        return showToast({
-          title: '遗物处理不为空',
-          icon: 'none',
-        });
-      }
+    if (!otherInfo?.postAddress || !otherInfo?.detail) {
+      return toast('接收地址不完整（包含门牌号）');
     }
 
     if (!agreement) {
-      return showToast({
-        title: '请勾选用户购买套餐协议',
-        icon: 'none',
-      });
+      return toast('请勾选用户购买套餐协议');
     }
-
-    console.log('combineInfo', agreement);
 
     const combineInfo = {
       ...baseInfo,
       ...otherInfo,
     };
+
+    console.log('combineInfo？》》》》》》》》》', combineInfo);
     //添加数据到缓存
     setStorageSync(
       'bookInfo',
@@ -81,7 +87,7 @@ export default () => {
         isRite: +combineInfo.isRite,
         bookDateTime: new Date(combineInfo.bookDateTime),
         riteDateTime: new Date(combineInfo.riteDateTime),
-        handleDateTime: new Date(combineInfo.expressDateTime),
+        handleDateTime: new Date(combineInfo.handleDateTime),
       })
     );
     navigateTo({
@@ -94,7 +100,6 @@ export default () => {
   };
   const handleRiteChange = (val) => {
     console.log('handleRiteChangex--------s', val);
-    setMenu(val?.menu);
   };
 
   useEffect(() => {
@@ -103,7 +108,28 @@ export default () => {
     // if (userInfo?.username) {
     //  setformModel({ ...formModel, username: userInfo?.username });
     //}
-  }, []);
+    _setOtherFormList((d: any) => {
+      console.log('setOtherFormList', d, menuList);
+      return d.map((item: any) => {
+        if (item.prop === 'menuId') {
+          return {
+            ...item,
+            tabsOptions: menuList.map((item: any) => ({
+              id: item.id,
+              label: item.name,
+              content: item.description,
+            })),
+            tabsTitle: menuList.map((iten: any) => iten.name),
+          };
+        }
+        return item;
+      });
+    });
+    setformModel({
+      ...formModel,
+      menuId: menuList?.[0]?.id,
+    });
+  }, [menuList]);
 
   return (
     <View className="pt-20 page-createBox">
@@ -117,7 +143,7 @@ export default () => {
       <View className="formCon">
         <AddForm
           ref={otherInfoRef}
-          formList={otherFormList}
+          formList={_otherFormList}
           formModel={formModel}
         >
           {{
