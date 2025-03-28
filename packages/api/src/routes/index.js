@@ -9,6 +9,7 @@ import book from './book.router';
 import user from './user.router';
 import pet from './pet.router';
 import wxRouter from './wx.router';
+import menuRouter from './menu.router';
 // 小程序路由
 import mpAdviseRouter from './mp/mp.advise.router';
 import mpBookRouter from './mp/mp.book.router';
@@ -18,6 +19,7 @@ import mpUser from './mp/mp.user.router';
 import mpBookGood from './mp/mp.bookGood.router';
 import mpEvaluateRouter from './mp/mp.evaluate.router';
 import mpWxRouter from './mp/mp.wx.router';
+import mpMenuRouter from './mp/mp.menu.router';
 
 export default function routes(app) {
     app.use('/hello', helloRouter);
@@ -31,6 +33,7 @@ export default function routes(app) {
     app.use('/user', user);
     app.use('/pet', pet);
     app.use('/wx', wxRouter);
+    app.use('/menu', menuRouter);
     // 小程序路由
     app.use('/mp/advise', mpAdviseRouter);
     app.use('/mp/book', mpBookRouter);
@@ -40,4 +43,5 @@ export default function routes(app) {
     app.use('/mp/bookGood', mpBookGood);
     app.use('/mp/evaluate', mpEvaluateRouter);
     app.use('/mp/wx', mpWxRouter);
+    app.use('/mp/menu', mpMenuRouter);
 }
