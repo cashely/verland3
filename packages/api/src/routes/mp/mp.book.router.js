@@ -33,17 +33,41 @@ router.post('/', async (req, res) => {
             }
         });
 
+        // 查询附加服务
+        const { bookGoodIds = []} = req.body;
+        const bookGoods = await prisma.bookGood.findMany({
+            where: {
+                id: {
+                    in: bookGoodIds
+                }
+            }
+        });
+        const bookGoodsAmount = bookGoods.reduce((total, bookGood) => total + bookGood.price, 0);
+
+        // 查询套餐的价格
+        const { menuId } = req.body;
+        const menu = await prisma.menu.findUnique({
+            where: {
+                id: menuId
+            }
+        });
+        const menuAmount = menu.price;
+        
+        // 计算价格
+        const totalAmount = bookGoodsAmount + menuAmount;
+
+
         
 
         const { id: addressId } = address;
         const { id: petId } = pet;
-        const { menu, bookDateTime, hadnleWay, handleDateTime, isRite, riteDateTime, totalAmount, payChannel = 1, mark, phone, username } = req.body;
+        const { bookDateTime, hadnleWay, handleDateTime, isRite, riteDateTime, payChannel = 1, mark, phone, username } = req.body;
 
         const book = await prisma.book.create({
             data: {
                 userId: id,
                 addressId,
-                menu,
+                menuId,
                 bookDateTime,
                 hadnleWay,
                 handleDateTime,
@@ -58,7 +82,7 @@ router.post('/', async (req, res) => {
             }
         });
 
-        const { bookGoodIds = []} = req.body;
+        
 
         if (bookGoodIds.length > 0) {
             await prisma.BookRelationBookGood.createMany({
