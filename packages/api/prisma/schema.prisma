@@ -102,7 +102,8 @@ model BookGood {
 // 预约单
 model Book {
   id              String     @id @default(uuid(7))
-  menu            Int        @default(1) // 套餐类型,默认为套餐1
+  menuId          String      // 套餐类型,默认为套餐1
+  menu            Menu        @relation(fields: [menuId], references: [id])
   bookDateTime    DateTime // 预约上门时间
   handleWay       Int        @default(1) // 处理方式 1-邮寄 2-自行提取 3-放弃处理
   handleDateTime  DateTime?   // 邮寄时间/提取时间
@@ -134,7 +135,8 @@ model Book {
   evaluate        Evaluate?
   expressNo       String? // 寄送的快递单号
   expressName     String? // 寄送的快递名称
-  updatedAt       DateTime  @updatedAt
+  updatedAt       DateTime?  @updatedAt
+
 }
 
 // 订单关联的附加服务 多对多中间表
@@ -214,6 +216,8 @@ model Menu {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   images  MenuRelationImage[]
+  bookId  String?
+  book    Book[]
 }
 
 // 套餐图片关联表

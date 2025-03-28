@@ -106,7 +106,7 @@ router.post('/refund/:bookId', async (req, res) => {
         const { bookId: id } = req.params;
         const book = await prisma.book.findUnique({
             where: {
-                id
+                id,
             } 
         });
 
