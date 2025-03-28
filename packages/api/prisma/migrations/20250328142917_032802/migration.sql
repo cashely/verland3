@@ -5,9 +5,6 @@
   - Added the required column `menuId` to the `Book` table without a default value. This is not possible if the table is not empty.
 
 */
--- AlterTable
-ALTER TABLE "Menu" ADD COLUMN "bookId" TEXT;
-
 -- RedefineTables
 PRAGMA defer_foreign_keys=ON;
 PRAGMA foreign_keys=OFF;

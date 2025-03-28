@@ -90,7 +90,7 @@ router.post('/', async (req, res) => {
                 name,
                 price,
                 description,
-                image: {
+                images: {
                     createMany: {
                         data: imageIds.map((imageId) => ({
                             imageId

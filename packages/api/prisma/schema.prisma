@@ -216,7 +216,6 @@ model Menu {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   images  MenuRelationImage[]
-  bookId  String?
   book    Book[]
 }
 
