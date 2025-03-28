@@ -19,7 +19,8 @@ router.get('/', async (req, res) => {
                     include: {
                        bookGood: true 
                     }
-                }
+                },
+                menu: true
             },
             orderBy: {
                 createdAt: 'desc'

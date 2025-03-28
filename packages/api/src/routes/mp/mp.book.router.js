@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
             }
         });
         const menuAmount = menu.price;
-        
+
         // 计算价格
         const totalAmount = bookGoodsAmount + menuAmount;
 
@@ -144,7 +144,8 @@ router.get('/:id', async (req, res) => {
                     include: {
                         bookGood: true 
                     }
-                }
+                },
+                menu: true
             }
         });
         res.response.success(book);

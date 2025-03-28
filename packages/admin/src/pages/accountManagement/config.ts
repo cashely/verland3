@@ -10,12 +10,42 @@ const searchItems = [
 const tableColumns = [
   {
     title: 'ID',
-    key: 'ID',
+    key: 'id',
+    dataIndex: 'id',
   },
   {
     title: '用户名',
     key: 'username',
+    dataIndex: 'username',
   },
+  {
+    title: '昵称',
+    key: 'nickname',
+    dataIndex: 'nickname',
+  },
+  {
+    title: 'openid',
+    key: 'wxid',
+    dataIndex: 'wxid',
+  },
+  {
+    title: '性别',
+    key: 'gender',
+    dataIndex: 'gender',
+    render(d: number) {
+        return d === 0 ? '男' : '女'
+    }
+  },
+  {
+    title: '手机号',
+    key: 'phone',
+    dataIndex: 'phone',
+  },
+  {
+    title: '创建时间',
+    key: 'createdAt',
+    dataIndex: 'createdAt',
+  }
 ]
 
 const detailItems = [
