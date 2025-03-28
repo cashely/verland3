@@ -132,6 +132,9 @@ model Book {
   username        String?
   evaluateId      String?
   evaluate        Evaluate?
+  expressNo       String? // 寄送的快递单号
+  expressName     String? // 寄送的快递名称
+  updatedAt       DateTime  @updatedAt
 }
 
 // 订单关联的附加服务 多对多中间表

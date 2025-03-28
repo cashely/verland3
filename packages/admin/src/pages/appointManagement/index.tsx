@@ -28,9 +28,13 @@ export default function TickManagement() {
                     showColumnActions: (_, record) => {
                         const id = record.id
                         const detailRoute = `/appointManagement/detail/${id}`
-                        return <Flex gap="small">
-                            <Button onClick={() => navigate(detailRoute)} size="small" color="primary" variant="link">详情</Button>
-                        </Flex>
+                        return (
+                            <Flex gap="small">
+                                <Button onClick={() => navigate(detailRoute)} size="small" color="primary" variant="link">详情</Button>
+                                <Button onClick={() => navigate(detailRoute)} size="small" color="primary" variant="link">完成预约</Button>
+                                <Button onClick={() => navigate(detailRoute)} size="small" color="primary" variant="link">完成寄送</Button>
+                            </Flex>
+                        )
                     }
                 }
             }
