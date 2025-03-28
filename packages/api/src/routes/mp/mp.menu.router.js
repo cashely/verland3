@@ -5,7 +5,7 @@ import Router from "../../middles/route";
 /**
  * 导入 prisma 配置
  */
-import prisma from "../configs/prisma";
+import prisma from "../../configs/prisma";
 
 /**
  * 创建一个新的路由实例，并设置需要进行身份验证
