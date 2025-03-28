@@ -50,7 +50,8 @@ router.get('/:id', async (req, res) => {
                     include: {
                        bookGood: true 
                     }
-                }
+                },
+                menu: true
             }
         });
         res.response.success(book);
