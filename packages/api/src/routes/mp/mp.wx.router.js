@@ -135,7 +135,8 @@ router.post('/refund/:bookId', async (req, res) => {
                 id
             },
             data: {
-                statu: 6
+                statu: 6,
+                outRefundNo,
             }
         });
 
