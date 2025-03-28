@@ -124,7 +124,7 @@ export default forwardRef<CustomFormRef, CustomFormProps>(({
                 {item.type === 'input' ? <Input className={formItemClasses} styles={{ prefix: 'red' }} classNames={{ count: '1' }} placeholder={item.placeholder} allowClear {...item.itemProps} /> : null}
                 {item.type === 'inputNumber' ? <InputNumber className={formItemClasses} style={{
                   width: '100%'
-                }} min={1} placeholder={item.placeholder}  {...item.itemProps} /> : null}
+                }} min={0.01} placeholder={item.placeholder}  {...item.itemProps} /> : null}
                 {item.type === 'select' ? <Select className={formItemClasses} placeholder={item.placeholder}>
                   {item.options.map((option, indey) => (<Option key={indey} value={option.value}>{option.label}</Option>))}
                 </Select> : null}

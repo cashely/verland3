@@ -54,6 +54,11 @@ export default function appointManagement() {
     setModalConfig(produce(draft => {
       draft.confirmLoading = true
     }))
+
+    // 处理一下价格变成分
+    if (values?.price) {
+      values.price = values.price * 100 
+    }
     try {
       if (id) {
         await edit(id, values)

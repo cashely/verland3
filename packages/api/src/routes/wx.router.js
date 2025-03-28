@@ -89,7 +89,7 @@ router.post('/wxpay/notify_url', async (req, res) => {
             const payResult = await payment.decodeResource(resource);
             console.log('收到微信支付通知', payResult)
             // 2. 更新订单状态
-            const { out_trade_no, amount: { payer_total } } = payResult;
+            const { out_trade_no, amount: { payer_total, transaction_id: transactionId } } = payResult;
 
             const book = await prisma.book.findFirst({
                 where: {
@@ -107,6 +107,7 @@ router.post('/wxpay/notify_url', async (req, res) => {
                 },
                 data: {
                     payAmount: payer_total,
+                    transactionId,
                     statu: 1 // 已预约
                 },
                 include: {
@@ -122,7 +123,7 @@ router.post('/wxpay/notify_url', async (req, res) => {
                 templateId,
                 openid: wxid,
                 data: {
-                    // 商品
+                    // 商品·
                     thing1: {
                         value: '预约成功'
                     },
