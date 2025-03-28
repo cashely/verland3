@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import payment from '../utils/wechat.pay.sdk';
 import Router from "../middles/route";
 import prisma from "../configs/prisma";
@@ -94,6 +95,9 @@ router.post('/wxpay/notify_url', async (req, res) => {
             const book = await prisma.book.findFirst({
                 where: {
                     outTradeNo: out_trade_no
+                },
+                include: {
+                    menu: true 
                 }
             })
 
@@ -129,15 +133,15 @@ router.post('/wxpay/notify_url', async (req, res) => {
                     },
                     // 金额
                     amount2: {
-                        value: '预约时间'
+                        value: book.totalAmount
                     },
                     // 时间
                     date3: {
-                        value: '2019-12-25 09:42'
+                        value: dayjs(book.createdAt).format('YYYY-MM-DD HH:mm')
                     },
                     // 订单编号
                     character_string8: {
-                        value: '15013306010'
+                        value: out_trade_no
                     }
                 },
                 url: `pages/mine/appointList/detail/index?id=${updateBook.id}`
@@ -159,6 +163,9 @@ router.post('/wxpay/notify_url', async (req, res) => {
             const book = await prisma.book.findFirst({
                 where: {
                     outRefundNo: out_refund_no
+                },
+                include: {
+                   menu: true 
                 }
             })
 
@@ -187,19 +194,19 @@ router.post('/wxpay/notify_url', async (req, res) => {
                 data: {
                     // 退款状态
                     phrase1: {
-                        value: '预约成功'
+                        value: '退款成功'
                     },
-                    // 订单编号
+                    // 订单时间
                     character_string2: {
-                        value: '预约时间'
+                        value: out_refund_no
                     },
                     // 商品名称
                     thing3: {
-                        value: '预约人'
+                        value: book.menu.name
                     },
                     // 退款金额
                     amount4: {
-                        value: '预约人电话'
+                        value: book.payAmount
                     }
                 }
             })
