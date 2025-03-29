@@ -36,7 +36,6 @@ export default function Profile() {
       ...formData,
       gender: +formData.gender,
     }).then((res) => {
-      console.log(res);
       if (res?.code === 200) {
         // 保存成功
         const _storage = getStorageSync('userInfo');
@@ -62,7 +61,6 @@ export default function Profile() {
 
   const handleChange = (val, key) => {
     if (key === 'gender') {
-      console.log(val.detail.value);
       setFormData({
         ...formData,
         [key]: val.detail.value,
@@ -71,7 +69,6 @@ export default function Profile() {
       return;
     }
     setFormData((d) => {
-      console.log(val, key);
       return {
         ...d,
         [key]: val,
@@ -85,7 +82,6 @@ export default function Profile() {
       sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
       sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有，在H5浏览器端支持
     }).then((res) => {
-      console.log(res, 'album');
       if (!res.tempFilePaths?.length) return;
       const filePath = res.tempFilePaths[0];
       uploadFile({

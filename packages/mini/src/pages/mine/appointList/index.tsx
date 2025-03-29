@@ -45,7 +45,6 @@ export default function Index() {
         ...item,
         bookDateTime: dayjs(item.bookDateTime).format('YYYY-MM-DD HH:mm:ss'),
       }));
-      console.log(result);
       setData(result);
     }
   };
@@ -56,7 +55,6 @@ export default function Index() {
 
   const getData = (val) => {
     if (val === -1) return data;
-    console.log(val);
     return data.filter((item) => item?.statu === val) || [];
   };
 
@@ -87,7 +85,6 @@ export default function Index() {
   };
 
   const onCancel = (item) => {
-    console.log(item);
     cancel(item.id).then((res) => {
       if (res.code === 200) {
         showToast({

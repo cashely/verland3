@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, Image } from '@tarojs/components';
-import { useLoad, getCurrentInstance } from '@tarojs/taro';
+import { useLoad } from '@tarojs/taro';
 import { detail } from '@/apis/advise';
 import { formatDateTime } from '@/utils';
 import waitDeal from '../../../../../subpackages/assets/images/wait_deal.png';
@@ -15,11 +15,8 @@ interface IProps {
 
 export default function Detail() {
   useLoad((option) => {
-    const params = getCurrentInstance().router?.params;
-    console.log('Page loaded.', params);
     option?.id &&
       detail(option?.id).then((res) => {
-        console.log(res);
         if (res?.data) {
           setData(res.data);
         }

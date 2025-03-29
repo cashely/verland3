@@ -68,6 +68,12 @@ const APPOINTMENT_TYPES = {
   },
 };
 
+const TICKET_STATUS_TYPE = {
+  1: '已开票',
+  2: '未开票',
+  3: '用户催票',
+};
+
 const DEFAULT_IMAGE =
   'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0';
 
@@ -79,4 +85,5 @@ export {
   BASE_SERVICES,
   TICKET_TYPE,
   DEFAULT_IMAGE,
+  TICKET_STATUS_TYPE,
 };

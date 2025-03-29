@@ -1,20 +1,12 @@
 import { useEffect, useState } from 'react';
 import { View, Text } from '@tarojs/components';
-import { useLoad, navigateTo } from '@tarojs/taro';
+import { navigateTo } from '@tarojs/taro';
 import { list } from '@/apis/advise';
 import './index.scss';
-import dayjs from 'dayjs';
+import { formatDateTime } from '@/utils';
 
 export default function List() {
-  useLoad(() => {
-    console.log('Page loaded.');
-  });
-
   const [data, setData] = useState([]);
-  const formatDay = (day: string) => {
-    if (!day) return '';
-    return dayjs(day).format('YYYY-MM-DD HH:mm:ss');
-  };
   const getStatusBg = (item) => {
     const obj = {
       0: {
@@ -35,10 +27,7 @@ export default function List() {
   };
 
   useEffect(() => {
-    console.log('getApi loaded.');
-
     list().then((res) => {
-      console.log(res);
       if (res?.data) {
         setData(res.data);
       }
@@ -57,8 +46,10 @@ export default function List() {
             })
           }
         >
-          <View className="item-head items-center">
-            <View className="text-888">预：{formatDay(item.createdAt)}</View>
+          <View className="items-center item-head">
+            <View className="text-888">
+              预：{formatDateTime(item.createdAt)}
+            </View>
             {getStatusBg(item)}
           </View>
           <View className="content">{item.content}</View>

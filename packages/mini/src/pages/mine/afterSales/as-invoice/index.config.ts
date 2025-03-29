@@ -1,3 +1,3 @@
 export default definePageConfig({
-  navigationBarTitleText: '我的预约单',
+  navigationBarTitleText: '我的发票',
 });

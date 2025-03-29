@@ -3,17 +3,15 @@ import { View, Text } from '@tarojs/components';
 import { navigateTo, useLoad } from '@tarojs/taro';
 import { list as bookList } from '@/apis/book';
 import { list } from '@/apis/ticket';
-import dayjs from 'dayjs';
-import { formatPrice } from '@/utils';
+import { TICKET_STATUS_TYPE } from '@/constants';
+import { formatPrice, formatDateTime } from '@/utils';
 import './index.scss';
 
 export default function Index() {
   const [data, setData] = useState([]);
   const [pageType, setPageType] = useState('');
-
   useLoad((option) => {
     const { type } = option;
-    console.log('Page loaded.', option);
     setPageType(type);
     if (type === 'kpsq') {
       bookList().then((res) => {
@@ -45,34 +43,30 @@ export default function Index() {
     });
   };
 
-  const formatTime = (time) => {
-    if (!time) return '';
-    return dayjs(time).format('YYYY-MM-DD HH:mm:ss');
-  };
-
   return (
     <View className="page-invoiceList">
       {data?.map((item, index) => (
         <View
-          className={['item', pageType]}
+          className={`item ${pageType}`}
           onClick={() => handleClick(item)}
           key={index}
         >
           <View className="flex items-center justify-between title">
             <Text>{item.menu?.name || '-'}</Text>
             <Text className="time">
-              {formatTime(item.bookDateTime || item.createdAt)}
+              {formatDateTime(item.bookDateTime || item.createdAt)}
             </Text>
           </View>
           <View className="font-bold priceCon text-price">
-            {formatPrice(item.totalAmount) ||
-              formatPrice(item.book?.totalAmount)}
+            {item?.book
+              ? formatPrice(item.book?.totalAmount)
+              : formatPrice(item.totalAmount)}
             <Text className="unit">元</Text>
           </View>
           {pageType === 'wdsq' && (
             <View className="ticket-footer">
-              <Text>{item.statu === 2 ? '未开票' : '开票中'}</Text>
-              <Text>未收到发票</Text>
+              <Text>{TICKET_STATUS_TYPE[item.statu]}</Text>
+              {/* <Text>未收到发票</Text> */}
             </View>
           )}
         </View>

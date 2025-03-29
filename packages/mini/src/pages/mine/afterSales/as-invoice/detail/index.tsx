@@ -15,13 +15,11 @@ interface IProps {
 export default () => {
   const [formData, setFormData] = useState<IProps>();
   useLoad((option) => {
-    console.log('Page loaded.', option);
     option?.id && getData(option);
   });
 
   const getData = async (option) => {
     const res = await detail(option.id);
-    console.log(res);
     if (res.code === 200) {
       setFormData({
         ...res.data,

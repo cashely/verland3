@@ -101,11 +101,9 @@ export default function Add() {
     });
   };
   const handleUpload = (_files: IFileItem[], type: string) => {
-    console.log(files);
     if (type === 'remove') return setFiles([]);
     if (files.length == 1)
       return showToast({ title: '最多上传一张照片', icon: 'none' });
-    // console.log(file);
     uploadFile({
       url: `${baseUrl}/file`,
       name: 'file',
@@ -113,7 +111,6 @@ export default function Add() {
       success: (res) => {
         if (res?.statusCode == 200) {
           const { data = {} } = res?.data ? JSON.parse(res.data) : {};
-          console.log(data);
           setFormData({
             ...formData,
             imageIds: [data?.id],
