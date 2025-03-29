@@ -51,6 +51,8 @@ const tableColumns = [
     title: '快递地址',
     key: 'address',
     dataIndex: 'address',
+    width: 200,
+    showTitle: true,
     render(_) {
       return `${_.province || ''}${_.city || ''}${_.area || ''}${
         _.detail || ''
@@ -139,10 +141,12 @@ const detailItems = [
   {
     label: '套餐类型',
     prop: 'menu',
-    render(_: any) {
-      if (!_) return;
-      return _.name;
-    },
+    render: (_: any) => _.name,
+  },
+  {
+    label: '附加服务',
+    prop: 'bookGoods',
+    render: (_: any) => _?.map((n) => n.bookGood?.title).join(),
   },
   {
     label: '预约上门时间',

@@ -1,3 +1,4 @@
+import { IOptionItem, Option } from './types';
 //预约单状态
 const APPOINTMENT_STATUS = [
   {
@@ -48,21 +49,25 @@ const INVOICE_STATUS = [
   {
     label: '未开票',
     value: 1,
+    tag: 'red',
   },
   {
     label: '已开票',
     value: 2,
+    tag: 'green',
   },
 ];
 //宠物状态
-const PET_STATUS = [
+const PET_STATUS: Option = [
   {
     label: '活着',
     value: 1,
+    tag: 'green',
   },
   {
     label: '死亡',
     value: 2,
+    tag: 'red',
   },
 ];
 //付款渠道
@@ -142,6 +147,13 @@ const RITE_TYPE = [
   },
 ];
 
+const tagColorMap = (arr: IOptionItem[]) => {
+  return arr.reduce((acc: Record<number, string>, cur: IOptionItem) => {
+    acc[cur.value] = cur.tag;
+    return acc;
+  }, {});
+};
+
 function getLabelByValue(arr: any[], value: any) {
   let label = '';
   arr.forEach((item) => {
@@ -163,4 +175,5 @@ export {
   RITE_TYPE,
   APPOINTMENT_STATUS,
   getLabelByValue,
+  tagColorMap,
 };

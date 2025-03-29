@@ -96,8 +96,6 @@ const BasicPage = (
     []
   );
 
-  console.log(children, '_--------------');
-
   //初始化数据
   useEffect(() => {
     getPageData();

@@ -1,4 +1,4 @@
-import { COMPLAINT_TYPE } from '@/constants';
+import { COMPLAINT_TYPE, getLabelByValue } from '@/constants';
 const searchItems = [
   {
     label: '投诉建议类型',
@@ -69,4 +69,35 @@ const formConfig = {
   },
 };
 
-export { searchItems, tableColums, formConfig };
+const detailItems = [
+  {
+    label: '投诉用户',
+    prop: 'user',
+    render: (_: any) => _?.username || '-',
+  },
+  {
+    label: '投诉类型',
+    prop: 'type',
+    render: (_: number) => getLabelByValue(COMPLAINT_TYPE, _),
+  },
+  {
+    label: '投诉内容',
+    prop: 'content',
+  },
+  {
+    label: '反馈内容',
+    prop: 'replayContent',
+  },
+  {
+    label: '反馈时间',
+    prop: 'replayAt',
+    type: 'datetime',
+  },
+  {
+    label: '创建时间',
+    prop: 'createdAt',
+    type: 'datetime',
+  },
+];
+
+export { searchItems, tableColums, formConfig, detailItems };

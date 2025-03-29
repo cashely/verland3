@@ -63,7 +63,7 @@ export default function Index() {
         {{
           showColumnActions: (_, record) => {
             const id = record.id;
-            const detailRoute = `/advice/detail/${id}`;
+            const detailRoute = `/adviceManagement/detail/${id}`;
             return (
               <Flex gap="small">
                 <Button

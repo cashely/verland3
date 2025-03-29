@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import loadable from '@loadable/component';
-import { Navigate, redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { TeamOutlined, CustomerServiceOutlined } from '@ant-design/icons';
 import { getTokenFromLocalStorage } from '../utils/index.ts';
 import IcontFont from '@/components/IcontFont';
@@ -16,16 +16,13 @@ const MenuManagementDetail = loadable(
   () => import('../pages/menuManagement/detail.tsx')
 );
 const AppointManagement = loadable(() => import('../pages/appointManagement'));
-const SaleManagement = loadable(
-  () => import('../pages/petManagement/index.tsx')
-);
+const PetManagement = loadable(() => import('../pages/petManagement/index'));
+const PetDetail = loadable(() => import('../pages/petManagement/detail'));
 const AccountManagement = loadable(() => import('../pages/accountManagement'));
 const AppointManagementDetail = loadable(
   () => import('../pages/appointManagement/detail')
 );
-const EditOrAdd = loadable(
-  () => import('../pages/appointManagement/editOrAdd')
-);
+
 const BookGoodsManagement = loadable(
   () => import('../pages/bookGoodsManagement')
 );
@@ -34,6 +31,9 @@ const TickManagementDetail = loadable(
   () => import('../pages/tickManagement/detail.tsx')
 );
 const AdviceManagement = loadable(() => import('../pages/adviceManagement'));
+const AdviceManagementDetail = loadable(
+  () => import('../pages/adviceManagement/detail')
+);
 const hasToken = getTokenFromLocalStorage();
 const BookGoodsDetail = loadable(
   () => import('../pages/bookGoodsManagement/detail')
@@ -162,23 +162,6 @@ const anyncRoutesList = [
         element: <AppointManagementDetail />,
         //lazy(),
       },
-      {
-        path: '/appointManagement/editAdd/:id?',
-        title: '预约编辑', //编辑或者新增
-        handle: {
-          title: '预约编辑',
-        },
-        hidden: true,
-        element: <EditOrAdd />,
-        //lazy(),
-        loader: (e) => {
-          console.log(e, '-111');
-          // alert(1);
-          // return hasToken ? redirect("/dashboard") : null;
-          // return false;
-          return null;
-        },
-      },
     ],
   },
   {
@@ -248,6 +231,15 @@ const anyncRoutesList = [
         },
         element: <AdviceManagement />,
       },
+      {
+        path: '/adviceManagement/detail/:id?',
+        title: '详情',
+        hidden: true,
+        handle: {
+          title: '详情',
+        },
+        element: <AdviceManagementDetail />,
+      },
     ],
   },
   {
@@ -269,7 +261,16 @@ const anyncRoutesList = [
         handle: {
           title: '宠物库',
         },
-        element: <SaleManagement />,
+        element: <PetManagement />,
+      },
+      {
+        path: '/petManagement/detail/:id?',
+        title: '详情',
+        hidden: true,
+        handle: {
+          title: '详情',
+        },
+        element: <PetDetail />,
       },
     ],
   },
@@ -295,7 +296,7 @@ const anyncRoutesList = [
         element: <AccountManagement />,
       },
       {
-        path: '/accountManagement/detail/:id',
+        path: '/accountManagement/detail/:id?',
         handle: {
           title: '详情',
         },

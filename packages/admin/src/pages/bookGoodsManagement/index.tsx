@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Modal, Flex, message } from 'antd';
+import { Button, Modal, Flex, Typography, message, Space } from 'antd';
 import { searchItems, tableColums, formConfig } from './config.tsx';
 import { list, del, edit, add } from '@/apis/modules/bookGood';
 import MyPage from '@/components/BasicPage';
@@ -101,39 +101,17 @@ export default function appointManagement() {
             const id = record.id;
             const detailRoute = `/bookGoodsManagement/detail/${id}`;
             return (
-              <Flex gap="small">
-                {/* <NavLink to={route}>详情</NavLink> */}
-                <Button
-                  onClick={() => navigate(detailRoute)}
-                  size="small"
-                  color="primary"
-                  variant="link"
-                >
+              <Space size="middle">
+                <Typography.Link onClick={() => navigate(detailRoute)}>
                   详情
-                </Button>
-                <Button
-                  onClick={() => handleAddOrEdit(record)}
-                  size="small"
-                  color="primary"
-                  variant="link"
-                >
+                </Typography.Link>
+                <Typography.Link onClick={() => handleAddOrEdit(record)}>
                   编辑
-                </Button>
-                {/* <Typography.Link>详情</Typography.Link>
-                    <Typography.Link>删除</Typography.Link> */}
-                <Button
-                  onClick={() => handleDel(record.id)}
-                  size="small"
-                  color="danger"
-                  variant="link"
-                >
+                </Typography.Link>
+                <Typography.Link onClick={() => handleDel(record.id)}>
                   删除
-                </Button>
-                {/* <NavLink to={route}>详情</NavLink>
-                    <a onClick={handleDel}>删除</a> */}
-                {/* <Typography.Link>删除</Typography.Link> */}
-                {/* <Link to="/" component={Typography.Link} /> */}
-              </Flex>
+                </Typography.Link>
+              </Space>
             );
           },
         }}

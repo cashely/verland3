@@ -1,4 +1,9 @@
-import { TICKET_TYPE } from '@/constants';
+import {
+  TICKET_TYPE,
+  PET_STATUS,
+  getLabelByValue,
+  tagColorMap,
+} from '@/constants';
 
 const searchItems = [
   {
@@ -46,39 +51,53 @@ const tableColumns = [
     title: '宠物状态',
     key: 'statu',
     dataIndex: 'statu',
-    render(_) {
-      if (!_) return '-';
-      return _ === 1 ? '活着' : '死亡';
-    },
+    slot: 'tag',
+    tagObj: tagColorMap(PET_STATUS),
+    options: PET_STATUS,
   },
   {
     title: '创建时间',
     key: 'createdAt',
     dataIndex: 'createdAt',
-    type: 'datetime',
+    slot: 'datetime',
   },
 ];
 
 const detailItems = [
   {
-    label: '产品名称',
-    prop: 'title',
+    label: '宠物名称',
+    prop: 'petname',
   },
   {
     label: '缩略图',
     prop: 'thumnb',
+    type: 'image',
   },
   {
-    label: '价格',
-    prop: 'price',
+    label: '宠物类别',
+    prop: 'type',
   },
   {
-    label: '产品内容',
-    prop: 'content',
+    label: '宠物子类',
+    prop: 'subType',
+  },
+  {
+    label: '年龄',
+    prop: 'age',
+  },
+  {
+    label: '体重(kg)',
+    prop: 'weight',
+  },
+  {
+    label: '宠物状态',
+    prop: 'statu',
+    render: (_: number) => getLabelByValue(PET_STATUS, _),
   },
   {
     label: '创建时间',
     prop: 'createdAt',
+    type: 'datetime',
   },
 ];
 

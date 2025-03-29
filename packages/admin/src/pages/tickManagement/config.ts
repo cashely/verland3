@@ -1,4 +1,9 @@
-import { getLabelByValue, TICKET_TYPE, INVOICE_STATUS } from '@/constants';
+import {
+  getLabelByValue,
+  TICKET_TYPE,
+  INVOICE_STATUS,
+  tagColorMap,
+} from '@/constants';
 import { formatPrice } from '@/utils';
 const searchItems = [
   {
@@ -51,7 +56,9 @@ const tableColumns = [
     title: '开票状态',
     key: 'statu',
     dataIndex: 'statu',
-    render: (_) => getLabelByValue(INVOICE_STATUS, _),
+    slot: 'tag',
+    tagObj: tagColorMap(INVOICE_STATUS),
+    options: INVOICE_STATUS,
   },
   {
     title: '邮箱',

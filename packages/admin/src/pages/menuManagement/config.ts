@@ -4,6 +4,7 @@ const searchItems = [
     label: '套餐名称',
     prop: 'name',
     type: 'input',
+    placeholder: '请输入',
   },
 ];
 
@@ -57,10 +58,7 @@ const detailItems = [
   {
     label: '套餐价格(¥)',
     prop: 'price',
-    render(_) {
-      if (!_) return '-';
-      return formatPrice(_);
-    },
+    render: (_) => formatPrice(_),
   },
   {
     label: '创建时间',

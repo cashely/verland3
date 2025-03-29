@@ -1,3 +1,5 @@
+import { formatPrice } from '@/utils';
+
 const tableColums = [
   {
     title: '产品名称',
@@ -12,18 +14,18 @@ const tableColums = [
     slot: 'image',
   },
   {
-    title: '价格',
+    title: '价格(¥)',
     dataIndex: 'price',
     key: 'price',
-    render(_) {
-      if (!_) return '-';
-      return (_ / 100).toLocaleString();
-    },
+    width: 100,
+    render: (_) => formatPrice(_),
   },
   {
     title: '产品内容',
     dataIndex: 'content',
     key: 'content',
+    width: 200,
+    showTitle: true,
   },
   {
     title: '创建时间',
@@ -59,7 +61,8 @@ const detailItems = [
   },
   {
     label: '缩略图',
-    prop: 'thumnb',
+    prop: 'thumb',
+    type: 'image',
   },
   {
     label: '价格',
