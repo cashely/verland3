@@ -1,12 +1,12 @@
 import type { RequestResult } from '../..';
-import request from "../request";
+import request from '../request';
 
 /**
  * @name 列表
  */
 
-export async function list<T>(): Promise<RequestResult<T>> {
-    return request.get("/book");
+export async function list<T>(params: any): Promise<RequestResult<T>> {
+  return request.get(`/book?${new URLSearchParams(params).toString()}`);
 }
 
 /**
@@ -14,5 +14,5 @@ export async function list<T>(): Promise<RequestResult<T>> {
  */
 
 export async function detail<T>(id: string): Promise<RequestResult<T>> {
-    return request.get(`/book/${id}`);
+  return request.get(`/book/${id}`);
 }

@@ -40,8 +40,8 @@ export async function uploadFile<T>(): Promise<RequestResult<T>> {
 /**
  * @name 菜单列表
  */
-export function menuList<T>(): Promise<RequestResult<T>> {
-  return request.get('/menu');
+export function menuList<T>(params = {} as any): Promise<RequestResult<T>> {
+  return request.get(`/menu?${new URLSearchParams(params).toString()}`);
 }
 
 //获取menu

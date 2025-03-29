@@ -50,6 +50,7 @@ export default function AsApplyInvoice() {
       if (res.code === 200) {
         setStatus(1);
         if (!isOpened) setIsOpened(true);
+        navigateBack();
       }
     });
 

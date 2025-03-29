@@ -30,6 +30,9 @@ const BookGoodsManagement = loadable(
   () => import('../pages/bookGoodsManagement')
 );
 const TickManagement = loadable(() => import('../pages/tickManagement'));
+const TickManagementDetail = loadable(
+  () => import('../pages/tickManagement/detail.tsx')
+);
 const AdviceManagement = loadable(() => import('../pages/adviceManagement'));
 const hasToken = getTokenFromLocalStorage();
 const BookGoodsDetail = loadable(
@@ -192,6 +195,15 @@ const anyncRoutesList = [
           title: '列表',
         },
         element: <TickManagement />,
+      },
+      {
+        path: '/ticketManagement/detail/:id?',
+        title: '详情',
+        hidden: true,
+        handle: {
+          title: '详情',
+        },
+        element: <TickManagementDetail />,
       },
     ],
   },

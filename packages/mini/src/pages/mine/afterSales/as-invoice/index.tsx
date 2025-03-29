@@ -4,7 +4,6 @@ import { navigateTo, useLoad } from '@tarojs/taro';
 import { list as bookList } from '@/apis/book';
 import { list } from '@/apis/ticket';
 import dayjs from 'dayjs';
-import { BASE_SERVICES } from '@/constants';
 import { formatPrice } from '@/utils';
 import './index.scss';
 
@@ -51,11 +50,6 @@ export default function Index() {
     return dayjs(time).format('YYYY-MM-DD HH:mm:ss');
   };
 
-  const getMenuLabel = (menu) => {
-    if (!menu) return '-';
-    return BASE_SERVICES.find((iten) => iten.value === menu)?.label;
-  };
-
   return (
     <View className="page-invoiceList">
       {data?.map((item, index) => (
@@ -65,9 +59,7 @@ export default function Index() {
           key={index}
         >
           <View className="flex items-center justify-between title">
-            <Text>
-              {getMenuLabel(item.menu) || getMenuLabel(item.book?.menu) || '-'}
-            </Text>
+            <Text>{item.menu?.name || '-'}</Text>
             <Text className="time">
               {formatTime(item.bookDateTime || item.createdAt)}
             </Text>

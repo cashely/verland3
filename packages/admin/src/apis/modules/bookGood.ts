@@ -1,12 +1,12 @@
 import type { RequestResult } from '../..';
-import request from "../request";
+import request from '../request';
 
 /**
  * @name 列表
  */
 
-export async function list<T>(): Promise<RequestResult<T>> {
-    return request.get("/bookGood");
+export async function list<T>(params: any): Promise<RequestResult<T>> {
+  return request.get(`/bookGood?${new URLSearchParams(params).toString()}`);
 }
 
 /**
@@ -14,7 +14,7 @@ export async function list<T>(): Promise<RequestResult<T>> {
  */
 
 export async function detail<T>(id: string): Promise<RequestResult<T>> {
-    return request.get(`/bookGood/${id}`);
+  return request.get(`/bookGood/${id}`);
 }
 
 /**
@@ -22,23 +22,21 @@ export async function detail<T>(id: string): Promise<RequestResult<T>> {
  */
 
 export async function add<T>(data: T): Promise<RequestResult<T>> {
-    return request.post("/bookGood", data);
+  return request.post('/bookGood', data);
 }
-
 
 /**
  * @name 修改
  */
 
 export async function edit<T>(id: string, data: T): Promise<RequestResult<T>> {
-    return request.put(`/bookGood/${id}`, data);
+  return request.put(`/bookGood/${id}`, data);
 }
-
 
 /**
  * @name 删除
  */
 
 export async function del<T>(id: string): Promise<RequestResult<T>> {
-    return request.delete(`/bookGood/${id}`);
+  return request.delete(`/bookGood/${id}`);
 }

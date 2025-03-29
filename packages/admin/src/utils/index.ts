@@ -677,6 +677,7 @@ export default {
 
 //格式化金额 分为单位
 const formatPrice = (price: number) => {
+  if (isNaN(price)) return '-';
   return (price / 100).toLocaleString() || 0;
 };
 export { formatPrice };

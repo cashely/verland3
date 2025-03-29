@@ -1,46 +1,18 @@
-import { HANDLE_WAYS, SERVICE_TYPE, RITE_TYPE } from '@/constants';
+import {
+  HANDLE_WAYS,
+  getLabelByValue,
+  ORDER_CHANNEL,
+  PAY_CHANNEL,
+  RITE_TYPE,
+  APPOINTMENT_STATUS,
+} from '@/constants';
 const searchItems = [
   {
-    label: '姓名',
-    prop: 'name',
-    type: 'input',
-    placeholder: '请输入姓名',
-  },
-  {
-    label: '手机号',
-    prop: 'phone',
-    type: 'input',
-    placeholder: '请输入手机号',
-    itemProps: {
-      // disabled: true,
-      allowClear: false,
-    },
-  },
-  {
-    label: '年龄',
-    prop: 'age',
-    type: 'inputNumber',
-    placeholder: '请输入年龄',
-    itemProps: {
-      // disabled: true,
-      // allowClear: false
-    },
-  },
-  {
-    label: '性别',
-    prop: 'sex',
+    label: '状态',
+    prop: 'statu',
     type: 'select',
-    placeholder: '请选择性别',
-    options: [
-      {
-        label: '男',
-        value: 1,
-      },
-      {
-        label: '女',
-        value: 2,
-      },
-    ],
+    placeholder: '请选择状态',
+    options: APPOINTMENT_STATUS,
   },
 ];
 
@@ -157,11 +129,19 @@ const tableColumns = [
 
 const detailItems = [
   {
-    label: '套餐类型',
-    prop: 'menu',
+    label: '预约用户',
+    prop: 'user',
     render(_) {
       if (!_) return;
-      return _ === 1 ? '上门服务' : '预约服务';
+      return _?.username || '-';
+    },
+  },
+  {
+    label: '套餐类型',
+    prop: 'menu',
+    render(_: any) {
+      if (!_) return;
+      return _.name;
     },
   },
   {
@@ -170,11 +150,11 @@ const detailItems = [
     type: 'datetime',
   },
   {
-    label: '是否需要快递',
+    label: '遗物处理方式',
     prop: 'handleWay',
-    render(_) {
+    render(_: number) {
       if (!_) return '-';
-      return HANDLE_WAYS.find((_) => _.value === _)?.label || '-';
+      return getLabelByValue(HANDLE_WAYS, _);
     },
   },
   {
@@ -195,9 +175,7 @@ const detailItems = [
   {
     label: '是否需要仪式',
     prop: 'isRite',
-    render(_) {
-      return _ === 1 ? '是' : '否';
-    },
+    render: (_) => getLabelByValue(RITE_TYPE, _),
   },
   {
     label: '仪式时间',
@@ -215,11 +193,14 @@ const detailItems = [
     type: 'price',
   },
   {
+    label: '订单渠道来源',
+    prop: 'channel',
+    render: (_: number) => getLabelByValue(ORDER_CHANNEL, _),
+  },
+  {
     label: '付款渠道',
     prop: 'payChannel',
-    render(_: number) {
-      return _ === 1 ? '微信' : '支付宝';
-    },
+    render: (_: number) => getLabelByValue(PAY_CHANNEL, _),
   },
   {
     label: '订单来源渠道',
@@ -246,6 +227,26 @@ const detailItems = [
           return '已取消';
       }
     },
+  },
+  {
+    label: '支付订单号',
+    prop: 'outTradeNo',
+  },
+  {
+    label: '退款订单号',
+    prop: 'outRefundNo',
+  },
+  {
+    label: '支付结果订单号',
+    prop: 'transactionId',
+  },
+  {
+    label: '寄送的快递名称',
+    prop: 'expressName',
+  },
+  {
+    label: '寄送的快递单号',
+    prop: 'expressNo',
   },
 ];
 

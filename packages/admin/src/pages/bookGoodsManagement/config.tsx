@@ -1,5 +1,3 @@
-
-
 const tableColums = [
   {
     title: '产品名称',
@@ -11,16 +9,16 @@ const tableColums = [
     title: '缩略图',
     key: 'thumb',
     dataIndex: 'thumb',
-    slot: "image"
+    slot: 'image',
   },
   {
     title: '价格',
     dataIndex: 'price',
     key: 'price',
     render(_) {
-      if (!_) return '-'
-      return (_ / 100).toLocaleString()
-    }
+      if (!_) return '-';
+      return (_ / 100).toLocaleString();
+    },
   },
   {
     title: '产品内容',
@@ -31,9 +29,9 @@ const tableColums = [
     title: '创建时间',
     dataIndex: 'createdAt',
     key: 'createdAt',
-    slot: 'datetime'
+    slot: 'datetime',
   },
-]
+];
 
 const searchItems = [
   {
@@ -41,17 +39,18 @@ const searchItems = [
     prop: 'title',
     type: 'input',
     placeholder: '请输入服务名称',
-    options: [{
-      label: '产品名称1',
-      value: '1'
-    },
-    {
-      label: '产品内容2',
-      value: '2'
-    },
-    ]
+    options: [
+      {
+        label: '产品名称1',
+        value: '1',
+      },
+      {
+        label: '产品内容2',
+        value: '2',
+      },
+    ],
   },
-]
+];
 
 const detailItems = [
   {
@@ -65,7 +64,7 @@ const detailItems = [
   {
     label: '价格',
     prop: 'price',
-    type: 'price'
+    type: 'price',
   },
   {
     label: '产品内容',
@@ -74,10 +73,9 @@ const detailItems = [
   {
     label: '创建时间',
     prop: 'createdAt',
-  }
+    type: 'datetime',
+  },
 ];
-
-
 
 const formConfig = {
   formList: [
@@ -92,7 +90,7 @@ const formConfig = {
         placeholder: '请输入服务名称',
         // disabled: true
         // readOnly: true,
-      }
+      },
     },
     {
       label: '价格',
@@ -103,13 +101,13 @@ const formConfig = {
       itemProps: {
         placeholder: '请输入价格',
         prefix: '￥',
-        suffix: "RMB",
+        suffix: 'RMB',
         controls: false,
-        precision: "2",
-      }
+        precision: '2',
+      },
     },
     {
-      label: "缩略图",
+      label: '缩略图',
       prop: 'thumb',
       type: 'upload',
       span: 24,
@@ -124,18 +122,11 @@ const formConfig = {
         placeholder: '请输入服务内容',
         // readonly: true,
         // required: true,
-      }
-    }
+      },
+    },
   ],
   formModel: {},
-  rules: []
-}
+  rules: [],
+};
 
-
-
-export {
-  tableColums,
-  searchItems,
-  detailItems,
-  formConfig
-}
+export { tableColums, searchItems, detailItems, formConfig };

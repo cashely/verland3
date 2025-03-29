@@ -5,7 +5,7 @@ const searchItems = [
     type: 'input',
     placeholder: '请输入',
   },
-]
+];
 
 const tableColumns = [
   {
@@ -33,8 +33,8 @@ const tableColumns = [
     key: 'gender',
     dataIndex: 'gender',
     render(d: number) {
-        return d === 0 ? '男' : '女'
-    }
+      return d === 0 ? '男' : '女';
+    },
   },
   {
     title: '手机号',
@@ -45,8 +45,9 @@ const tableColumns = [
     title: '创建时间',
     key: 'createdAt',
     dataIndex: 'createdAt',
-  }
-]
+    slot: 'datetime',
+  },
+];
 
 const detailItems = [
   {
@@ -67,11 +68,11 @@ const detailItems = [
   },
   {
     label: '性别',
-    key: 'gender',
-    dataIndex: 'gender',
+    prop: 'gender',
     render(d: number) {
-        return d === 0 ? '男' : '女'
-    }
+      console.log(d, '++++');
+      return d === 0 ? '男' : '女';
+    },
   },
   {
     label: '手机号',
@@ -80,11 +81,8 @@ const detailItems = [
   {
     label: '创建时间',
     prop: 'createdAt',
-  }
+    type: 'datetime',
+  },
 ];
 
-export {
-  searchItems,
-  tableColumns,
-  detailItems
-}
+export { searchItems, tableColumns, detailItems };

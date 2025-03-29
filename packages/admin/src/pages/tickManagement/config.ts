@@ -1,98 +1,114 @@
-import { TICKET_TYPE } from '@/constants'
+import { getLabelByValue, TICKET_TYPE, INVOICE_STATUS } from '@/constants';
+import { formatPrice } from '@/utils';
 const searchItems = [
-    {
-        label: '发票类型',
-        prop: 'type',
-        type: 'select',
-        placeholder: '请选择发票类型',
-        options: TICKET_TYPE
-    },
-]
-
-const tableColumns = [
-    {
-        title: '发票抬头',
-        key: 'header',
-        prop: 'header',
-    },
-    {
-        title: '发票类型',
-        key: 'type',
-        prop: "type",
-        render(_) {
-            return _ === '1' ? '个人' : '企业'
-        }
-    },
-    {
-        title: '附加服务',
-        key: 'book',
-        prop: 'book'
-    },
-    {
-        title: '税号',
-        key: 'number',
-        prop: 'number'
-    },
-    {
-        title: '发票金额',
-        key: 'amount',
-        prop: 'amount',
-        render(_) {
-            if (!_) return '-'
-            return (_ / 100).toLocaleString()
-        }
-    },
-    {
-        title: '开票状态',
-        key: 'statu',
-        prop: 'statu',
-        render(_) {
-            return _ === '2' ? '未开票' : '已开票'
-        }
-    },
-    {
-        title: '邮箱',
-        key: 'email',
-        prop: 'email'
-    },
-    {
-        title: '开票时间',
-        key: 'createdAt',
-        prop: 'createdAt',
-        slot: 'datetime'
-    },
-    {
-        title: '操作',
-        key: 'action',
-    }
-]
-
-const detailItems = [
-    {
-        label: '产品名称',
-        prop: 'title',
-    },
-    {
-        label: '缩略图',
-        prop: 'thumnb',
-    },
-    {
-        label: '价格',
-        prop: 'price',
-    },
-    {
-        label: '产品内容',
-        prop: 'content',
-    },
-    {
-        label: '创建时间',
-        prop: 'createdAt',
-    }
+  {
+    label: '发票类型',
+    prop: 'type',
+    type: 'select',
+    placeholder: '请选择发票类型',
+    options: TICKET_TYPE,
+  },
 ];
 
+const tableColumns = [
+  {
+    title: 'ID',
+    key: 'id',
+    dataIndex: 'id',
+  },
+  {
+    title: '发票抬头',
+    key: 'header',
+    dataIndex: 'header',
+  },
+  {
+    title: '发票类型',
+    key: 'type',
+    dataIndex: 'type',
+    render: (_) => getLabelByValue(TICKET_TYPE, _),
+  },
+  {
+    title: '附加服务',
+    key: 'book',
+    dataIndex: 'book',
+    render: (_) => {
+      if (!_) return;
+      return _.bookGoods?.map((item) => item.name).join('，') || '无';
+    },
+  },
+  {
+    title: '税号',
+    key: 'number',
+    dataIndex: 'number',
+  },
+  {
+    title: '发票金额(¥)',
+    key: 'book',
+    dataIndex: 'book',
+    render: (_: any) => formatPrice(_.totalAmount),
+  },
+  {
+    title: '开票状态',
+    key: 'statu',
+    dataIndex: 'statu',
+    render: (_) => getLabelByValue(INVOICE_STATUS, _),
+  },
+  {
+    title: '邮箱',
+    key: 'email',
+    dataIndex: 'email',
+  },
+  {
+    title: '开票时间',
+    key: 'createdAt',
+    dataIndex: 'createdAt',
+    slot: 'datetime',
+  },
+];
 
-export {
-    searchItems,
-    tableColumns,
-    detailItems
-}
+const detailItems = [
+  {
+    label: '发票抬头',
+    prop: 'header',
+  },
+  {
+    label: '发票类型',
+    prop: 'type',
+    render: (_) => getLabelByValue(TICKET_TYPE, _),
+  },
+  {
+    label: '附加服务',
+    prop: 'book',
+
+    render: (_) => {
+      if (!_) return;
+      return _.bookGoods?.map((item: any) => item.name).join('，') || '无';
+    },
+  },
+  {
+    label: '税号',
+    prop: 'number',
+  },
+  {
+    label: '发票金额(¥)',
+    prop: 'book',
+    render: (_: any) => formatPrice(_?.totalAmount),
+  },
+  {
+    label: '开票状态',
+    prop: 'statu',
+    render: (_: number) => getLabelByValue(INVOICE_STATUS, _),
+  },
+  {
+    label: '邮箱',
+    prop: 'email',
+    dataIndex: 'email',
+  },
+  {
+    label: '开票时间',
+    prop: 'createdAt',
+    type: 'datetime',
+  },
+];
+
+export { searchItems, tableColumns, detailItems };

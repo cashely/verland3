@@ -2,7 +2,7 @@ import { formatPrice } from '@/utils';
 const searchItems = [
   {
     label: '套餐名称',
-    prop: 'type',
+    prop: 'name',
     type: 'input',
   },
 ];
