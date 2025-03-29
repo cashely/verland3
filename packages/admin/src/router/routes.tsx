@@ -13,10 +13,7 @@ const Layout = loadable(() => import('../layout'));
 const ProjectList = loadable(() => import('../pages/projects/list'));
 const MenuManagement = loadable(() => import('../pages/menuManagement'));
 const MenuManagementDetail = loadable(
-  () => import('../pages/menuManagement/detail')
-);
-const MenuEditOrAdd = loadable(
-  () => import('../pages/menuManagement/editOrAdd')
+  () => import('../pages/menuManagement/detail.tsx')
 );
 const AppointManagement = loadable(() => import('../pages/appointManagement'));
 const SaleManagement = loadable(
@@ -122,34 +119,15 @@ const anyncRoutesList = [
           title: '列表',
         },
         element: <MenuManagement />,
-        //lazy(),
       },
       {
         path: '/menuManagement/detail/:id',
-        title: '预约详情',
+        title: '套餐详情',
         handle: {
-          title: '预约详情',
+          title: '套餐详情',
         },
         hidden: true,
         element: <MenuManagementDetail />,
-        //lazy(),
-      },
-      {
-        path: '/menuManagement/editAdd/:id?',
-        title: '套餐编辑', //编辑或者新增
-        handle: {
-          title: '套餐编辑',
-        },
-        hidden: true,
-        element: <MenuEditOrAdd />,
-        //lazy(),
-        loader: (e) => {
-          console.log(e, '-111');
-          // alert(1);
-          // return hasToken ? redirect("/dashboard") : null;
-          // return false;
-          return null;
-        },
       },
     ],
   },

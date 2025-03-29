@@ -2,9 +2,11 @@ html,
 body {
   overflow: hidden;
 }
+
 a:hover {
   color: inherit;
 }
+
 .logo {
   /* height: 6em;
   padding: 1.5em; */
@@ -18,9 +20,11 @@ a:hover {
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -29,6 +33,7 @@ a:hover {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -48,10 +53,10 @@ a:hover {
   color: #888;
 }
 
-.flex-column{
+.flex-column {
   flex-direction: column;
 }
 
-.ant-menu-item-selected .ant-menu-item-icon{
+.ant-menu-item-selected .ant-menu-item-icon {
   color: #fff !important;
 }

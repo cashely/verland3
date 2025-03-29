@@ -55,12 +55,16 @@ const detailItems = [
     prop: 'description',
   },
   {
-    label: '套餐价格',
+    label: '套餐价格(¥)',
     prop: 'price',
+    render(_) {
+      if (!_) return '-';
+      return formatPrice(_);
+    },
   },
   {
     label: '创建时间',
-    prop: 'createAt',
+    prop: 'createdAt',
     type: 'datetime',
   },
   {
@@ -73,46 +77,41 @@ const detailItems = [
 const formConfig = {
   formList: [
     {
-      label: '产品名称',
-      prop: 'title',
+      label: '套餐名称',
+      prop: 'name',
       type: 'input',
-      options: [],
+
       rules: [{ required: true, message: '请输入产品名称' }],
       span: 24,
       itemProps: {
-        placeholder: '请输入服务名称',
+        placeholder: '请输入套餐名称',
         // disabled: true
         // readOnly: true,
       },
     },
     {
-      label: '价格',
+      label: '价格(¥)',
       prop: 'price',
       type: 'inputNumber',
       rules: [{ required: true, message: '请输入价格' }],
       span: 24,
       itemProps: {
-        placeholder: '请输入价格',
+        placeholder: '请输入套餐价格',
         prefix: '￥',
         suffix: 'RMB',
         controls: false,
         precision: '2',
       },
     },
-    {
-      label: '缩略图',
-      prop: 'thumb',
-      type: 'upload',
-      span: 24,
-    },
+
     {
       label: '产品内容',
-      prop: 'content',
+      prop: 'description',
       type: 'textarea',
       span: 24,
-      rules: [{ required: true, message: '请输入产品内容' }],
+      rules: [{ required: true, message: '请输入套餐内容' }],
       itemProps: {
-        placeholder: '请输入服务内容',
+        placeholder: '请输入套餐内容',
         // readonly: true,
         // required: true,
       },

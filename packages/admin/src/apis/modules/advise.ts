@@ -1,12 +1,12 @@
 import type { RequestResult } from '../..';
-import request from "../request";
+import request from '../request';
 
 /**
  * @name 列表
  */
 
 export async function list<T>(): Promise<RequestResult<T>> {
-    return request.get("/advise");
+  return request.get('/advise');
 }
 
 /**
@@ -14,13 +14,13 @@ export async function list<T>(): Promise<RequestResult<T>> {
  */
 
 export async function detail<T>(id: string): Promise<RequestResult<T>> {
-    return request.get(`/advise/${id}`);
+  return request.get(`/advise/${id}`);
 }
 
 /**
  * @name 修改
  */
 
-export async function edit<T>(id: string): Promise<RequestResult<T>> {
-    return request.put(`/advise/${id}`);
+export function edit<T>(id: string, data: T): Promise<RequestResult<T>> {
+  return request.put(`/advise/${id}`, data);
 }

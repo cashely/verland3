@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Flex, message } from 'antd';
+import { Button, Flex, message, Modal } from 'antd';
 import { searchItems, tableColumns, formConfig } from './config.ts';
-import { menuList } from '@/apis/modules/common.ts';
+import {
+  menuList,
+  menuUpdate,
+  menuCreate,
+  menuDelete,
+} from '@/apis/modules/common.ts';
 import MyPage from '@/components/BasicPage';
 import { produce } from 'immer';
 import ModalForm from '@/components/ModalForm';
@@ -10,10 +15,6 @@ import ModalForm from '@/components/ModalForm';
 //发票
 export default function TickManagement() {
   const pageRef = useRef<null>();
-  useEffect(() => {
-    // console.log(pageRef?.current)
-    // pageRef?.current?.load()
-  }, []);
 
   const [modalConfig, setModalConfig] = useState({
     title: '编辑',
@@ -37,10 +38,15 @@ export default function TickManagement() {
     }
     try {
       if (id) {
-        await edit(id, values);
+        await menuUpdate(id, {
+          ...values,
+          createdAt: undefined,
+          updatedAt: undefined,
+          key: undefined,
+        });
         message.success('编辑成功');
       } else {
-        const result = await add(values);
+        const result = await menuCreate(values);
         console.log(result);
         message.success('添加成功');
       }
@@ -65,11 +71,27 @@ export default function TickManagement() {
         if (record?.id) {
           formConfig.formModel = {
             ...record,
-            thumb: record?.thumb?.path ? FILE_URL + record?.thumb?.path : '',
+            price: record?.price / 100,
           };
         }
       })
     );
+  };
+
+  const handleDel = (id: string) => {
+    Modal.confirm({
+      title: '提示',
+      content: '确定删除吗？',
+      okText: '确定',
+      cancelText: '取消',
+      centered: true,
+      onOk() {
+        menuDelete(id).then((res) => {
+          message.success('删除成功');
+          pageRef.current?.load();
+        });
+      },
+    });
   };
   return (
     <>
@@ -89,7 +111,7 @@ export default function TickManagement() {
           ],
           showColumnActions: (_, record) => {
             const id = record.id;
-            const detailRoute = `/bookGoodsManagement/detail/${id}`;
+            const detailRoute = `/menuManagement/detail/${id}`;
             return (
               <Flex gap="small">
                 {/* <NavLink to={route}>详情</NavLink> */}

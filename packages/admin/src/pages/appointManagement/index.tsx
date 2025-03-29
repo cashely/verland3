@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Flex, Dropdown } from 'antd';
+import { Button, Flex, Dropdown, Space } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import { searchItems, tableColumns } from './config.ts';
 // Bug 修复：添加 @types 声明文件
 import { list } from '@/apis/modules/book';
@@ -17,51 +18,47 @@ export default function TickManagement() {
 
   const handleItems = (record) => {
     const id = record.id;
-    const detailRoute = `/appointManagement/detail/${id}`;
+
     return (
       <Dropdown
-        items={[
-          {
-            key: '0',
-            label: (
-              <Button
-                onClick={() => navigate(detailRoute)}
-                size="small"
-                color="primary"
-                variant="link"
-              >
-                详情
-              </Button>
-            ),
-          },
-          {
-            key: '1',
-            label: (
-              <Button
-                onClick={() => navigate(detailRoute)}
-                size="small"
-                color="primary"
-                variant="link"
-              >
-                完成预约
-              </Button>
-            ),
-          },
-          {
-            key: '2',
-            label: (
-              <Button
-                onClick={() => navigate(detailRoute)}
-                size="small"
-                color="primary"
-                variant="link"
-              >
-                完成寄送
-              </Button>
-            ),
-          },
-        ]}
-      ></Dropdown>
+        menu={{
+          items: [
+            {
+              key: '2',
+              label: (
+                <Button
+                  onClick={() => navigate(detailRoute)}
+                  size="small"
+                  color="primary"
+                  variant="link"
+                >
+                  完成预约
+                </Button>
+              ),
+            },
+            {
+              key: '3',
+              label: (
+                <Button
+                  onClick={() => navigate(detailRoute)}
+                  size="small"
+                  color="primary"
+                  variant="link"
+                >
+                  完成寄送
+                </Button>
+              ),
+            },
+          ],
+        }}
+      >
+        <a onClick={(e) => e.preventDefault()}>
+          <Space>
+            更多
+            <DownOutlined />
+          </Space>
+        </a>
+      </Dropdown>
     );
   };
 
@@ -73,13 +70,19 @@ export default function TickManagement() {
     >
       {{
         showColumnActions: (_, record) => {
+          const detailRoute = `/appointManagement/detail/${record.id}`;
           return (
-            // <Flex gap="small">
-            //     <Button onClick={() => navigate(detailRoute)} size="small" color="primary" variant="link">详情</Button>
-            //     <Button onClick={() => navigate(detailRoute)} size="small" color="primary" variant="link">完成预约</Button>
-            //     <Button onClick={() => navigate(detailRoute)} size="small" color="primary" variant="link">完成寄送</Button>
-            // </Flex>
-            handleItems(record)
+            <>
+              <Button
+                onClick={() => navigate(detailRoute)}
+                size="small"
+                color="primary"
+                variant="link"
+              >
+                详情
+              </Button>
+              {handleItems(record)}
+            </>
           );
         },
       }}

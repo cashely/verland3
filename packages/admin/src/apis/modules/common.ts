@@ -48,7 +48,7 @@ export function menuList<T>(): Promise<RequestResult<T>> {
 /**
  * @name 获取菜单详情
  */
-export function menuDetail<T>(id: number): Promise<RequestResult<T>> {
+export async function menuDetail<T>(id: string): Promise<RequestResult<T>> {
   return request.get(`/menu/${id}`);
 }
 
