@@ -11,23 +11,30 @@ const searchItems = [
 
 const tableColums = [
   {
+    title: '投诉用户',
+    dataIndex: 'user',
+    key: 'user',
+    width: 100,
+    render: (_: any) => _?.username || '-',
+  },
+  {
     title: '投诉类型',
     key: 'type',
     dataIndex: 'type',
     width: 100,
-    render(_: number) {
-      return COMPLAINT_TYPE.find((item) => item.value === _)?.label;
-    },
+    render: (_: number) => getLabelByValue(COMPLAINT_TYPE, _),
   },
   {
     title: '投诉内容',
     dataIndex: 'content',
     key: 'content',
+    showTitle: true,
   },
   {
     title: '答复内容',
     dataIndex: 'replayContent',
     key: 'replayContent',
+    showTitle: true,
   },
   {
     title: '答复时间',
@@ -35,14 +42,7 @@ const tableColums = [
     key: 'replayAt',
     slot: 'datetime',
   },
-  {
-    title: '投诉用户',
-    dataIndex: 'user',
-    key: 'user',
-    render(_: any) {
-      return _?.username || '-';
-    },
-  },
+
   {
     title: '创建时间',
     dataIndex: 'createdAt',

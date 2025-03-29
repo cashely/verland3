@@ -20,6 +20,7 @@ const tableColumns = [
     title: 'ID',
     key: 'id',
     dataIndex: 'id',
+    showTitle: true,
     fixed: 'left',
   },
   {

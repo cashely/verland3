@@ -24,6 +24,7 @@ const tableColumns = [
     title: '套餐内容',
     key: 'description',
     dataIndex: 'description',
+    showTitle: true,
   },
   {
     title: '套餐价格(¥)',
