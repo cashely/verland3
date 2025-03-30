@@ -107,9 +107,10 @@ const detailItems = [
 const formConfig = {
   formList: [
     {
-      label: '缩略图',
-      prop: 'thumb',
+      label: '发票附件',
+      prop: 'fileId',
       type: 'upload',
+      rules: [{ required: true, message: '请选择' }],
       span: 24,
     },
   ],

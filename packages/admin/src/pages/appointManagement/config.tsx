@@ -167,6 +167,12 @@ const tableColumns = [
       }
     },
   },
+  {
+    title: '创建时间',
+    prop: 'createdAt',
+    dataIndex: 'createdAt',
+    slot: 'datetime',
+  },
 ];
 
 const detailItems = [
@@ -183,7 +189,7 @@ const detailItems = [
   {
     label: '附加服务',
     prop: 'bookGoods',
-    render: (_: any) => _?.map((n) => n.bookGood?.title).join() || '-',
+    render: (_: any) => _?.map((n: any) => n.bookGood?.title).join() || '-',
   },
   {
     label: '预约上门时间',
@@ -310,7 +316,7 @@ const formConfig = {
       prop: 'expressName',
       type: 'input',
       span: 24,
-      rules: [{ required: true, message: '请输入' }],
+      rules: [{ type: 'array', required: true, message: '请输入' }],
       itemProps: {
         placeholder: '请输入',
       },

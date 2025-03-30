@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Flex } from 'antd';
-import { searchItems, tableColumns } from './config.ts';
+import { searchItems, tableColumns } from './config.tsx';
 import { list } from '@/apis/modules/pet.ts';
 import MyPage from '@/components/BasicPage';
 
