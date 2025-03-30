@@ -6,6 +6,7 @@ import { getLabelByValue } from '@/constants';
 import { createStyles } from 'antd-style';
 import { FILE_URL } from '@/apis/request';
 import _ from 'lodash-es';
+import { useNavigate } from 'react-router-dom';
 import './index.scss';
 
 interface DataType {
@@ -62,6 +63,7 @@ const useStyle = createStyles(({ css, token }) => {
 export default (props: IProps) => {
   const { pagination, columns, dataSource, children, ...otherConfig } = props;
   const { styles } = useStyle();
+  const navigate = useNavigate();
   const defaultPagination = {
     size: 'default',
     showQuickJumper: true,
@@ -211,7 +213,8 @@ export default (props: IProps) => {
             }}
             key={index}
             render={(value, record) =>
-              item?.render?.(value, record) ?? columnRender(item, { value })
+              item?.render?.(value, record, navigate) ??
+              columnRender(item, { value })
             }
           ></Table.Column>
         ))}

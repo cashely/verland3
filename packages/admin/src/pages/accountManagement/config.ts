@@ -9,11 +9,6 @@ const searchItems = [
 
 const tableColumns = [
   {
-    title: 'ID',
-    key: 'id',
-    dataIndex: 'id',
-  },
-  {
     title: '用户名',
     key: 'username',
     dataIndex: 'username',

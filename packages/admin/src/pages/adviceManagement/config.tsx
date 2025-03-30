@@ -14,7 +14,7 @@ const tableColums = [
     title: '投诉用户',
     dataIndex: 'user',
     key: 'user',
-    width: 100,
+    width: 140,
     render: (_: any) => _?.username || '-',
   },
   {

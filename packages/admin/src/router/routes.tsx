@@ -277,7 +277,7 @@ const anyncRoutesList = [
   },
   {
     path: '/accountManagement',
-    title: '账号管理',
+    title: '客户管理',
     element: <Layout />,
     icon: (
       <TeamOutlined
