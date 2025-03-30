@@ -1,11 +1,10 @@
-import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
-import { Button, Col, Form, Input, Row, Select, Space, InputNumber } from 'antd';
-import type { FormProps, FormInstance } from 'antd'
-import UploadButton from "@/components/UploadButton";
-import { produce } from "immer";
-import { stringify } from "querystring";
-const { Option } = Select
-const formItemClasses = `rounded-[4px]`
+import { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
+import { Col, Form, Input, Row, Select, InputNumber } from 'antd';
+import type { FormProps, FormInstance } from 'antd';
+import UploadButton from '@/components/UploadButton';
+import { produce } from 'immer';
+const { Option } = Select;
+const formItemClasses = `rounded-[4px]`;
 
 // 表单项配置类型
 export interface FormItemConfig {
@@ -33,85 +32,96 @@ interface CustomFormProps extends Omit<FormProps, 'onFinish'> {
   formModel?: {
     id?: string;
     [key: string]: any;
-  }
+  };
 }
 
+export default forwardRef<CustomFormRef, CustomFormProps>(
+  (
+    {
+      formModel = {},
+      formList = [],
+      onSubmit = () => {},
+      onReset = () => {},
+      setFormLoading = () => {},
+      submitText = '提交',
+      resetText = '重置',
+      rules = [],
+    }: any,
+    ref
+  ) => {
+    const [detailForm] = Form.useForm();
+    // const formValues = Form.useWatch([], detailForm);
+    const [formData, setFormData] = useState({});
 
-export default forwardRef<CustomFormRef, CustomFormProps>(({
-  formModel = {},
-  formList = [],
-  onSubmit = () => { },
-  onReset = () => { },
-  setFormLoading = () => { },
-  submitText = '提交',
-  resetText = '重置',
-  rules = []
-}: any, ref) => {
-  const [detailForm] = Form.useForm();
-  // const formValues = Form.useWatch([], detailForm);
-  const [formData, setFormData] = useState({})
+    // 暴露方法给父组件
+    useImperativeHandle(ref, () => ({
+      form: detailForm,
+      formData,
+      submit: () => detailForm.submit(),
+      reset: () => handleReset(),
+    }));
 
-  // 暴露方法给父组件
-  useImperativeHandle(ref, () => ({
-    form: detailForm,
-    formData,
-    submit: () => detailForm.submit(),
-    reset: () => handleReset(),
-  }));
+    //重置
+    const handleReset = () => {
+      detailForm.resetFields();
+      // setFormData(detailForm.getFieldsValue())
+      onReset?.(detailForm.getFieldsValue());
+    };
 
-  //重置
-  const handleReset = () => {
-    detailForm.resetFields()
-    // setFormData(detailForm.getFieldsValue())
-    onReset?.(detailForm.getFieldsValue())
-  }
+    //暂时用不到
+    const handleSubmit = (values?: any) => {
+      console.log('提交表单++++++', detailForm, values);
+      setTimeout(() => {
+        onSubmit?.(values);
+      }, 2000);
+    };
 
-  //暂时用不到
-  const handleSubmit = (values?: any) => {
-    console.log('提交表单++++++', detailForm, values)
-    setTimeout(() => {
-      onSubmit?.(values)
-    }, 2000)
-  }
+    //图片上传成功
+    const handleUploadSuccess = (fileObj: any) => {
+      console.log('上传成功', fileObj);
+      setFormLoading(false);
+      setFormData(
+        produce((draft: any) => {
+          draft['thumbId'] = fileObj.id;
+        })
+      );
+    };
 
-  //图片上传成功
-  const handleUploadSuccess = (fileObj: any) => {
-    console.log('上传成功', fileObj)
-    setFormLoading(false)
-    setFormData(produce((draft: any) => {
-      draft['thumbId'] = fileObj.id
-    }))
-  }
+    //表单值变化
+    const handleValueChange = (_, values: Record<string, any>) => {
+      setFormData({
+        ...formData,
+        ...values,
+        id: formModel?.id,
+      });
+    };
 
-  //表单值变化
-  const handleValueChange = (_, values: Record<string, any>) => {
-    setFormData({
-      ...formData,
-      ...values,
-      id: formModel?.id
-    })
-  }
+    //只能用setFieldsValue在初始化的时候设置默认值
+    useEffect(() => {
+      console.log(formModel, 'formModel变更');
+      detailForm.setFieldsValue(formModel);
+      setFormData({
+        ...formModel,
+      });
+    }, [formModel, detailForm]);
 
-  //只能用setFieldsValue在初始化的时候设置默认值
-  useEffect(() => {
-    console.log(formModel, 'formModel变更')
-    detailForm.setFieldsValue(formModel)
-    setFormData({
-      ...formModel,
-    })
-  }, [formModel, detailForm])
-
-
-  return (
-    <Form layout="vertical" labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }} initialValues={formData} form={detailForm} name="detailForm" onFinish={handleSubmit} labelAlign="left" onValuesChange={handleValueChange}>
-      {/* formModal--  {JSON.stringify(formModel)}
+    return (
+      <Form
+        layout="vertical"
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 16 }}
+        initialValues={formData}
+        form={detailForm}
+        name="detailForm"
+        onFinish={handleSubmit}
+        labelAlign="left"
+        onValuesChange={handleValueChange}
+      >
+        {/* formModal--  {JSON.stringify(formModel)}
       <hr></hr>
       formData-- {JSON.stringify(formData)} */}
-      <Row gutter={24}>
-        {
-          formList.map((item, index) =>
-          (
+        <Row gutter={24}>
+          {formList.map((item: any, index: number) => (
             <Col span={item.span ?? 8} key={index}>
               <Form.Item
                 name={item.prop}
@@ -121,35 +131,76 @@ export default forwardRef<CustomFormRef, CustomFormProps>(({
                 rules={item.rules ?? []}
                 required={item.rules?.length}
               >
-                {item.type === 'input' ? <Input className={formItemClasses} styles={{ prefix: 'red' }} classNames={{ count: '1' }} placeholder={item.placeholder} allowClear {...item.itemProps} /> : null}
-                {item.type === 'inputNumber' ? <InputNumber className={formItemClasses} style={{
-                  width: '100%'
-                }} min={0.01} placeholder={item.placeholder}  {...item.itemProps} /> : null}
-                {item.type === 'select' ? <Select className={formItemClasses} placeholder={item.placeholder}>
-                  {item.options.map((option, indey) => (<Option key={indey} value={option.value}>{option.label}</Option>))}
-                </Select> : null}
-                {
-                  item.type === 'upload' ?
-                    <UploadButton name={item.prop} onUploadSuccess={handleUploadSuccess} setFormLoading={setFormLoading} _fileList={formModel.thumb ? [{
-                      url: formModel.thumb
-                    }] : []}>
-                      {/* {
+                {item.type === 'input' ? (
+                  <Input
+                    className={formItemClasses}
+                    styles={{ prefix: 'red' }}
+                    classNames={{ count: '1' }}
+                    placeholder={item.placeholder}
+                    allowClear
+                    {...item.itemProps}
+                  />
+                ) : null}
+                {item.type === 'inputNumber' ? (
+                  <InputNumber
+                    className={formItemClasses}
+                    style={{
+                      width: '100%',
+                    }}
+                    min={0.01}
+                    placeholder={item.placeholder}
+                    {...item.itemProps}
+                  />
+                ) : null}
+                {item.type === 'select' ? (
+                  <Select
+                    className={formItemClasses}
+                    placeholder={item.placeholder}
+                  >
+                    {item.options.map((option, indey) => (
+                      <Option key={indey} value={option.value}>
+                        {option.label}
+                      </Option>
+                    ))}
+                  </Select>
+                ) : null}
+                {item.type === 'upload' ? (
+                  <UploadButton
+                    name={item.prop}
+                    onUploadSuccess={handleUploadSuccess}
+                    setFormLoading={setFormLoading}
+                    _fileList={
+                      formModel.thumb
+                        ? [
+                            {
+                              url: formModel.thumb,
+                            },
+                          ]
+                        : []
+                    }
+                  >
+                    {/* {
                       (isUploading: boolean) => {
                         setBtnLoading(isUploading)
                       }
                     } */}
-                    </UploadButton>
-                    : null
-                }
-                {
-                  item.type === 'textarea' ? <Input.TextArea className={formItemClasses} placeholder={item.placeholder} rows={4} showCount={true} maxLength={item.itemProps.maxLength ?? 100} {...item.itemProps} /> : null
-                }
+                  </UploadButton>
+                ) : null}
+                {item.type === 'textarea' ? (
+                  <Input.TextArea
+                    className={formItemClasses}
+                    placeholder={item.placeholder}
+                    rows={4}
+                    showCount={true}
+                    maxLength={item.itemProps.maxLength ?? 100}
+                    {...item.itemProps}
+                  />
+                ) : null}
               </Form.Item>
             </Col>
-          ))
-        }
-      </Row>
-      {/* {
+          ))}
+        </Row>
+        {/* {
         formList?.length ? <div style={{ textAlign: 'right' }}>
           <Space size="small">
             <Button
@@ -166,6 +217,7 @@ export default forwardRef<CustomFormRef, CustomFormProps>(({
 
         </div> : null
       } */}
-    </Form>
-  )
-})
+      </Form>
+    );
+  }
+);

@@ -23,6 +23,7 @@ export default () => {
   const [formModel, setformModel] = useState({
     isRite: '1',
     menuId: menuList?.[0]?.id,
+    handleWay: '1', //处理方式
   });
   useLoad(() => {
     console.log('Page loaded.');
