@@ -129,7 +129,7 @@ router.put('/:id', async (req, res) => {
                 name,
                 price,
                 description,
-                image: {
+                images: {
                     deleteMany: {},
                     createMany: {
                         data: imageIds.map((imageId) => ({
