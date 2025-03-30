@@ -8,6 +8,10 @@ import MyPage from '@/components/BasicPage';
 export default function TickManagement() {
   const navigate = useNavigate();
 
+  const handleTicket = () => {
+    console.log(1);
+  };
+
   return (
     <MyPage
       pageApi={list}
@@ -27,6 +31,14 @@ export default function TickManagement() {
                 variant="link"
               >
                 详情
+              </Button>
+              <Button
+                onClick={handleTicket}
+                size="small"
+                color="primary"
+                variant="link"
+              >
+                开票
               </Button>
             </Flex>
           );

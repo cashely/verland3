@@ -18,11 +18,11 @@ export async function detail<T>(id: string): Promise<RequestResult<T>> {
 }
 
 /**
- * @name 新增
+ * @name 修改
  */
 export async function edit<T>(
   id: string,
-  statu: number
+  data: any
 ): Promise<RequestResult<T>> {
-  return request.put(`/book/${id}`, { statu });
+  return request.put(`/book/${id}`, data);
 }
