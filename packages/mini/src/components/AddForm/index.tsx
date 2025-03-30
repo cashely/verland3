@@ -24,6 +24,7 @@ import DateTimePicker from '@/components/DateTimePicker';
 import QQMapWX from '@/utils/qqmap-wx-jssdk.min.js';
 import locationIcon from '../../assets/imgs/location.png';
 import dateIcon from '../../assets/imgs/date-icon.png';
+import { formatAddress } from '@/utils';
 import './index.scss';
 export default forwardRef((props, ref) => {
   const { formList = [], formModel = {}, children, handleSubmit } = props;
