@@ -19,7 +19,12 @@ router.get('/', async (req, res) => {
                 }
             },
             include: {
-                images: true
+                images: true,
+                petImage: {
+                    include: {
+                        image: true
+                    }
+                }
             },
             orderBy: {
                 createdAt: 'desc'
@@ -44,7 +49,12 @@ router.get('/:id', async (req, res) => {
                 id
             },
             include: {
-                images: true 
+                images: true,
+                petImage: {
+                    include: {
+                        image: true
+                    }
+                }
             }
         });
         res.response.success(pet);

@@ -15,7 +15,11 @@ router.get('/', async (req, res) => {
         },
         include: {
             book: true,
-            petImage: true
+            petImage: {
+                include: {
+                    image: true 
+                }
+            }
         },
         orderBy: {
             createdAt: 'desc'
