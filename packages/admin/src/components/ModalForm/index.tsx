@@ -28,6 +28,7 @@ const ModalForm = (props: IProps) => {
   const handleOk = async () => {
     //获取表单数据
     const FormInstance = formRef?.current
+    console.log(FormInstance.getForm().getFieldsValue(), 'FormInstance=====')
     try {
       const values = await FormInstance.form?.validateFields();
       onOk?.(FormInstance?.formData || {})

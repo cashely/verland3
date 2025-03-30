@@ -33,5 +33,5 @@ export async function edit<T>(
 export async function refundDetail<T>(
   outRefundNo: string
 ): Promise<RequestResult<T>> {
-  return request.get(`/wxpay/refundStatu/${outRefundNo}`);
+  return request.get(`/wx/wxpay/refundStatu/${outRefundNo}`);
 }

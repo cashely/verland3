@@ -110,7 +110,9 @@ const formConfig = {
       label: '发票附件',
       prop: 'fileId',
       type: 'upload',
-      rules: [{ required: true, message: '请选择' }],
+      // rules: (value: any) => {
+      //   console.log(value, '----');
+      // },
       span: 24,
     },
   ],
