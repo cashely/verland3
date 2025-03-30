@@ -222,6 +222,28 @@ router.post('/wxpay/notify_url', async (req, res) => {
     }
 })
 
+// 查询退款状态
+router.get('/wxpay/refundStatu', async (req, res) => {
+    try {
+        const { outRefundNo } = req.query;
+        const refundResult = await payment.getRefund({ out_refund_no: outRefundNo });
+        res.response.success(refundResult);
+    } catch (error) {
+        res.response.error(error); 
+    } 
+})
+
+// 关闭订单
+router.post('/wxpay/closeOrder', async (req, res) => {
+    try {
+        const { outTradeNo } = req.body;
+        const closeResult = await payment.close({ out_trade_no: outTradeNo });
+        res.response.success(closeResult);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
 
 
 export default router;

@@ -63,14 +63,16 @@ router.get('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
-        const { id: bookId } = req.params;
-        const { statu } = req.body;
+        const { id } = req.params;
+        const { statu, expressNo, expressName } = req.body;
         const book = await prisma.book.update({
             where: {
-                id: bookId
+                id
             },
             data: {
-                statu: statu,
+                statu,
+                expressName,
+                expressNo
             },
         })
         res.response.success(book);
