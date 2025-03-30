@@ -63,13 +63,13 @@ export default function Add() {
       placeholder: '请选择爱宠类型',
     },
     {
-      title: '体重',
+      title: '体重(kg)',
       key: 'weight',
       type: 'number',
       placeholder: '请输入',
     },
     {
-      title: '年龄',
+      title: '年龄(月)',
       key: 'age',
       type: 'number',
       placeholder: '请输入',

@@ -77,7 +77,7 @@ const detailItems = [
     prop: 'subType',
   },
   {
-    label: '年龄',
+    label: '年龄(月)',
     prop: 'age',
   },
   {
