@@ -32,6 +32,11 @@ router.get('/:id', async (req, res) => {
         const ticket = await prisma.ticket.findUnique({
             where: {
                 id
+            },
+            include: {
+               file: true,
+               book: true,
+               user: true, 
             }
         });
         res.response.success(ticket);
