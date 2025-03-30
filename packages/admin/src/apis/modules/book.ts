@@ -20,6 +20,9 @@ export async function detail<T>(id: string): Promise<RequestResult<T>> {
 /**
  * @name 新增
  */
-export async function edit<T>(statu: number): Promise<RequestResult<T>> {
-  return request.post(`/book`, statu);
+export async function edit<T>(
+  id: string,
+  statu: number
+): Promise<RequestResult<T>> {
+  return request.put(`/book/${id}`, statu);
 }

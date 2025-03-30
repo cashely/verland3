@@ -47,14 +47,14 @@ const TICKET_TYPE = [
 //开票状态
 const INVOICE_STATUS = [
   {
-    label: '未开票',
+    label: '已开票',
     value: 1,
-    tag: 'red',
+    tag: 'green',
   },
   {
-    label: '已开票',
+    label: '未开票',
     value: 2,
-    tag: 'green',
+    tag: 'red',
   },
 ];
 //宠物状态

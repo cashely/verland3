@@ -16,20 +16,22 @@ export default function TickManagement() {
     // pageRef?.current?.load()
   }, []);
 
-  const handleChangeStatu = (statu: number) => {
-    edit(statu).then((res) => {
+  const handleChangeStatu = (id: string, statu: number) => {
+    edit(id, statu).then((res) => {
       console.log(res);
     });
   };
 
-  const handleItems = (record) => {
+  const handleItems = (record: any) => {
     const statu = record.statu;
-    const items = [
-      {
+    const id = record.id;
+    const items = [];
+    if (statu === 1) {
+      items.push({
         key: '2',
         label: (
           <Button
-            onClick={() => handleChangeStatu(2)}
+            onClick={() => handleChangeStatu(id, 2)}
             size="small"
             color="primary"
             variant="link"
@@ -37,14 +39,14 @@ export default function TickManagement() {
             完成预约
           </Button>
         ),
-      },
-    ];
+      });
+    }
     if (statu === 2) {
       items.push({
         key: '3',
         label: (
           <Button
-            onClick={() => handleChangeStatu(3)}
+            onClick={() => handleChangeStatu(id, 3)}
             size="small"
             color="primary"
             variant="link"
@@ -54,7 +56,7 @@ export default function TickManagement() {
         ),
       });
     }
-    return (
+    return items.length ? (
       <Dropdown
         menu={{
           items,
@@ -67,7 +69,7 @@ export default function TickManagement() {
           </Space>
         </a>
       </Dropdown>
-    );
+    ) : null;
   };
 
   return (

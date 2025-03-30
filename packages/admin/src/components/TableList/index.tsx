@@ -156,14 +156,30 @@ export default (props: IProps) => {
       if (item?.slot === 'datetime') {
         return timeFormatDateTime(value);
       } else if (item?.slot === 'image') {
-        return (
-          <Image
-            src={FILE_URL + value?.path}
-            alt="缩略图"
-            width={60}
-            height={60}
-          />
-        );
+        if (value?.length && value instanceof Array) {
+          return (
+            <Image.PreviewGroup>
+              {value.map((img: any) => (
+                <Image
+                  key={img.id}
+                  src={FILE_URL + '/' + img?.image.path}
+                  alt="宠物图片"
+                />
+              ))}
+            </Image.PreviewGroup>
+          );
+        } else if (value?.path) {
+          return (
+            <Image
+              src={FILE_URL + value?.path}
+              alt="缩略图"
+              width={60}
+              height={60}
+            />
+          );
+        }
+
+        return '-';
       } else if (item.slot === 'select') {
         return getLabelByValue(item?.options || [], value);
       } else if (item.slot === 'tag') {

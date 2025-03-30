@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useContext } from 'react';
+import { useState, useRef, useEffect, useContext, Suspense } from 'react';
 import { View, Label, Checkbox, Text, CheckboxGroup } from '@tarojs/components';
 import {
   useLoad,
@@ -7,7 +7,7 @@ import {
   setStorageSync,
   getStorageSync,
 } from '@tarojs/taro';
-import { AtButton } from 'taro-ui';
+import { AtButton, AtToast } from 'taro-ui';
 import { otherFormList, baseInfoFormList } from './model';
 import AddForm from '@/components/AddForm';
 //import AppContext from '@/hooks/useContext';
@@ -132,40 +132,46 @@ export default () => {
   }, [menuList]);
 
   return (
-    <View className="pt-20 page-createBox">
-      <View className="formCon">
-        <AddForm
-          ref={baseInfoRef}
-          formList={baseInfoFormList}
-          formModel={formModel}
-        ></AddForm>
-      </View>
-      <View className="formCon">
-        <AddForm
-          ref={otherInfoRef}
-          formList={_otherFormList}
-          formModel={formModel}
-        >
-          {{
-            handleRiteChange,
-          }}
-        </AddForm>
-      </View>
-      {/* 协议 */}
-      <View className="flex justify-center mb-30">
-        <CheckboxGroup onChange={handleAgreementChange}>
-          <Label className="checkboxLabel">
-            <Checkbox className="checkbox" value="agree" color="#004ebf" />
-            <Text className="txt">用户购买套餐协议</Text>
-          </Label>
-        </CheckboxGroup>
-      </View>
+    <Suspense fallback={<AtToast isOpened text="loading"></AtToast>}>
+      <View className="pt-20 page-createBox">
+        <View className="formCon">
+          <AddForm
+            ref={baseInfoRef}
+            formList={baseInfoFormList}
+            formModel={formModel}
+          ></AddForm>
+        </View>
+        <View className="formCon">
+          <AddForm
+            ref={otherInfoRef}
+            formList={_otherFormList}
+            formModel={formModel}
+          >
+            {{
+              handleRiteChange,
+            }}
+          </AddForm>
+        </View>
+        {/* 协议 */}
+        <View className="flex justify-center mb-30">
+          <CheckboxGroup onChange={handleAgreementChange}>
+            <Label className="checkboxLabel">
+              <Checkbox className="checkbox" value="agree" color="#004ebf" />
+              <Text className="txt">用户购买套餐协议</Text>
+            </Label>
+          </CheckboxGroup>
+        </View>
 
-      <View className="flex btnList">
-        <AtButton className="flex-1 btn" onClick={handleSubmit} type="primary">
-          下一步
-        </AtButton>
+        <View className="flex btnList">
+          <AtButton
+            className="flex-1 btn"
+            onClick={handleSubmit}
+            type="primary"
+          >
+            下一步
+          </AtButton>
+        </View>
       </View>
-    </View>
+    </Suspense>
   );
 };

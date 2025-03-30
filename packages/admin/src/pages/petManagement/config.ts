@@ -17,21 +17,15 @@ const searchItems = [
 
 const tableColumns = [
   {
-    title: 'ID',
-    key: 'id',
-    dataIndex: 'id',
-    showTitle: true,
-    fixed: 'left',
-  },
-  {
     title: '宠物名称',
     key: 'petname',
     dataIndex: 'petname',
   },
   {
     title: '缩略图',
-    key: 'image',
-    dataIndex: 'image',
+    key: 'petImage',
+    dataIndex: 'petImage',
+    slot: 'image',
   },
   {
     title: '宠物子类',
@@ -71,7 +65,7 @@ const detailItems = [
   },
   {
     label: '缩略图',
-    prop: 'thumnb',
+    prop: 'petImage',
     type: 'image',
   },
   {

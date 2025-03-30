@@ -16,8 +16,24 @@ export default function DetailTemplate(props: any) {
       }
       return '-';
     } else if (item.type === 'image') {
-      if (!value?.path) return '-';
-      return <Image src={FILE_URL + value?.path} alt="缩略图" height={140} />;
+      if (value?.length && value instanceof Array) {
+        return (
+          <Image.PreviewGroup>
+            {value.map((img: any) => (
+              <Image
+                key={img.id}
+                src={FILE_URL + '/' + img?.image.path}
+                alt="宠物图片"
+              />
+            ))}
+          </Image.PreviewGroup>
+        );
+      } else if (value?.path) {
+        return (
+          <Image src={FILE_URL + '/' + value.path} alt="缩略图" height={140} />
+        );
+      }
+      return '-';
     }
     return value || '-';
   };
