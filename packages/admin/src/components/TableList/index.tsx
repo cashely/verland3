@@ -184,7 +184,7 @@ export default (props: IProps) => {
         dataSource={dataSource}
         {...tableConfig}
       >
-        {columns?.map((item) => (
+        {columns?.map((item, index) => (
           <Table.Column
             width={item.width ?? 160}
             fixed={item.fixed || false}
@@ -193,7 +193,7 @@ export default (props: IProps) => {
             ellipsis={{
               showTitle: item.showTitle,
             }}
-            key={item.key}
+            key={index}
             render={(value, record) =>
               item?.render?.(value, record) ?? columnRender(item, { value })
             }

@@ -1,4 +1,4 @@
-import Taro, { getLocation } from '@tarojs/taro';
+import Taro, { getLocation, chooseLocation } from '@tarojs/taro';
 import { useEffect, useImperativeHandle, useState, forwardRef } from 'react';
 import {
   Radio,
@@ -24,6 +24,7 @@ import DateTimePicker from '@/components/DateTimePicker';
 import QQMapWX from '@/utils/qqmap-wx-jssdk.min.js';
 import locationIcon from '../../assets/imgs/location.png';
 import dateIcon from '../../assets/imgs/date-icon.png';
+import { formatAddress } from '@/utils';
 import './index.scss';
 export default forwardRef((props, ref) => {
   const { formList = [], formModel = {}, children, handleSubmit } = props;
@@ -183,7 +184,25 @@ export default forwardRef((props, ref) => {
         (formItem) => formItem.type === 'location'
       ).itemProps.placeholder = '正在获取位置...';
       setFormList([..._formList]);
-      getlocal(formItem);
+      // getlocal(formItem);
+      chooseLocation({
+        success: function (res) {
+          console.log(res, 'success');
+          if (res?.address) {
+            const { province, city, district, detail } = formatAddress(
+              res.address
+            );
+            setFormData({
+              ...formData,
+              [formItem.prop]: `${province}-${city}-${district}`,
+              detail,
+              province,
+              city,
+              area: district,
+            });
+          }
+        },
+      });
     }
   };
 
