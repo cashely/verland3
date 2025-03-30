@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import {
   HANDLE_WAYS,
   getLabelByValue,
@@ -153,7 +154,7 @@ const tableColumns = [
         case 5:
           return '异常';
         case 6:
-          return '退款中';
+          return <div><Button onClick={() => {}}>退款中</Button></div>;
       }
     },
   },
