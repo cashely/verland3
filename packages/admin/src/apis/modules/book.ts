@@ -30,7 +30,7 @@ export async function edit<T>(
 /**
  * @name 查询退款详情
  */
-export async function refundDetail<T>(outTradeNo: string): Promise<RequestResult<T>> {
-  return request.get(`/wxpay/refundStatu/${outTradeNo}`); 
+export async function refundDetail<T>(outRefundNo: string): Promise<RequestResult<T>> {
+  return request.get(`/wxpay/refundStatu/${outRefundNo}`); 
 }
 
