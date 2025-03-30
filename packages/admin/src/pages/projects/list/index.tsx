@@ -1,4 +1,3 @@
-
-export default ()=>{
-  return <div>32</div>
-}
+export default () => {
+  return <div></div>;
+};

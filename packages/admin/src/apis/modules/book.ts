@@ -24,5 +24,5 @@ export async function edit<T>(
   id: string,
   statu: number
 ): Promise<RequestResult<T>> {
-  return request.put(`/book/${id}`, statu);
+  return request.put(`/book/${id}`, { statu });
 }

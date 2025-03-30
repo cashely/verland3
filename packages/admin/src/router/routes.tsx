@@ -107,34 +107,6 @@ const anyncRoutesList = [
     ],
   },
   {
-    path: '/menuManagement',
-    title: '套餐管理',
-    element: <Layout />,
-    icon: <IcontFont type="icon-yuyueguanli"></IcontFont>,
-    handle: { title: '套餐管理' },
-    redirect: '/a',
-    children: [
-      {
-        index: true,
-        path: '/menuManagement/list',
-        title: '列表',
-        handle: {
-          title: '列表',
-        },
-        element: <MenuManagement />,
-      },
-      {
-        path: '/menuManagement/detail/:id',
-        title: '套餐详情',
-        handle: {
-          title: '套餐详情',
-        },
-        hidden: true,
-        element: <MenuManagementDetail />,
-      },
-    ],
-  },
-  {
     path: '/appointManagement',
     title: '预约管理',
     element: <Layout />,
@@ -164,6 +136,35 @@ const anyncRoutesList = [
       },
     ],
   },
+  {
+    path: '/menuManagement',
+    title: '套餐管理',
+    element: <Layout />,
+    icon: <IcontFont type="icon-yuyueguanli"></IcontFont>,
+    handle: { title: '套餐管理' },
+    redirect: '/a',
+    children: [
+      {
+        index: true,
+        path: '/menuManagement/list',
+        title: '列表',
+        handle: {
+          title: '列表',
+        },
+        element: <MenuManagement />,
+      },
+      {
+        path: '/menuManagement/detail/:id',
+        title: '套餐详情',
+        handle: {
+          title: '套餐详情',
+        },
+        hidden: true,
+        element: <MenuManagementDetail />,
+      },
+    ],
+  },
+
   {
     path: '/ticketManagement',
     title: '发票管理',

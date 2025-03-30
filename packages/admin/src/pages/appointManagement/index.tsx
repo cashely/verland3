@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Dropdown, Space, Typography } from 'antd';
+import { Button, Dropdown, message, Space, Typography } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { searchItems, tableColumns } from './config.ts';
+import { searchItems, tableColumns } from './config.tsx';
 // Bug 修复：添加 @types 声明文件
 import { list, edit } from '@/apis/modules/book';
 import MyPage from '@/components/BasicPage';
@@ -10,15 +10,11 @@ import MyPage from '@/components/BasicPage';
 //发票
 export default function TickManagement() {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // console.log(pageRef?.current)
-    // pageRef?.current?.load()
-  }, []);
-
   const handleChangeStatu = (id: string, statu: number) => {
     edit(id, statu).then((res) => {
-      console.log(res);
+      if (res?.code === 200) {
+        message.success('操作成功');
+      }
     });
   };
 
