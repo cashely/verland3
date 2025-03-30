@@ -7,8 +7,16 @@ const router = new Router({
 
 router.get('/', async (req, res) => {
     try {
-        const { pageSize = 20, pageNo = 1 } = req.query;
+        const { pageSize = 20, pageNo = 1, type } = req.query;
+        const whereCondition = {
+            
+        }
+
+        if (type) {
+            whereCondition.type = type;
+        }
         const advises = await prisma.advise.findMany({
+            where: whereCondition,
             orderBy: {
                 createdAt: 'desc'
             },
