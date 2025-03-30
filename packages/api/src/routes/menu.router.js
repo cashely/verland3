@@ -37,6 +37,9 @@ router.get('/', async (req, res) => {
         }
         const menus = await prisma.menu.findMany({
             where: whereCondition,
+            include: {
+                images: true
+            },
             orderBy: {
                 createdAt: 'desc'
             },
@@ -63,6 +66,9 @@ router.get('/:id', async (req, res) => {
         const menu = await prisma.menu.findUnique({
             where: {
                 id
+            },
+            include: {
+                images: true 
             }
         });
         res.response.success(menu);

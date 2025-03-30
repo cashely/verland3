@@ -133,7 +133,7 @@ router.post('/wxpay/notify_url', async (req, res) => {
                     },
                     // 金额
                     amount2: {
-                        value: book.totalAmount
+                        value: `¥ ${book.totalAmount / 100}`
                     },
                     // 时间
                     date3: {

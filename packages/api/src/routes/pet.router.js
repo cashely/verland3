@@ -18,6 +18,9 @@ router.get('/', async (req, res) => {
                     in: userIds
                 }
             },
+            include: {
+                images: true
+            },
             orderBy: {
                 createdAt: 'desc'
             },
@@ -39,6 +42,9 @@ router.get('/:id', async (req, res) => {
         const pet = await prisma.pet.findUnique({
             where: {
                 id
+            },
+            include: {
+                images: true 
             }
         });
         res.response.success(pet);
