@@ -8,6 +8,8 @@ import {
   APPOINTMENT_STATUS,
 } from '@/constants';
 import { formatPrice } from '@/utils';
+import { refundDetail } from '@/apis/modules/book';
+import { message } from 'antd';
 const searchItems = [
   {
     label: '状态',
@@ -72,7 +74,7 @@ const tableColumns = [
     dataIndex: 'address',
     width: 220,
     showTitle: true,
-    render(_) {
+    render(_: any) {
       return `${_.province || ''}${_.city || ''}${_.area || ''}${
         _.detail || ''
       }`;
@@ -81,10 +83,7 @@ const tableColumns = [
   {
     title: '是否需要仪式',
     dataIndex: 'isRite',
-    render(_) {
-      if (!_) return '-';
-      return RITE_TYPE.find((item) => item.value === _)?.label || '-';
-    },
+    render: (_: number) => getLabelByValue(RITE_TYPE, _),
   },
   {
     title: '仪式时间',
@@ -135,7 +134,7 @@ const tableColumns = [
     title: '付款状态',
     key: 'statu',
     dataIndex: 'statu',
-    render(_: number) {
+    render(_: number, record: any) {
       // 待付款  已预约  待寄送  已完成  已取消
       switch (_) {
         case 0:
@@ -151,7 +150,20 @@ const tableColumns = [
         case 5:
           return '异常';
         case 6:
-          return <div><Button onClick={() => {}}>退款中</Button></div>;
+          return (
+            <div>
+              <Button
+                type="primary"
+                onClick={() => {
+                  refundDetail(record.outRefundNo).then(() => {
+                    message.success('退款成功');
+                  });
+                }}
+              >
+                退款中
+              </Button>
+            </div>
+          );
       }
     },
   },
@@ -161,7 +173,7 @@ const detailItems = [
   {
     label: '预约用户',
     prop: 'user',
-    render: (_) => _?.username || '-',
+    render: (_: any) => _?.username || '-',
   },
   {
     label: '套餐类型',
