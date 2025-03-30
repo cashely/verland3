@@ -43,13 +43,13 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { status, fileId } = req.body;
+        const { statu, fileId } = req.body;
         const ticket = await prisma.ticket.update({
             where: {
                 id
             },
             data: {
-                status,
+                statu,
                 fileId
             }
         });
