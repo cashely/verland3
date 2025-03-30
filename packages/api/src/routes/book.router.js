@@ -61,4 +61,22 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+router.put('/:id', async (req, res) => {
+    try {
+        const { id: bookId } = req.params;
+        const { statu } = req.body;
+        const book = await prisma.book.update({
+            where: {
+                id: bookId
+            },
+            data: {
+                statu: statu,
+            },
+        })
+        res.response.success(book);
+    }   catch (error) {
+        res.response.error(error); 
+    }
+})
+
 export default router;
