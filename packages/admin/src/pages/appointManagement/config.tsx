@@ -173,7 +173,7 @@ const detailItems = [
   {
     label: '预约用户',
     prop: 'user',
-    render: (_) => _?.username || '-',
+    render: (_: any) => _?.username || '-',
   },
   {
     label: '套餐类型',

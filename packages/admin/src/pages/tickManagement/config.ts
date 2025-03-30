@@ -67,7 +67,7 @@ const detailItems = [
   {
     label: '发票类型',
     prop: 'type',
-    render: (_) => getLabelByValue(TICKET_TYPE, _),
+    render: (_: number) => getLabelByValue(TICKET_TYPE, _),
   },
   {
     label: '附加服务',
@@ -104,4 +104,17 @@ const detailItems = [
   },
 ];
 
-export { searchItems, tableColumns, detailItems };
+const formConfig = {
+  formList: [
+    {
+      label: '缩略图',
+      prop: 'thumb',
+      type: 'upload',
+      span: 24,
+    },
+  ],
+  formModel: {},
+  rules: [],
+};
+
+export { searchItems, tableColumns, detailItems, formConfig };

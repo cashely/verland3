@@ -18,7 +18,7 @@ const tableColums = [
     dataIndex: 'price',
     key: 'price',
     width: 100,
-    render: (_) => formatPrice(_),
+    render: (_: number) => formatPrice(_),
   },
   {
     title: '产品内容',
