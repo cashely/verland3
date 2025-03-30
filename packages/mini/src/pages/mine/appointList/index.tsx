@@ -91,9 +91,9 @@ export default function Index() {
           title: '取消成功',
           icon: 'none',
           success() {
-            setTimeout(() => {
+            setInterval(() => {
               getlist();
-            }, 1000);
+            }, 2000);
           },
         });
       }

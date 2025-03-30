@@ -126,7 +126,7 @@ export default function AdditionalService() {
                     <Image
                       className="image"
                       mode="widthFix"
-                      style={{ width: '80px' }}
+                      style={{ width: '80px', height: '80px' }}
                       src={fileUrl + '/' + item.imageUrl}
                     ></Image>
                   </View>

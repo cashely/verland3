@@ -16,3 +16,10 @@ export async function list<T>(params: any): Promise<RequestResult<T>> {
 export async function detail<T>(id: string): Promise<RequestResult<T>> {
   return request.get(`/book/${id}`);
 }
+
+/**
+ * @name 新增
+ */
+export async function edit<T>(statu: number): Promise<RequestResult<T>> {
+  return request.post(`/book`, statu);
+}

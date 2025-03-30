@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Flex, message, Modal } from 'antd';
+import { Button, Flex, message, Modal, Typography, Space } from 'antd';
 import { searchItems, tableColumns, formConfig } from './config.ts';
 import {
   menuList,
@@ -113,39 +113,17 @@ export default function TickManagement() {
             const id = record.id;
             const detailRoute = `/menuManagement/detail/${id}`;
             return (
-              <Flex gap="small">
-                {/* <NavLink to={route}>详情</NavLink> */}
-                <Button
-                  onClick={() => navigate(detailRoute)}
-                  size="small"
-                  color="primary"
-                  variant="link"
-                >
+              <Space>
+                <Typography.Link onClick={() => navigate(detailRoute)}>
                   详情
-                </Button>
-                <Button
-                  onClick={() => handleAddOrEdit(record)}
-                  size="small"
-                  color="primary"
-                  variant="link"
-                >
+                </Typography.Link>
+                <Typography.Link onClick={() => handleAddOrEdit(record)}>
                   编辑
-                </Button>
-                {/* <Typography.Link>详情</Typography.Link>
-                    <Typography.Link>删除</Typography.Link> */}
-                <Button
-                  onClick={() => handleDel(record.id)}
-                  size="small"
-                  color="danger"
-                  variant="link"
-                >
+                </Typography.Link>
+                <Typography.Link onClick={() => handleDel(record.id)}>
                   删除
-                </Button>
-                {/* <NavLink to={route}>详情</NavLink>
-                    <a onClick={handleDel}>删除</a> */}
-                {/* <Typography.Link>删除</Typography.Link> */}
-                {/* <Link to="/" component={Typography.Link} /> */}
-              </Flex>
+                </Typography.Link>
+              </Space>
             );
           },
         }}

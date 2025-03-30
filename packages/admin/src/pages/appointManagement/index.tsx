@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Flex, Dropdown, Space } from 'antd';
+import { Button, Dropdown, Space, Typography } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { searchItems, tableColumns } from './config.ts';
 // Bug 修复：添加 @types 声明文件
-import { list } from '@/apis/modules/book';
+import { list, edit } from '@/apis/modules/book';
 import MyPage from '@/components/BasicPage';
 
 //发票
@@ -16,45 +16,53 @@ export default function TickManagement() {
     // pageRef?.current?.load()
   }, []);
 
-  const handleItems = (record) => {
-    const id = record.id;
+  const handleChangeStatu = (statu: number) => {
+    edit(statu).then((res) => {
+      console.log(res);
+    });
+  };
 
+  const handleItems = (record) => {
+    const statu = record.statu;
+    const items = [
+      {
+        key: '2',
+        label: (
+          <Button
+            onClick={() => handleChangeStatu(2)}
+            size="small"
+            color="primary"
+            variant="link"
+          >
+            完成预约
+          </Button>
+        ),
+      },
+    ];
+    if (statu === 2) {
+      items.push({
+        key: '3',
+        label: (
+          <Button
+            onClick={() => handleChangeStatu(3)}
+            size="small"
+            color="primary"
+            variant="link"
+          >
+            完成寄送
+          </Button>
+        ),
+      });
+    }
     return (
       <Dropdown
         menu={{
-          items: [
-            {
-              key: '2',
-              label: (
-                <Button
-                  onClick={() => navigate(detailRoute)}
-                  size="small"
-                  color="primary"
-                  variant="link"
-                >
-                  完成预约
-                </Button>
-              ),
-            },
-            {
-              key: '3',
-              label: (
-                <Button
-                  onClick={() => navigate(detailRoute)}
-                  size="small"
-                  color="primary"
-                  variant="link"
-                >
-                  完成寄送
-                </Button>
-              ),
-            },
-          ],
+          items,
         }}
       >
         <a onClick={(e) => e.preventDefault()}>
           <Space>
-            更多
+            <Typography.Link>更多</Typography.Link>
             <DownOutlined />
           </Space>
         </a>
