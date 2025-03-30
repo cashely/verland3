@@ -96,16 +96,13 @@ const tableColumns = [
     title: '总金额（元）',
     key: 'totalAmount',
     dataIndex: 'totalAmount',
-    render(_) {
-      if (!Number.isInteger(_)) return '-';
-      return (_ / 100).toLocaleString();
-    },
+    render: (_: number) => formatPrice(_),
   },
   {
     title: '付款金额（元）',
     dataIndex: 'payAmount',
     key: 'payAmount',
-    render: (_) => formatPrice(_),
+    render: (_: number) => formatPrice(_),
   },
   {
     title: '付款渠道',
@@ -284,4 +281,30 @@ const detailItems = [
   },
 ];
 
-export { searchItems, tableColumns, detailItems };
+const formConfig = {
+  formList: [
+    {
+      label: '寄送的快递单号',
+      prop: 'expressNo',
+      type: 'input',
+      rules: [{ required: true, message: '请输入' }],
+      span: 24,
+      itemProps: {
+        placeholder: '请输入',
+      },
+    },
+    {
+      label: '寄送的快递名称',
+      prop: 'expressName',
+      type: 'input',
+      span: 24,
+      rules: [{ required: true, message: '请输入' }],
+      itemProps: {
+        placeholder: '请输入',
+      },
+    },
+  ],
+  formModel: {},
+};
+
+export { searchItems, tableColumns, detailItems, formConfig };

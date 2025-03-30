@@ -17,11 +17,6 @@ const searchItems = [
 
 const tableColumns = [
   {
-    title: 'ID',
-    key: 'id',
-    dataIndex: 'id',
-  },
-  {
     title: '发票抬头',
     key: 'header',
     dataIndex: 'header',
@@ -30,16 +25,7 @@ const tableColumns = [
     title: '发票类型',
     key: 'type',
     dataIndex: 'type',
-    render: (_) => getLabelByValue(TICKET_TYPE, _),
-  },
-  {
-    title: '附加服务',
-    key: 'book',
-    dataIndex: 'book',
-    render: (_) => {
-      if (!_) return;
-      return _.bookGoods?.map((item) => item.name).join('，') || '无';
-    },
+    render: (_: number) => getLabelByValue(TICKET_TYPE, _),
   },
   {
     title: '税号',
@@ -66,7 +52,7 @@ const tableColumns = [
     dataIndex: 'email',
   },
   {
-    title: '开票时间',
+    title: '创建时间',
     key: 'createdAt',
     dataIndex: 'createdAt',
     slot: 'datetime',
