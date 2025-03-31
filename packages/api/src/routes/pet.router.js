@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
             const users = await prisma.user.findMany({
                 where: {
                     username: { contains: username }
-                }, 
+                },
             });
             if (users.length > 0) {
                 whereConditions.userId.in = users.map(user => user.id); 
