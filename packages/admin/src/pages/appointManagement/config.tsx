@@ -1,4 +1,4 @@
-import { Button, Tag } from 'antd';
+import { Button, Tag, Space } from 'antd';
 import { PhoneFilled, UserOutlined } from '@ant-design/icons';
 import {
   HANDLE_WAYS,
@@ -41,17 +41,17 @@ const tableColumns = [
   {
     title: '用户信息',
     dataIndex: 'user',
-    width: 256,
+    width: 150,
     render: (_: any) => {
       return (
-        <>
+        <Space direction="vertical">
           <Tag icon={<UserOutlined />} color="processing">
             {_?.nickname || '-'}
           </Tag>
           <Tag icon={<PhoneFilled />} color="processing">
             {_?.phone || ''}
           </Tag>
-        </>
+        </Space>
       );
     },
   },
@@ -123,14 +123,18 @@ const tableColumns = [
     title: '付款信息',
     key: 'payInfo',
     dataIndex: 'payInfo',
-    width: 300,
+    width: 280,
     render: (_: number, record: any) => {
       return (
-        <>
-          <p>订单编号：{record.outTradeNo || '-'}</p>
-          <p>交易流水号：{record.transactionId || '-'}</p>
-          <p>退款订单编号：{record.outRefundNo || '-'}</p>
-        </>
+        <Space direction="vertical">
+          <Tag color="processing">订单编号：{record.outTradeNo || '-'}</Tag>
+          <Tag color="processing">
+            交易流水号：{record.transactionId || '-'}
+          </Tag>
+          <Tag color="processing">
+            退款订单编号：{record.outRefundNo || '-'}
+          </Tag>
+        </Space>
       );
     },
   },
