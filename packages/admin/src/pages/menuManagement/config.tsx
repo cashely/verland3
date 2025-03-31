@@ -24,7 +24,7 @@ const tableColumns = [
     title: '套餐价格(¥)',
     key: 'price',
     dataIndex: 'price',
-    slot: 'price'
+    slot: 'price',
   },
 
   {
@@ -53,7 +53,7 @@ const detailItems = [
   {
     label: '套餐价格(¥)',
     prop: 'price',
-    render: (_) => formatPrice(_),
+    render: (_: number) => formatPrice(_),
   },
   {
     label: '创建时间',

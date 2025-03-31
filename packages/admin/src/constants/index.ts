@@ -143,7 +143,7 @@ const RITE_TYPE = [
   },
   {
     label: '否',
-    value: 2,
+    value: 0,
   },
 ];
 
@@ -190,5 +190,4 @@ export {
   GENDER_TYPE,
   getLabelByValue,
   tagColorMap,
-
 };

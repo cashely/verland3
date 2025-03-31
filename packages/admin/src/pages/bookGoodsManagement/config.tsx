@@ -1,5 +1,3 @@
-import { formatPrice } from '@/utils';
-
 const tableColums = [
   {
     title: '产品名称',
@@ -18,7 +16,7 @@ const tableColums = [
     dataIndex: 'price',
     key: 'price',
     width: 100,
-    slot: 'price'
+    slot: 'price',
   },
   {
     title: '产品内容',

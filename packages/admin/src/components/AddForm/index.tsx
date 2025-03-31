@@ -40,15 +40,15 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
     {
       formModel = {},
       formList = [],
-      onSubmit = () => { },
-      onReset = () => { },
-      setFormLoading = () => { },
+      onSubmit = () => {},
+      onReset = () => {},
+      setFormLoading = () => {},
     }: any,
     ref
   ) => {
     const [detailForm] = Form.useForm();
     // const formValues = Form.useWatch([], detailForm);
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState(formModel);
 
     // 暴露方法给父组件
     useImperativeHandle(ref, () => ({
@@ -74,14 +74,19 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
     };
 
     //图片上传成功
-    const handleUploadSuccess = (propName: keyof typeof formModel, fileObj: any) => {
+    const handleUploadSuccess = (
+      propName: keyof typeof formModel,
+      fileObj: any
+    ) => {
       console.log('上传成功', fileObj);
       setFormLoading(false);
-      setFormData(
-        produce((draft: any) => {
-          draft[propName] = fileObj.id;
-        })
-      );
+      detailForm.setFieldValue(propName, fileObj.id);
+      setFormData((d) => {
+        return {
+          ...d,
+          [propName]: fileObj.id,
+        };
+      });
     };
 
     //表单值变化
@@ -97,9 +102,7 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
     useEffect(() => {
       console.log(formModel, 'formModel变更');
       detailForm.setFieldsValue(formModel);
-      setFormData({
-        ...formModel,
-      });
+      setFormData(formModel);
     }, [formModel, detailForm]);
 
     return (
@@ -164,23 +167,25 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
                 {item.type === 'upload' ? (
                   <UploadButton
                     name={item.prop}
-                    onUploadSuccess={(fileObj) => handleUploadSuccess(item.prop, fileObj)}
+                    onUploadSuccess={(fileObj) =>
+                      handleUploadSuccess(item.prop, fileObj)
+                    }
                     setFormLoading={setFormLoading}
                     _fileList={
-                      formModel[item.prop]
+                      formData[item.prop]
                         ? [
-                          {
-                            url: formModel[item.prop],
-                          },
-                        ]
+                            {
+                              url: formData[item.prop],
+                            },
+                          ]
                         : []
                     }
                   >
                     {/* {
-                      (isUploading: boolean) => {
-                        setBtnLoading(isUploading)
-                      }
-                    } */}
+                   (isUploading: boolean) => {
+                     setBtnLoading(isUploading)
+                   }
+                 } */}
                   </UploadButton>
                 ) : null}
                 {item.type === 'textarea' ? (

@@ -1,4 +1,5 @@
-import { Button } from 'antd';
+import { Button, Tag } from 'antd';
+import { PhoneFilled, UserOutlined } from '@ant-design/icons';
 import {
   HANDLE_WAYS,
   getLabelByValue,
@@ -7,7 +8,6 @@ import {
   RITE_TYPE,
   APPOINTMENT_STATUS,
 } from '@/constants';
-import { formatPrice } from '@/utils';
 import { refundDetail } from '@/apis/modules/book';
 import { message } from 'antd';
 const searchItems = [
@@ -18,7 +18,7 @@ const searchItems = [
     clearable: true,
     placeholder: '请选择状态',
     options: APPOINTMENT_STATUS,
-    initValue: ''
+    initValue: '',
   },
 ];
 
@@ -41,12 +41,16 @@ const tableColumns = [
   {
     title: '用户信息',
     dataIndex: 'user',
-    width: 200,
+    width: 256,
     render: (_: any) => {
       return (
         <>
-          <p>姓名:{_?.nickname || '-'}</p>
-          <p>手机号:{_?.phone || ''}</p>
+          <Tag icon={<UserOutlined />} color="processing">
+            {_?.nickname || '-'}
+          </Tag>
+          <Tag icon={<PhoneFilled />} color="processing">
+            {_?.phone || ''}
+          </Tag>
         </>
       );
     },
@@ -61,7 +65,11 @@ const tableColumns = [
     dataIndex: 'handleWay',
     render(_: number) {
       if (!_) return;
-      return HANDLE_WAYS.find((item) => item.value === _)?.label || '-';
+      return (
+        <Tag color="geekblue">
+          {HANDLE_WAYS.find((item) => item.value === _)?.label || '-'}
+        </Tag>
+      );
     },
   },
   {
@@ -77,8 +85,9 @@ const tableColumns = [
     width: 220,
     showTitle: true,
     render(_: any) {
-      return `${_.province || ''}${_.city || ''}${_.area || ''}${_.detail || ''
-        }`;
+      return `${_.province || ''}${_.city || ''}${_.area || ''}${
+        _.detail || ''
+      }`;
     },
   },
   {
@@ -96,13 +105,13 @@ const tableColumns = [
     title: '总金额（元）',
     key: 'totalAmount',
     dataIndex: 'totalAmount',
-    slot: 'price'
+    slot: 'price',
   },
   {
     title: '付款金额（元）',
     dataIndex: 'payAmount',
     key: 'payAmount',
-    slot: 'price'
+    slot: 'price',
   },
   {
     title: '付款渠道',
@@ -215,8 +224,9 @@ const detailItems = [
     prop: 'address',
     render(_) {
       if (!_) return;
-      return `${_.province || ''}${_.city || ''}${_.area || ''}${_.detail || ''
-        }`;
+      return `${_.province || ''}${_.city || ''}${_.area || ''}${
+        _.detail || ''
+      }`;
     },
   },
   {
