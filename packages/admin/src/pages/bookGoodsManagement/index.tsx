@@ -42,7 +42,7 @@ export default function appointManagement() {
         if (record?.id) {
           formConfig.formModel = {
             ...record,
-            thumb: record?.thumb?.path ? FILE_URL + record?.thumb?.path : '',
+            thumb: record?.thumb?.path,
           };
         }
       })

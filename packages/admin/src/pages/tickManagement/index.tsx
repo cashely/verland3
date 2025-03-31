@@ -61,6 +61,7 @@ export default function TickManagement() {
   return (
     <>
       <MyPage
+        ref={pageRef}
         pageApi={list}
         tableOptions={tableColumns}
         searchItems={searchItems}
@@ -79,14 +80,16 @@ export default function TickManagement() {
                 >
                   详情
                 </Button>
-                <Button
-                  onClick={() => handleTicket(record)}
-                  size="small"
-                  color="primary"
-                  variant="link"
-                >
-                  开票
-                </Button>
+                {record.fileId && (
+                  <Button
+                    onClick={() => handleTicket(record)}
+                    size="small"
+                    color="primary"
+                    variant="link"
+                  >
+                    开票
+                  </Button>
+                )}
               </Flex>
             );
           },

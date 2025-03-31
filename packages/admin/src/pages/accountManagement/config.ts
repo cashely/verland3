@@ -1,4 +1,4 @@
-import { GENDER_TYPE, getLabelByValue } from '@/constants'
+import { GENDER_TYPE, getLabelByValue } from '@/constants';
 const searchItems = [
   {
     label: '用户名',
@@ -20,15 +20,16 @@ const tableColumns = [
     dataIndex: 'nickname',
   },
   {
-    title: 'openid',
+    title: 'OpenId',
     key: 'wxid',
     dataIndex: 'wxid',
+    width: 240,
   },
   {
     title: '性别',
     key: 'gender',
     dataIndex: 'gender',
-    render: (_: number) => getLabelByValue(GENDER_TYPE, _)
+    render: (_: number) => getLabelByValue(GENDER_TYPE, _),
   },
   {
     title: '手机号',
@@ -63,7 +64,7 @@ const detailItems = [
   {
     label: '性别',
     prop: 'gender',
-    render: (_: number) => getLabelByValue(GENDER_TYPE, _)
+    render: (_: number) => getLabelByValue(GENDER_TYPE, _),
   },
   {
     label: '手机号',

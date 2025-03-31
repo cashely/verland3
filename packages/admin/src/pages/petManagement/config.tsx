@@ -1,18 +1,12 @@
 import { Button } from 'antd';
-import {
-  TICKET_TYPE,
-  PET_STATUS,
-  getLabelByValue,
-  tagColorMap,
-} from '@/constants';
+import { PET_STATUS, getLabelByValue, tagColorMap } from '@/constants';
 
 const searchItems = [
   {
-    label: '发票类型',
-    prop: 'type',
-    type: 'select',
-    placeholder: '请选择发票类型',
-    options: TICKET_TYPE,
+    label: '用户名',
+    prop: 'username',
+    type: 'input',
+    placeholder: '请输入',
   },
 ];
 
