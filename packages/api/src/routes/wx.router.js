@@ -223,9 +223,9 @@ router.post('/wxpay/notify_url', async (req, res) => {
 })
 
 // 查询退款状态
-router.get('/wxpay/refundStatu', async (req, res) => {
+router.get('/wxpay/refundStatu/:outRefundNo', async (req, res) => {
     try {
-        const { outRefundNo } = req.query;
+        const { outRefundNo } = req.params;
         const refundResult = await payment.getRefund({ out_refund_no: outRefundNo });
         res.response.success(refundResult);
     } catch (error) {
