@@ -12,11 +12,10 @@ router.get('/', async (req, res) => {
     try {
 
         const { userIds = [], pageSize = 20, pageNo = 1, username } = req.query;
-        const whereConditions = {
-            userId: {
-                in: userIds
-            }
-        };
+        const whereConditions = {};
+        if (userIds.length > 0) {
+            whereConditions.userId = { in: userIds };
+        }
         if (username) {
             const users = await prisma.user.findMany({
                 where: {
