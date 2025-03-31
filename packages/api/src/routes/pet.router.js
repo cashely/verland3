@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
                 },
             });
             if (users.length > 0) {
-                whereConditions.userId.in = users.map(user => user.id); 
+                whereConditions.userId = { in: users.map(user => user.id) };
             }
         }
         const pets = await prisma.pet.findMany({
