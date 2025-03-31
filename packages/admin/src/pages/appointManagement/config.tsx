@@ -15,8 +15,10 @@ const searchItems = [
     label: '状态',
     prop: 'statu',
     type: 'select',
+    clearable: true,
     placeholder: '请选择状态',
     options: APPOINTMENT_STATUS,
+    initValue: ''
   },
 ];
 
@@ -75,9 +77,8 @@ const tableColumns = [
     width: 220,
     showTitle: true,
     render(_: any) {
-      return `${_.province || ''}${_.city || ''}${_.area || ''}${
-        _.detail || ''
-      }`;
+      return `${_.province || ''}${_.city || ''}${_.area || ''}${_.detail || ''
+        }`;
     },
   },
   {
@@ -95,13 +96,13 @@ const tableColumns = [
     title: '总金额（元）',
     key: 'totalAmount',
     dataIndex: 'totalAmount',
-    render: (_: number) => formatPrice(_),
+    slot: 'price'
   },
   {
     title: '付款金额（元）',
     dataIndex: 'payAmount',
     key: 'payAmount',
-    render: (_: number) => formatPrice(_),
+    slot: 'price'
   },
   {
     title: '付款渠道',
@@ -214,9 +215,8 @@ const detailItems = [
     prop: 'address',
     render(_) {
       if (!_) return;
-      return `${_.province || ''}${_.city || ''}${_.area || ''}${
-        _.detail || ''
-      }`;
+      return `${_.province || ''}${_.city || ''}${_.area || ''}${_.detail || ''
+        }`;
     },
   },
   {

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { message, Modal, Typography, Space } from 'antd';
-import { searchItems, tableColumns, formConfig } from './config.ts';
+import { searchItems, tableColumns, formConfig } from './config.tsx';
 import {
   menuList,
   menuUpdate,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, Layout } from "antd";
 import { anyncRoutesList } from "../../../../router/routes";
@@ -26,8 +26,7 @@ function SideMenu(props) {
     if (isLink(url)) {
       return (
         <a href={url} target={"_blank"} rel="noreferrer">
-          {" "}
-          {title}{" "}
+          {title}
         </a>
       );
     } else {
@@ -46,7 +45,7 @@ function SideMenu(props) {
       const obj = {
         ...item,
         label: menuLink(item.path, item.title),
-        key: item.path,
+        key: item.path.includes(':id') ? item.key : item.path,  //唯一标识
         icon: item.icon,
       };
 
@@ -65,6 +64,7 @@ function SideMenu(props) {
   const initMenu = (list: any) => {
     const _list = changeRoutes(list);
     const newList = _list ? [...changeRoutes(list)] : [];
+    console.log(331, newList)
     setMenuList(newList);
   };
 
@@ -80,26 +80,33 @@ function SideMenu(props) {
 
   // 初始化需展开的导航 和 高亮当前路径的导航
   const initActiveMenu = () => {
+    const openKeys = [];
+    const selectedKeys = [];
     const rank = initPath.split("/");
-    console.log(rank, "rank");
     const len = rank.length;
-    const openMenus = [initPath];
-    const selectedOpenMenus = [];
-    const index = len - 2;
-    if (len > 0) {
-      for (let i = 0; i < index + 1; i++) {
-        if (i < index) {
-          selectedOpenMenus.push(rank.slice(0, i + 2).join("/"));
+    //详情
+    if (rank.includes('detail')) {
+      const mainMenu = initPath.split('/detail')[0]
+      openKeys.push(mainMenu)
+      selectedKeys.push(mainMenu + '/list')
+    } else {
+      selectedKeys.push(initPath)
+      const index = len - 2; //4-2=2
+      if (len > 0) {
+        for (let i = 0; i < index + 1; i++) {
+          if (i < index) {
+            // console.log('++++331', index, rank.slice(0, i + 2).join("/"));
+            openKeys.push(rank.slice(0, i + 2).join("/"));
+          }
         }
       }
     }
     //默认打开菜单
-    setDefaultOpenKeys(selectedOpenMenus);
-    setSelectedKeys(openMenus);
+    setDefaultOpenKeys(openKeys); //主菜单
+    setSelectedKeys(selectedKeys);  //子菜单
   };
 
   const handleOpenChange = (openKeys: string[]) => {
-    console.log(openKeys)
     setDefaultOpenKeys(openKeys)
   }
 
@@ -109,10 +116,13 @@ function SideMenu(props) {
     navigate(key)
   }
 
+  useEffect(() => {
+    initActiveMenu()
+  }, [initPath])
+
   return (
     <section className="h-full bg-[#001529] pt-[10px]">
-      <Sider  collapsed={!sidebarStatus}>
-        {/* 可以放logo */}
+      <Sider collapsed={!sidebarStatus}>
         <Menu
           theme={theme}
           mode={mode}

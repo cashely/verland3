@@ -24,7 +24,7 @@ const tableColumns = [
     title: '套餐价格(¥)',
     key: 'price',
     dataIndex: 'price',
-    render: (_) => formatPrice(_),
+    slot: 'price'
   },
 
   {
@@ -78,8 +78,6 @@ const formConfig = {
       span: 24,
       itemProps: {
         placeholder: '请输入套餐名称',
-        // disabled: true
-        // readOnly: true,
       },
     },
     {
@@ -105,8 +103,6 @@ const formConfig = {
       rules: [{ required: true, message: '请输入套餐内容' }],
       itemProps: {
         placeholder: '请输入套餐内容',
-        // readonly: true,
-        // required: true,
       },
     },
   ],

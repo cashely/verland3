@@ -147,11 +147,24 @@ const RITE_TYPE = [
   },
 ];
 
+//性别
+const GENDER_TYPE = [
+  {
+    label: '男',
+    value: 0,
+  },
+  {
+    label: '女',
+    value: 1,
+  },
+];
+
 const tagColorMap = (arr: IOptionItem[]) => {
+  const obj = {} as Record<number, string>;
   return arr.reduce((acc: Record<number, string>, cur: IOptionItem) => {
     acc[cur.value] = cur.tag;
     return acc;
-  }, {});
+  }, obj);
 };
 
 function getLabelByValue(arr: any[], value: any) {
@@ -174,6 +187,8 @@ export {
   SERVICE_TYPE,
   RITE_TYPE,
   APPOINTMENT_STATUS,
+  GENDER_TYPE,
   getLabelByValue,
   tagColorMap,
+
 };

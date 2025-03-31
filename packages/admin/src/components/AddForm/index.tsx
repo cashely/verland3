@@ -40,12 +40,9 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
     {
       formModel = {},
       formList = [],
-      onSubmit = () => {},
-      onReset = () => {},
-      setFormLoading = () => {},
-      submitText = '提交',
-      resetText = '重置',
-      rules = [],
+      onSubmit = () => { },
+      onReset = () => { },
+      setFormLoading = () => { },
     }: any,
     ref
   ) => {
@@ -77,18 +74,18 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
     };
 
     //图片上传成功
-    const handleUploadSuccess = (fileObj: any) => {
+    const handleUploadSuccess = (propName: keyof typeof formModel, fileObj: any) => {
       console.log('上传成功', fileObj);
       setFormLoading(false);
       setFormData(
         produce((draft: any) => {
-          draft['thumbId'] = fileObj.id;
+          draft[propName] = fileObj.id;
         })
       );
     };
 
     //表单值变化
-    const handleValueChange = (_, values: Record<string, any>) => {
+    const handleValueChange = (_: any, values: Record<string, any>) => {
       setFormData({
         ...formData,
         ...values,
@@ -157,7 +154,7 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
                     className={formItemClasses}
                     placeholder={item.placeholder}
                   >
-                    {item.options.map((option, indey) => (
+                    {item.options.map((option: any, indey: number) => (
                       <Option key={indey} value={option.value}>
                         {option.label}
                       </Option>
@@ -167,15 +164,15 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
                 {item.type === 'upload' ? (
                   <UploadButton
                     name={item.prop}
-                    onUploadSuccess={handleUploadSuccess}
+                    onUploadSuccess={(fileObj) => handleUploadSuccess(item.prop, fileObj)}
                     setFormLoading={setFormLoading}
                     _fileList={
-                      formModel.thumb
+                      formModel[item.prop]
                         ? [
-                            {
-                              url: formModel.thumb,
-                            },
-                          ]
+                          {
+                            url: formModel[item.prop],
+                          },
+                        ]
                         : []
                     }
                   >

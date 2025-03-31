@@ -20,6 +20,6 @@ export default defineConfig({
         },
       },
     },
-    allowedHosts: [],
+    allowedHosts: ['658gjvuw-mqy3qsam-yahiny0cgwh0.vcc3p.mcprev.cn'],
   },
 });

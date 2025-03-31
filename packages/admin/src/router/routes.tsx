@@ -1,58 +1,29 @@
-import { lazy } from 'react';
-import loadable from '@loadable/component';
+
 import { Navigate } from 'react-router-dom';
 import { TeamOutlined, CustomerServiceOutlined } from '@ant-design/icons';
-import { getTokenFromLocalStorage } from '../utils/index.ts';
 import IcontFont from '@/components/IcontFont';
-import useUrlQuery from '../hooks/useUrlQuery.ts';
-//按需加载
-const Login = loadable(() => import('../pages/login'));
-const Page401 = loadable(() => import('../pages/errorPage/401'));
-const Page404 = loadable(() => import('../pages/errorPage/404'));
-const Layout = loadable(() => import('../layout'));
-const ProjectList = loadable(() => import('../pages/projects/list'));
-const MenuManagement = loadable(() => import('../pages/menuManagement'));
-const MenuManagementDetail = loadable(
-  () => import('../pages/menuManagement/detail.tsx')
-);
-const AppointManagement = loadable(() => import('../pages/appointManagement'));
-const PetManagement = loadable(() => import('../pages/petManagement/index'));
-const PetDetail = loadable(() => import('../pages/petManagement/detail'));
-const AccountManagement = loadable(() => import('../pages/accountManagement'));
-const AppointManagementDetail = loadable(
-  () => import('../pages/appointManagement/detail')
-);
+import {
+  Login,
+  Page401,
+  Page404,
+  Layout,
+  ProjectList,
+  MenuManagement,
+  MenuManagementDetail,
+  AppointManagement,
+  PetManagement,
+  PetDetail,
+  AccountManagement,
+  AppointManagementDetail,
+  BookGoodsManagement,
+  TickManagement,
+  TickManagementDetail,
+  AdviceManagement,
+  AdviceManagementDetail,
+  BookGoodsDetail,
+  AccountDetail
+} from './routeComps.ts'
 
-const BookGoodsManagement = loadable(
-  () => import('../pages/bookGoodsManagement')
-);
-const TickManagement = loadable(() => import('../pages/tickManagement'));
-const TickManagementDetail = loadable(
-  () => import('../pages/tickManagement/detail.tsx')
-);
-const AdviceManagement = loadable(() => import('../pages/adviceManagement'));
-const AdviceManagementDetail = loadable(
-  () => import('../pages/adviceManagement/detail')
-);
-const hasToken = getTokenFromLocalStorage();
-const BookGoodsDetail = loadable(
-  () => import('../pages/bookGoodsManagement/detail')
-);
-const AccountDetail = loadable(
-  () => import('../pages/accountManagement/detail')
-);
-console.log('🚀 ~ hasToken:', hasToken);
-// const AuthComponent = ({ children }: Props) => {
-//   // 检查权限是否通过的逻辑
-//   console.log("🚀 ~ hasToken:", hasToken);
-
-//   if (!hasToken) {
-//     // 检查失败, 跳转登录页
-//     return <Navigate to="/login"></Navigate>;
-//   }
-//   // 检查成功, 展示内容
-//   return <>{children}</>;
-// };
 const constantRoutesList = [
   {
     path: '/login',
@@ -101,8 +72,7 @@ const anyncRoutesList = [
       {
         hidden: true,
         index: true,
-
-        element: <Navigate to="/dashboard" />,
+        element: <Navigate to="/appointManagement/list" />,
       },
     ],
   },
@@ -112,17 +82,16 @@ const anyncRoutesList = [
     element: <Layout />,
     icon: <IcontFont type="icon-yuyueguanli"></IcontFont>,
     handle: { title: '预约管理' },
-    redirect: '/a',
+    //redirect: '/appointManagement/list',
     children: [
       {
-        index: true,
+
         path: '/appointManagement/list',
-        title: '列表',
+        title: '预约列表',
         handle: {
-          title: '列表',
+          title: '预约列表',
         },
         element: <AppointManagement />,
-        //lazy(),
       },
       {
         path: '/appointManagement/detail/:id',
@@ -132,8 +101,11 @@ const anyncRoutesList = [
         },
         hidden: true,
         element: <AppointManagementDetail />,
-        //lazy(),
       },
+      {
+        index: true,
+        element: <Navigate to="/appointManagement/list" />,
+      }
     ],
   },
   {
@@ -142,14 +114,14 @@ const anyncRoutesList = [
     element: <Layout />,
     icon: <IcontFont type="icon-yuyueguanli"></IcontFont>,
     handle: { title: '套餐管理' },
-    redirect: '/a',
+    redirect: '/menuManagement/list',
     children: [
       {
         index: true,
         path: '/menuManagement/list',
-        title: '列表',
+        title: '套餐列表',
         handle: {
-          title: '列表',
+          title: '套餐列表',
         },
         element: <MenuManagement />,
       },
@@ -162,6 +134,10 @@ const anyncRoutesList = [
         hidden: true,
         element: <MenuManagementDetail />,
       },
+      {
+        index: true,
+        element: <Navigate to="/menuManagement/list" />,
+      }
     ],
   },
 
@@ -174,9 +150,9 @@ const anyncRoutesList = [
     children: [
       {
         path: '/ticketManagement/list',
-        title: '列表',
+        title: '发票列表',
         handle: {
-          title: '列表',
+          title: '发票列表',
         },
         element: <TickManagement />,
       },
@@ -189,6 +165,10 @@ const anyncRoutesList = [
         },
         element: <TickManagementDetail />,
       },
+      {
+        index: true,
+        element: <Navigate to="/ticketManagement/list" />,
+      }
     ],
   },
   {
@@ -200,9 +180,9 @@ const anyncRoutesList = [
     children: [
       {
         path: '/bookGoodsManagement/list',
-        title: '列表',
+        title: '附加服务列表',
         handle: {
-          title: '列表',
+          title: '附加服务列表',
         },
         element: <BookGoodsManagement />,
       },
@@ -215,6 +195,10 @@ const anyncRoutesList = [
         },
         element: <BookGoodsDetail />,
       },
+      {
+        index: true,
+        element: <Navigate to="/bookGoodsManagement/list" />,
+      }
     ],
   },
   {
@@ -226,9 +210,9 @@ const anyncRoutesList = [
     children: [
       {
         path: '/adviceManagement/list',
-        title: '列表',
+        title: '投诉列表',
         handle: {
-          title: '列表',
+          title: '投诉列表',
         },
         element: <AdviceManagement />,
       },
@@ -241,6 +225,10 @@ const anyncRoutesList = [
         },
         element: <AdviceManagementDetail />,
       },
+      {
+        index: true,
+        element: <Navigate to="/adviceManagement/list" />,
+      }
     ],
   },
   {
@@ -258,14 +246,14 @@ const anyncRoutesList = [
     children: [
       {
         path: '/petManagement/list',
-        title: '宠物库',
+        title: '宠物列表',
         handle: {
-          title: '宠物库',
+          title: '宠物列表',
         },
         element: <PetManagement />,
       },
       {
-        path: '/petManagement/detail/:id?',
+        path: '/petManagement/detail/:id',
         title: '详情',
         hidden: true,
         handle: {
@@ -273,6 +261,10 @@ const anyncRoutesList = [
         },
         element: <PetDetail />,
       },
+      {
+        index: true,
+        element: <Navigate to="/petManagement/list" />,
+      }
     ],
   },
   {
@@ -286,18 +278,18 @@ const anyncRoutesList = [
         }}
       />
     ),
-    handle: { title: '账号管理' },
+    handle: { title: '客户管理' },
     children: [
       {
         path: '/accountManagement/list',
         handle: {
-          title: '列表',
+          title: '客户列表',
         },
-        title: '列表',
+        title: '客户列表',
         element: <AccountManagement />,
       },
       {
-        path: '/accountManagement/detail/:id?',
+        path: '/accountManagement/detail/:id',
         handle: {
           title: '详情',
         },
@@ -305,6 +297,10 @@ const anyncRoutesList = [
         title: '详情',
         element: <AccountDetail />,
       },
+      {
+        index: true,
+        element: <Navigate to="/accountManagement/list" />,
+      }
     ],
   },
 ];

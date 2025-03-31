@@ -9,14 +9,14 @@ import { Button, Card } from 'antd';
 import type { ColumnsType } from 'antd/es/table/interface';
 import SearchForm from './SearchForm';
 import TableList from '@/components/TableList';
-import type { MyResponse } from '@/apis/request';
+import type { Response } from '@/apis/request';
 import { PageData } from '@/types';
 import './index.scss';
 
 export type MyPageTableOptions<S> = ColumnsType<S>;
 type ParseDataType<S> = S extends (
   params?: any
-) => MyResponse<PageData<infer T>>
+) => Response<PageData<infer T>>
   ? T
   : S;
 export interface PageProps<S> {
@@ -39,7 +39,7 @@ const BasicPage = (
 ) => {
   const [pageData, setPageData] = useState<PageData<ParseDataType<S>>>({
     pageSize: 20,
-    pageNum: 1,
+    pageNo: 1,
     total: 0,
     data: [],
   });
@@ -55,7 +55,7 @@ const BasicPage = (
           ...params,
           ...pageParams,
           pageSize: pageData.pageSize,
-          pageNum: pageData.pageNum,
+          pageNo: pageData.pageNo,
         };
         const { code, data } = await pageApi(obj);
         setTableLoading(false);
@@ -71,7 +71,7 @@ const BasicPage = (
         }
       }
     },
-    [pageApi, pageParams, pageData.pageSize, pageData.pageNum]
+    [pageApi, pageParams, pageData.pageSize, pageData.pageNo]
   );
 
   const onSearch = (searchParams: Record<string, any>) => {
@@ -79,10 +79,10 @@ const BasicPage = (
     getPageData(searchParams);
   };
 
-  const onPageChange = (pageNum: number, pageSize?: number) => {
+  const onPageChange = (pageNo: number, pageSize?: number) => {
     setPageData({
       ...pageData,
-      pageNum,
+      pageNo,
       pageSize,
     });
   };
@@ -127,7 +127,7 @@ const BasicPage = (
           columns={tableOptions}
           loading={tableLoading}
           pagination={{
-            current: pageData.pageNum,
+            current: pageData.pageNo,
             pageSize: pageData.pageSize,
             total: pageData.total,
             onChange: onPageChange,

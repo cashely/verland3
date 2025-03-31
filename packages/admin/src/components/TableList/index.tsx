@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Empty, Image, Tag } from 'antd';
-import type { PaginationProps, TableColumnsType, TableProps } from 'antd';
+import type { PaginationProps, TableColumnProps, GetProp, TableProps } from 'antd';
 import { timeFormatDateTime } from '@/utils/timeUtils';
 import { getLabelByValue } from '@/constants';
 import { createStyles } from 'antd-style';
@@ -8,22 +8,30 @@ import { FILE_URL } from '@/apis/request';
 import _ from 'lodash-es';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
+import { formatPrice } from '@/utils';
+
+type CellEllipsisType = GetProp<TableColumnProps, 'ellipsis'>;
 
 interface DataType {
-  key: string;
-  slot?: string;
-  // dataIndex?: string;
-  // fixed: 'left' | 'right' | false;
-  // title: string;
   // render: () => React.ReactNode;
   [key: string]: any;
+}
+
+// TableProps<DataType>['columns'] &
+type CustomTableColumnProps = TableColumnProps & {
+  render?: (text: any, record: any, index: number) => React.ReactNode;
+  ellipsis?: CellEllipsisType;
+  width?: number;
+  dataIndex?: string;
+  title?: React.ReactNode;
+  showTitle: boolean;
 }
 
 type IProps = {
   children?: any;
 } & {
   pagination?: PaginationProps | boolean;
-  columns: TableColumnsType<DataType>;
+  columns: CustomTableColumnProps;
   dataSource: DataType[];
   loading: TableProps<DataType>['loading'];
   rowSelection?: TableProps<DataType>['rowSelection'];
@@ -89,60 +97,59 @@ export default (props: IProps) => {
   const tableConfig: any = {
     rowKey: 'id',
     bordered: true,
-    loading: otherConfig.loading,
     size: 'large',
     scroll: { x: '100%', y: '100%' },
     //表格行选择
     rowSelection: otherConfig?.rowSelection
       ? {
-          // type: 'checkbox',
-          selections: [
-            {
-              key: Table.SELECTION_ALL,
-              text: '全选',
-              onSelect: (allKeys: React.Key[]) => setSelectedRowKeys(allKeys),
-            },
-            {
-              key: Table.SELECTION_INVERT,
-              text: '反选',
-              onSelect: (allKeys: React.Key[]) =>
-                setSelectedRowKeys(
-                  allKeys.filter((key) => !selectedRowKeys.includes(key))
-                ),
-            },
-            {
-              key: Table.SELECTION_NONE,
-              text: '清空',
-              onSelect: () => setSelectedRowKeys([]),
-            },
-          ],
-          selectedRowKeys,
-          onChange: (newSelectedRowKeys: React.Key[]) => {
-            console.log(`rowSelection---selectedRowKeys: ${selectedRowKeys}`);
-            setSelectedRowKeys(newSelectedRowKeys);
+        // type: 'checkbox',
+        selections: [
+          {
+            key: Table.SELECTION_ALL,
+            text: '全选',
+            onSelect: (allKeys: React.Key[]) => setSelectedRowKeys(allKeys),
           },
-          ...otherConfig?.rowSelection,
-        }
+          {
+            key: Table.SELECTION_INVERT,
+            text: '反选',
+            onSelect: (allKeys: React.Key[]) =>
+              setSelectedRowKeys(
+                allKeys.filter((key) => !selectedRowKeys.includes(key))
+              ),
+          },
+          {
+            key: Table.SELECTION_NONE,
+            text: '清空',
+            onSelect: () => setSelectedRowKeys([]),
+          },
+        ],
+        selectedRowKeys,
+        onChange: (newSelectedRowKeys: React.Key[]) => {
+          console.log(`rowSelection---selectedRowKeys: ${selectedRowKeys}`);
+          setSelectedRowKeys(newSelectedRowKeys);
+        },
+        ...otherConfig?.rowSelection,
+      }
       : false,
     //分页、排序、筛选变化时触发
-    onChange(
-      pagination,
-      filters,
-      sorter,
-      extra: { currentDataSource: []; action: 'paginate' | 'sort' | 'filter' }
-    ) {
-      console.log(pagination, filters, sorter, extra);
-    },
+    // onChange(
+    //   pagination,
+    //   filters,
+    //   sorter,
+    //   extra: { currentDataSource: []; action: 'paginate' | 'sort' | 'filter' }
+    // ) {
+    //   console.log(pagination, filters, sorter, extra);
+    // },
     //点击某一行触发
-    onRow: (record) => ({
-      onClick: (event) => {
-        // console.log(record)
-      },
-    }),
+    // onRow: (record) => ({
+    //   onClick: (event) => {
+    //     // console.log(record)
+    //   },
+    // }),
     locale: () => ({ emptyText: <Empty description="No Data"></Empty> }),
     pagination: {
       showTotal: (total: number) => `共${total}条`,
-      onShowSizeChange: (current, pageSize) => {
+      onShowSizeChange: (current: number, pageSize: number) => {
         console.log(current, pageSize);
       },
       ...combinedPagination,
@@ -190,6 +197,8 @@ export default (props: IProps) => {
             {getLabelByValue(item?.options || [], value)}
           </Tag>
         );
+      } else if (item.slot === 'price') {
+        return <Tag color="green">{formatPrice(value)}</Tag>
       }
     }
     return value || '-';
@@ -202,14 +211,14 @@ export default (props: IProps) => {
         dataSource={dataSource}
         {...tableConfig}
       >
-        {columns?.map((item, index) => (
+        {columns?.map((item: any, index: number) => (
           <Table.Column
             width={item.width ?? 160}
             fixed={item.fixed || false}
             title={item.title}
             dataIndex={item.dataIndex}
             ellipsis={{
-              showTitle: item.showTitle,
+              showTitle: item.showTitle || false,
             }}
             key={index}
             render={(value, record) =>
