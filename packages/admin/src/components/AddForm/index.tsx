@@ -43,15 +43,12 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
       onSubmit = () => {},
       onReset = () => {},
       setFormLoading = () => {},
-      submitText = '提交',
-      resetText = '重置',
-      rules = [],
     }: any,
     ref
   ) => {
     const [detailForm] = Form.useForm();
     // const formValues = Form.useWatch([], detailForm);
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState(formModel);
 
     // 暴露方法给父组件
     useImperativeHandle(ref, () => ({
@@ -77,18 +74,23 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
     };
 
     //图片上传成功
-    const handleUploadSuccess = (fileObj: any) => {
+    const handleUploadSuccess = (
+      propName: keyof typeof formModel,
+      fileObj: any
+    ) => {
       console.log('上传成功', fileObj);
       setFormLoading(false);
-      setFormData(
-        produce((draft: any) => {
-          draft['thumbId'] = fileObj.id;
-        })
-      );
+      detailForm.setFieldValue(propName, fileObj.id);
+      setFormData((d) => {
+        return {
+          ...d,
+          [propName]: fileObj.id,
+        };
+      });
     };
 
     //表单值变化
-    const handleValueChange = (_, values: Record<string, any>) => {
+    const handleValueChange = (_: any, values: Record<string, any>) => {
       setFormData({
         ...formData,
         ...values,
@@ -100,9 +102,7 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
     useEffect(() => {
       console.log(formModel, 'formModel变更');
       detailForm.setFieldsValue(formModel);
-      setFormData({
-        ...formModel,
-      });
+      setFormData(formModel);
     }, [formModel, detailForm]);
 
     return (
@@ -157,7 +157,7 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
                     className={formItemClasses}
                     placeholder={item.placeholder}
                   >
-                    {item.options.map((option, indey) => (
+                    {item.options.map((option: any, indey: number) => (
                       <Option key={indey} value={option.value}>
                         {option.label}
                       </Option>
@@ -167,23 +167,25 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
                 {item.type === 'upload' ? (
                   <UploadButton
                     name={item.prop}
-                    onUploadSuccess={handleUploadSuccess}
+                    onUploadSuccess={(fileObj) =>
+                      handleUploadSuccess(item.prop, fileObj)
+                    }
                     setFormLoading={setFormLoading}
                     _fileList={
-                      formModel.thumb
+                      formData[item.prop]
                         ? [
                             {
-                              url: formModel.thumb,
+                              url: formData[item.prop],
                             },
                           ]
                         : []
                     }
                   >
                     {/* {
-                      (isUploading: boolean) => {
-                        setBtnLoading(isUploading)
-                      }
-                    } */}
+                   (isUploading: boolean) => {
+                     setBtnLoading(isUploading)
+                   }
+                 } */}
                   </UploadButton>
                 ) : null}
                 {item.type === 'textarea' ? (

@@ -1,5 +1,3 @@
-import { formatPrice } from '@/utils';
-
 const tableColums = [
   {
     title: '产品名称',
@@ -18,7 +16,7 @@ const tableColums = [
     dataIndex: 'price',
     key: 'price',
     width: 100,
-    render: (_: number) => formatPrice(_),
+    slot: 'price',
   },
   {
     title: '产品内容',
@@ -123,8 +121,6 @@ const formConfig = {
       rules: [{ required: true, message: '请输入产品内容' }],
       itemProps: {
         placeholder: '请输入服务内容',
-        // readonly: true,
-        // required: true,
       },
     },
   ],

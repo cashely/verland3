@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Modal, Flex, Typography, message, Space } from 'antd';
+import { Modal, Typography, message, Space } from 'antd';
 import { searchItems, tableColums, formConfig } from './config.tsx';
 import { list, del, edit, add } from '@/apis/modules/bookGood';
 import MyPage from '@/components/BasicPage';

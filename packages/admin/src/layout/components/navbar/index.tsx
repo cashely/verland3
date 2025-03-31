@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useMatches, Link } from "react-router-dom";
+import { useMatches } from "react-router-dom";
 import { Breadcrumb } from "antd";
 
 function NavBar() {
   const [paths, setPaths] = useState<any>([]);
   const matches = useMatches();
-  console.log("matches", matches);
+  console.log("matches332", matches);
   useEffect(() => {
     if (!matches) {
       return;
@@ -14,25 +14,20 @@ function NavBar() {
       return matches
         .filter((item) => item.pathname !== "/")
         .map((match: any, index) => {
-          const path: any = {
+          const item: any = {
             title: match.handle?.title,
           };
-          if (match.id === '1') {
-            path.href = `/#${match.pathname}/list`;
+          if (!~match.id?.indexOf('-')) {
+            item.href = `/#${match.pathname}/list`;
           } else
             if (index !== matches.length - 1) {
-              path.href = `/#${match.pathname}`;
+              item.href = `/#${match.pathname}`;
             }
-          return path;
-          //   return (
-          //     <Link key={match.id} to={match.pathname}>
-          //       {match.handle?.title || "首页"}
-          //     </Link>
-          //   );
+          return item;
         });
     });
   }, [matches]);
-  console.log(paths);
+
   return (
     <div className="p-2 border-b navbox">
       <Breadcrumb items={paths} />

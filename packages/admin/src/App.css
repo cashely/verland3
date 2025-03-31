@@ -56,3 +56,8 @@ body {
 .ant-menu-item-selected .ant-menu-item-icon {
   color: #fff !important;
 }
+
+/* 加载进度条颜色 */
+#nprogress .bar {
+  background-color: #c696da !important;
+}

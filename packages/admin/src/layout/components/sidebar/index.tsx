@@ -7,7 +7,10 @@ const SiderBar = () => {
   const [initPath, setInitPath] = useState("");
   const location = useLocation();
   const { sidebarStatus } = appStore()
+
+
   useEffect(() => {
+    console.log('331', location)
     setInitPath(location.pathname);
   }, [location.pathname]);
 
@@ -18,7 +21,7 @@ const SiderBar = () => {
       style={{ minWidth: sidebarStatus ? 200 : 80 }}
     >
       <h1 className="text-sm text-gray-100">
-        <Logo width={30} fontSize={18} />
+        <Logo width={50} fontSize={18} />
       </h1>
       <SideMenu initPath={initPath}></SideMenu>
     </aside>

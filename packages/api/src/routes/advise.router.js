@@ -38,6 +38,9 @@ router.get('/:id', async (req, res) => {
         const advise = await prisma.advise.findUnique({
             where: {
                 id
+            },
+            include: {
+                user: true,
             }
         });
         res.response.success(advise);

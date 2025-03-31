@@ -1,4 +1,5 @@
-import { Button } from 'antd';
+import { Button, Tag, Space } from 'antd';
+import { PhoneFilled, UserOutlined } from '@ant-design/icons';
 import {
   HANDLE_WAYS,
   getLabelByValue,
@@ -7,7 +8,6 @@ import {
   RITE_TYPE,
   APPOINTMENT_STATUS,
 } from '@/constants';
-import { formatPrice } from '@/utils';
 import { refundDetail } from '@/apis/modules/book';
 import { message } from 'antd';
 const searchItems = [
@@ -15,8 +15,10 @@ const searchItems = [
     label: '状态',
     prop: 'statu',
     type: 'select',
+    clearable: true,
     placeholder: '请选择状态',
     options: APPOINTMENT_STATUS,
+    initValue: '',
   },
 ];
 
@@ -39,13 +41,17 @@ const tableColumns = [
   {
     title: '用户信息',
     dataIndex: 'user',
-    width: 200,
+    width: 150,
     render: (_: any) => {
       return (
-        <>
-          <p>姓名:{_?.nickname || '-'}</p>
-          <p>手机号:{_?.phone || ''}</p>
-        </>
+        <Space direction="vertical">
+          <Tag icon={<UserOutlined />} color="processing">
+            {_?.nickname || '-'}
+          </Tag>
+          <Tag icon={<PhoneFilled />} color="processing">
+            {_?.phone || ''}
+          </Tag>
+        </Space>
       );
     },
   },
@@ -59,7 +65,11 @@ const tableColumns = [
     dataIndex: 'handleWay',
     render(_: number) {
       if (!_) return;
-      return HANDLE_WAYS.find((item) => item.value === _)?.label || '-';
+      return (
+        <Tag color="geekblue">
+          {HANDLE_WAYS.find((item) => item.value === _)?.label || '-'}
+        </Tag>
+      );
     },
   },
   {
@@ -95,13 +105,13 @@ const tableColumns = [
     title: '总金额（元）',
     key: 'totalAmount',
     dataIndex: 'totalAmount',
-    render: (_: number) => formatPrice(_),
+    slot: 'price',
   },
   {
     title: '付款金额（元）',
     dataIndex: 'payAmount',
     key: 'payAmount',
-    render: (_: number) => formatPrice(_),
+    slot: 'price',
   },
   {
     title: '付款渠道',
@@ -113,14 +123,18 @@ const tableColumns = [
     title: '付款信息',
     key: 'payInfo',
     dataIndex: 'payInfo',
-    width: 300,
+    width: 280,
     render: (_: number, record: any) => {
       return (
-        <>
-          <p>订单编号：{record.outTradeNo || '-'}</p>
-          <p>交易流水号：{record.transactionId || '-'}</p>
-          <p>退款订单编号：{record.outRefundNo || '-'}</p>
-        </>
+        <Space direction="vertical">
+          <Tag color="processing">订单编号：{record.outTradeNo || '-'}</Tag>
+          <Tag color="processing">
+            交易流水号：{record.transactionId || '-'}
+          </Tag>
+          <Tag color="processing">
+            退款订单编号：{record.outRefundNo || '-'}
+          </Tag>
+        </Space>
       );
     },
   },

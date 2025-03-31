@@ -33,8 +33,6 @@ export default function TickManagement() {
   };
 
   const handleOk = async (values: any) => {
-    console.log(values, '+++form的sad值');
-    return;
     const id = values?.id;
     setModalConfig(
       produce((draft) => {

@@ -1,3 +1,4 @@
+import { GENDER_TYPE, getLabelByValue } from '@/constants'
 const searchItems = [
   {
     label: '用户名',
@@ -27,9 +28,7 @@ const tableColumns = [
     title: '性别',
     key: 'gender',
     dataIndex: 'gender',
-    render(d: number) {
-      return d === 0 ? '男' : '女';
-    },
+    render: (_: number) => getLabelByValue(GENDER_TYPE, _)
   },
   {
     title: '手机号',
@@ -64,10 +63,7 @@ const detailItems = [
   {
     label: '性别',
     prop: 'gender',
-    render(d: number) {
-      console.log(d, '++++');
-      return d === 0 ? '男' : '女';
-    },
+    render: (_: number) => getLabelByValue(GENDER_TYPE, _)
   },
   {
     label: '手机号',

@@ -156,6 +156,14 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
     }
   };
 
+  const normFile = (e: any) => {
+    console.log('normal++++++++++++++++', e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+
   useEffect(() => {
     console.log(fileList, _fileList);
     setFileList([...fileList, ..._fileList]);

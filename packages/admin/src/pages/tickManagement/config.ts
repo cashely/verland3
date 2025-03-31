@@ -17,6 +17,12 @@ const searchItems = [
 
 const tableColumns = [
   {
+    title: '发票附件',
+    key: 'file',
+    dataIndex: 'file',
+    slot: 'image',
+  },
+  {
     title: '发票抬头',
     key: 'header',
     dataIndex: 'header',
@@ -61,6 +67,11 @@ const tableColumns = [
 
 const detailItems = [
   {
+    label: '发票附件',
+    prop: 'file',
+    type: 'image',
+  },
+  {
     label: '发票抬头',
     prop: 'header',
   },
@@ -72,10 +83,9 @@ const detailItems = [
   {
     label: '附加服务',
     prop: 'book',
-
     render: (_) => {
       if (!_) return;
-      return _.bookGoods?.map((item: any) => item.name).join('，') || '无';
+      return _.bookGoods?.map((item: any) => item.name).join(',') || '无';
     },
   },
   {
@@ -110,9 +120,8 @@ const formConfig = {
       label: '发票附件',
       prop: 'fileId',
       type: 'upload',
-      // rules: (value: any) => {
-      //   console.log(value, '----');
-      // },
+      valuePropName: 'fileList',
+      rules: [{ trigger: 'change', required: true, message: '请上传发票附件' }],
       span: 24,
     },
   ],
