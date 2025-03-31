@@ -11,13 +11,24 @@ const router = new Router({
 router.get('/', async (req, res) => {
     try {
 
-        const { userIds, pageSize = 20, pageNo = 1 } = req.query;
+        const { userIds = [], pageSize = 20, pageNo = 1, username } = req.query;
+        const whereConditions = {
+            userId: {
+                in: userIds
+            }
+        };
+        if (username) {
+            const users = await prisma.user.findMany({
+                where: {
+                    username: { contains: username }
+                }, 
+            });
+            if (users.length > 0) {
+                whereConditions.userId.in = users.map(user => user.id); 
+            }
+        }
         const pets = await prisma.pet.findMany({
-            where: {
-                userId: {
-                    in: userIds
-                }
-            },
+            where: whereConditions,
             include: {
                 images: true,
                 petImage: {

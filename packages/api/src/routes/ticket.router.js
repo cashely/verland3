@@ -7,8 +7,13 @@ const router = new Router({
 
 router.get('/', async (req, res) => {
     try {
-        const { pageSize = 20, pageNo = 1 } = req.query;
+        const { pageSize = 20, pageNo = 1, type } = req.query;
+        const whereConditions = {};
+        if (type) {
+            whereConditions.type = type;
+        }
         const tickets = await prisma.ticket.findMany({
+            where: whereConditions,
             orderBy: {
                 createdAt: 'desc'
             },

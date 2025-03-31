@@ -7,8 +7,16 @@ const router = new Router({
 
 router.get('/', async (req, res) => {
     try {
-        const { pageSize = 20, pageNo = 1 } = req.query;
+        const { pageSize = 20, pageNo = 1, nickname, username } = req.query;
+        const whereConditions = {};
+        if (nickname) {
+            whereConditions.nickname = { contains: nickname };
+        }
+        if (username) {
+            whereConditions.username = { contains: username };
+        }
         const users = await prisma.user.findMany({
+            where: whereConditions,
             orderBy: {
                 createdAt: 'desc'
             },
