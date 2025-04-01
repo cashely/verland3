@@ -63,7 +63,7 @@ router.post('/', async (req, res) => {
 
         const { id: addressId } = address;
         const { id: petId } = pet;
-        const { bookDateTime, hadnleWay, handleDateTime, isRite, riteDateTime, payChannel = 1, mark, phone, username } = req.body;
+        const { bookDateTime, handleWay, handleDateTime, isRite, riteDateTime, payChannel = 1, mark, phone, username } = req.body;
 
         const book = await prisma.book.create({
             data: {
@@ -71,7 +71,7 @@ router.post('/', async (req, res) => {
                 addressId,
                 menuId,
                 bookDateTime,
-                hadnleWay,
+                handleWay,
                 handleDateTime,
                 isRite,
                 riteDateTime,
