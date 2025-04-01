@@ -83,6 +83,9 @@ router.post('/', async (req, res) => {
                 username,
                 menu: {
                     connect: { id: menuId } 
+                },
+                pet: {
+                    connect: { id: petId }
                 }
             }
         });
