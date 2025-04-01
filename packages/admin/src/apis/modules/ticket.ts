@@ -5,8 +5,8 @@ import request from '../request';
  * @name 列表
  */
 
-export async function list<T>(): Promise<RequestResult<T>> {
-  return request.get('/ticket');
+export async function list<T>(params: any): Promise<RequestResult<T>> {
+  return request.get(`/ticket?${new URLSearchParams(params).toString()}`);
 }
 
 /**

@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Empty, Image, Tag } from 'antd';
-import type { PaginationProps, TableColumnProps, GetProp, TableProps } from 'antd';
+import type {
+  PaginationProps,
+  TableColumnProps,
+  GetProp,
+  TableProps,
+} from 'antd';
 import { timeFormatDateTime } from '@/utils/timeUtils';
 import { getLabelByValue } from '@/constants';
 import { createStyles } from 'antd-style';
@@ -25,7 +30,7 @@ type CustomTableColumnProps = TableColumnProps & {
   dataIndex?: string;
   title?: React.ReactNode;
   showTitle: boolean;
-}
+};
 
 type IProps = {
   children?: any;
@@ -102,34 +107,34 @@ export default (props: IProps) => {
     //表格行选择
     rowSelection: otherConfig?.rowSelection
       ? {
-        // type: 'checkbox',
-        selections: [
-          {
-            key: Table.SELECTION_ALL,
-            text: '全选',
-            onSelect: (allKeys: React.Key[]) => setSelectedRowKeys(allKeys),
+          // type: 'checkbox',
+          selections: [
+            {
+              key: Table.SELECTION_ALL,
+              text: '全选',
+              onSelect: (allKeys: React.Key[]) => setSelectedRowKeys(allKeys),
+            },
+            {
+              key: Table.SELECTION_INVERT,
+              text: '反选',
+              onSelect: (allKeys: React.Key[]) =>
+                setSelectedRowKeys(
+                  allKeys.filter((key) => !selectedRowKeys.includes(key))
+                ),
+            },
+            {
+              key: Table.SELECTION_NONE,
+              text: '清空',
+              onSelect: () => setSelectedRowKeys([]),
+            },
+          ],
+          selectedRowKeys,
+          onChange: (newSelectedRowKeys: React.Key[]) => {
+            console.log(`rowSelection---selectedRowKeys: ${selectedRowKeys}`);
+            setSelectedRowKeys(newSelectedRowKeys);
           },
-          {
-            key: Table.SELECTION_INVERT,
-            text: '反选',
-            onSelect: (allKeys: React.Key[]) =>
-              setSelectedRowKeys(
-                allKeys.filter((key) => !selectedRowKeys.includes(key))
-              ),
-          },
-          {
-            key: Table.SELECTION_NONE,
-            text: '清空',
-            onSelect: () => setSelectedRowKeys([]),
-          },
-        ],
-        selectedRowKeys,
-        onChange: (newSelectedRowKeys: React.Key[]) => {
-          console.log(`rowSelection---selectedRowKeys: ${selectedRowKeys}`);
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-        ...otherConfig?.rowSelection,
-      }
+          ...otherConfig?.rowSelection,
+        }
       : false,
     //分页、排序、筛选变化时触发
     // onChange(
@@ -198,7 +203,23 @@ export default (props: IProps) => {
           </Tag>
         );
       } else if (item.slot === 'price') {
-        return <Tag color="green">{formatPrice(value)}</Tag>
+        return <Tag color="green">{formatPrice(value)}</Tag>;
+      } else if (item.slot === 'file') {
+        return (
+          <a
+            href={FILE_URL + value?.path}
+            target="_blank"
+            download={item?.title}
+            rel="noopener noreferrer"
+            style={{
+              textDecoration: 'underline',
+              color: '#c696da',
+              cursor: 'pointer',
+            }}
+          >
+            {item.title}
+          </a>
+        );
       }
     }
     return value || '-';

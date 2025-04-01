@@ -29,7 +29,7 @@ interface UniversalUploadProps {
 const UploadButton: React.FC<UniversalUploadProps> = ({
   maxSize = 10,
   setFormLoading = () => {},
-  accept = acceptFileTypes.join(','),
+  uploadProps = {},
   multiple = false,
   _fileList = [],
   name = '', //该formItem表单的prop
@@ -110,7 +110,8 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
       return;
     }
     console.log(newFileList, 'handleChange-newFileList');
-    // setFileList(newFileList)
+    setFileList(newFileList);
+    onUploadSuccess?.({ [name]: '', file: {} });
   };
 
   //自定義上傳
@@ -156,36 +157,27 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
     }
   };
 
-  const normFile = (e: any) => {
-    console.log('normal++++++++++++++++', e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  };
-
   useEffect(() => {
     console.log(fileList, _fileList);
-    setFileList([...fileList, ..._fileList]);
-  }, []);
+    setFileList(_fileList);
+  }, [_fileList]);
 
   return (
     <>
       <Upload
         name="file"
-        listType="picture-card"
-        accept="image/*"
         multiple={false}
         fileList={fileList}
         showUploadList={true}
         disabled={isUploading}
         maxCount={1}
-        onPreview={handlePreview}
+        onPreview={name === 'fileId' ? undefined : handlePreview}
         onChange={handleChange}
+        {...uploadProps}
         // beforeUpload={onBeforeUpload}
       >
         <Button
-          variant="link"
+          variant={name === 'thumb' ? 'link' : 'outlined'}
           color="default"
           icon={<CloudUploadOutlined />}
           title="上傳圖片"

@@ -112,6 +112,10 @@ const formConfig = {
       prop: 'thumb',
       type: 'upload',
       span: 24,
+      uploadProps: {
+        listType: 'picture-card',
+        accept: 'image/*',
+      },
     },
     {
       label: '产品内容',

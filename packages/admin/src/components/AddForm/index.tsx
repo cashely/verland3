@@ -2,6 +2,7 @@ import { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import { Col, Form, Input, Row, Select, InputNumber } from 'antd';
 import type { FormProps, FormInstance } from 'antd';
 import UploadButton from '@/components/UploadButton';
+import { FILE_URL } from '@/apis/request';
 import { produce } from 'immer';
 const { Option } = Select;
 const formItemClasses = `rounded-[4px]`;
@@ -105,6 +106,25 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
       setFormData(formModel);
     }, [formModel, detailForm]);
 
+    const formatFileList = (
+      formData: any,
+      propName: keyof typeof formModel
+    ) => {
+      return formData[propName]
+        ? [
+            {
+              url:
+                FILE_URL +
+                '/' +
+                (formData['file']
+                  ? formData['file']?.path
+                  : formData[propName]),
+              name: formData['file'] ? formData['file']?.title : '',
+            },
+          ]
+        : [];
+    };
+
     return (
       <Form
         layout="vertical"
@@ -165,28 +185,25 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
                   </Select>
                 ) : null}
                 {item.type === 'upload' ? (
-                  <UploadButton
-                    name={item.prop}
-                    onUploadSuccess={(fileObj) =>
-                      handleUploadSuccess(item.prop, fileObj)
-                    }
-                    setFormLoading={setFormLoading}
-                    _fileList={
-                      formData[item.prop]
-                        ? [
-                            {
-                              url: formData[item.prop],
-                            },
-                          ]
-                        : []
-                    }
-                  >
-                    {/* {
+                  <>
+                    {/* {JSON.stringify(formData[item.prop])} */}
+                    {/* {JSON.stringify(item.uploadProps)} */}
+                    <UploadButton
+                      name={item.prop}
+                      onUploadSuccess={(fileObj) =>
+                        handleUploadSuccess(item.prop, fileObj)
+                      }
+                      setFormLoading={setFormLoading}
+                      _fileList={formatFileList(formData, item.prop)}
+                      uploadProps={item.uploadProps}
+                    >
+                      {/* {
                    (isUploading: boolean) => {
                      setBtnLoading(isUploading)
                    }
                  } */}
-                  </UploadButton>
+                    </UploadButton>
+                  </>
                 ) : null}
                 {item.type === 'textarea' ? (
                   <Input.TextArea

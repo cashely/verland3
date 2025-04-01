@@ -20,7 +20,7 @@ const tableColumns = [
     title: '发票附件',
     key: 'file',
     dataIndex: 'file',
-    slot: 'image',
+    slot: 'file',
   },
   {
     title: '发票抬头',
@@ -120,6 +120,9 @@ const formConfig = {
       label: '发票附件',
       prop: 'fileId',
       type: 'upload',
+      uploadProps: {
+        accept: '.pdf,.PDF', // 接受上传的文件类型
+      },
       valuePropName: 'fileList',
       rules: [{ trigger: 'change', required: true, message: '请上传发票附件' }],
       span: 24,
