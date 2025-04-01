@@ -86,6 +86,12 @@ router.post('/', async (req, res) => {
                 },
                 pet: {
                     connect: { id: petId }
+                },
+                address: {
+                    connect: { id: addressId } 
+                },
+                user: {
+                    connect: { id }
                 }
             }
         });
