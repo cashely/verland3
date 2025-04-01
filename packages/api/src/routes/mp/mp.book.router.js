@@ -67,7 +67,6 @@ router.post('/', async (req, res) => {
 
         const book = await prisma.book.create({
             data: {
-                userId: id,
                 addressId,
                 menuId,
                 bookDateTime,
