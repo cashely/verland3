@@ -17,10 +17,10 @@ const formatAddress = (address: string) => {
   let result = {};
   if (match) {
     result = {
-      province: match[1], // 省
-      city: match[2], // 市
-      district: match[3], // 区
-      detail: match[4], // 详细地址
+      province: match[1] || '', // 省
+      city: match[2] || '', // 市
+      district: match[3] || '', // 区
+      detail: match[4] || '', // 详细地址
     };
   }
   return result;

@@ -74,6 +74,8 @@ export default () => {
     getSetting({
       withSubscriptions: true,
       success: function (res) {
+        console.log(res, '>>>>>>');
+
         if (
           res.subscriptionsSetting.mainSwitch &&
           res.subscriptionsSetting.mainSwitch != null
@@ -124,6 +126,24 @@ export default () => {
         icon: 'none',
       });
     }
+
+    //弹窗授权窗口
+    requestSubscribeMessage({
+      tmplIds: [
+        'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY',
+        'fIijh96IYidJFYVTWwW2FsvEu2b7yKaQ7MO9FDv8M7U',
+      ],
+      entityIds: [
+        'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY',
+        'fIijh96IYidJFYVTWwW2FsvEu2b7yKaQ7MO9FDv8M7U',
+      ],
+      success: function (res) {
+        console.log(res, '订阅成功');
+      },
+      fail: function (err) {
+        console.log(err, '订阅消息失败');
+      },
+    });
     //发起预支付
     prepay({
       bookId: order.id,
@@ -143,46 +163,28 @@ export default () => {
               package: _pkg,
               paySign,
             } = res.data;
-            console.log(res.data, '>>>>>>>');
-
-            //弹窗授权窗口
-            requestSubscribeMessage({
-              tmplIds: [
-                'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY',
-                'fIijh96IYidJFYVTWwW2FsvEu2b7yKaQ7MO9FDv8M7U',
-              ],
-              entityIds: [
-                'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY',
-                'fIijh96IYidJFYVTWwW2FsvEu2b7yKaQ7MO9FDv8M7U',
-              ],
-              success: function (res) {
-                console.log(res, '订阅成功');
-                requestPayment({
-                  timeStamp,
-                  nonceStr,
-                  package: _pkg,
-                  signType,
-                  paySign,
-                  success: function () {
-                    removeStorageSync('bookInfo');
-                    setPayDisabled(true);
-                    reLaunch({
-                      url: '/pages/createBook/payResult/index?id=' + order.id,
-                    });
-                  },
-                  fail: function (error) {
-                    console.log(error);
-                    showToast({
-                      title: '支付失败',
-                      icon: 'none',
-                    });
-                  },
+            requestPayment({
+              timeStamp,
+              nonceStr,
+              package: _pkg,
+              signType,
+              paySign,
+              success: function () {
+                removeStorageSync('bookInfo');
+                setPayDisabled(true);
+                reLaunch({
+                  url: '/pages/createBook/payResult/index?id=' + order.id,
                 });
               },
-              fail: function (err) {
-                console.log(err, '订阅消息失败');
+              fail: function (error) {
+                console.log(error);
+                showToast({
+                  title: '支付失败',
+                  icon: 'none',
+                });
               },
             });
+            console.log(res.data, '>>>>>>>');
           }
         });
       }

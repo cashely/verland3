@@ -1,9 +1,10 @@
 import Taro, { clearStorageSync, getStorageSync } from '@tarojs/taro';
-import { showToast } from '@tarojs/taro';
+import { showToast, showLoading, hideLoading } from '@tarojs/taro';
 export const baseUrl = process.env.TARO_APP_API;
 export const fileUrl = process.env.TARO_APP_API;
 export default function (url: string, options: any = {}) {
   return new Promise<any>((resolve, reject) => {
+    showLoading();
     const token = getStorageSync('token') || '';
     const userInfo = getStorageSync('userInfo') || {};
     Taro.request({
@@ -39,7 +40,10 @@ export default function (url: string, options: any = {}) {
           });
           return;
         }
-        resolve(res.data);
+        setTimeout(function () {
+          resolve(res.data);
+          hideLoading();
+        }, 1000);
       },
       fail: (err) => {
         console.log(err);
@@ -47,6 +51,9 @@ export default function (url: string, options: any = {}) {
           title: '网络错误',
           icon: 'none',
           success: () => {
+            setTimeout(function () {
+              hideLoading();
+            }, 1000);
             clearStorageSync();
             reject(err);
           },

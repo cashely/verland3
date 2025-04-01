@@ -21,7 +21,7 @@ export default function Index() {
   });
 
   const [pageFlag, setPageFlag] = useState('');
-  const [loading, setLoading] = useState(false);
+
   useLoad(({ type = '' }) => {
     console.log(type, 'pageload');
 
@@ -59,7 +59,6 @@ export default function Index() {
   // 获取用户信息
   const fetchUserInfo = async (code, initUserInfo: any) => {
     try {
-      setLoading(true);
       mpLogin({ code }).then(async (res) => {
         if (res.code === 200) setStorageSync('token', res.data);
         console.log(res, '====');
@@ -79,7 +78,7 @@ export default function Index() {
           await putUser(data);
           setStorageSync('userInfo', data);
           showToast({ title: '登录成功', icon: 'none' });
-          setLoading(false);
+
           setTimeout(() => {
             pageFlag === '1'
               ? reLaunch({
@@ -92,7 +91,7 @@ export default function Index() {
         }
       });
     } catch (error) {
-      setLoading(false);
+      console.log(error);
     }
   };
   const handleLogin = async () => {
@@ -164,7 +163,7 @@ export default function Index() {
           />
         </View>
       </View>
-      <AtButton type="primary" loading={loading} onClick={handleLogin}>
+      <AtButton type="primary" onClick={handleLogin}>
         登录
       </AtButton>
     </View>

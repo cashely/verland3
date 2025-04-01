@@ -22,7 +22,7 @@ export default () => {
   const [menuList, setMenuList] = useState([]);
   const [formModel, setformModel] = useState({
     isRite: '1',
-    menuId: menuList?.[0]?.id,
+    phone: '18334496112',
     handleWay: '1', //处理方式
   });
   useLoad(() => {
@@ -40,6 +40,12 @@ export default () => {
     menu().then((res) => {
       console.log('menu', res);
       if (res?.code === 200) {
+        setformModel((d) => {
+          return {
+            ...d,
+            menuId: res.data[0]?.id, // 处理方式
+          };
+        });
         setMenuList(res?.data || []);
       }
     });
@@ -86,6 +92,7 @@ export default () => {
         subType: combineInfo?.type?.split('/')[1],
         weight: +combineInfo.weight,
         isRite: +combineInfo.isRite,
+        handWay: +combineInfo.handleWay,
         bookDateTime: new Date(combineInfo.bookDateTime),
         riteDateTime: new Date(combineInfo.riteDateTime),
         handleDateTime: new Date(combineInfo.handleDateTime),
@@ -125,10 +132,6 @@ export default () => {
         }
         return item;
       });
-    });
-    setformModel({
-      ...formModel,
-      menuId: menuList?.[0]?.id,
     });
   }, [menuList]);
 

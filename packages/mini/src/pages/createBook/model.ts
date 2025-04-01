@@ -167,7 +167,7 @@ const otherFormList = [
     // type: "textarea",
     type: 'location',
     itemProps: {
-      placeholder: '点击获取当前位置',
+      placeholder: '点击选择位置',
     },
     rules: [],
   },

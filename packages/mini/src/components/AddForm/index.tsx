@@ -180,9 +180,9 @@ export default forwardRef((props, ref) => {
         };
       });
     } else if (formItem.type === 'location') {
-      _formList.find(
-        (formItem) => formItem.type === 'location'
-      ).itemProps.placeholder = '正在获取位置...';
+      // _formList.find(
+      //   (formItem) => formItem.type === 'location'
+      // ).itemProps.placeholder = '正在获取位置...';
       setFormList([..._formList]);
       // getlocal(formItem);
       chooseLocation({
@@ -192,14 +192,22 @@ export default forwardRef((props, ref) => {
             const { province, city, district, detail } = formatAddress(
               res.address
             );
-            setFormData({
-              ...formData,
-              [formItem.prop]: `${province}-${city}-${district}`,
-              detail,
-              province,
-              city,
-              area: district,
-            });
+            if (!formatAddress(res.address).province) {
+              setFormData({
+                ...formData,
+                [formItem.prop]: '',
+              });
+            } else {
+              setFormData({
+                ...formData,
+                [formItem.prop]: `${province}-${city}-${district}`,
+                detail,
+                province,
+                city,
+                area: district,
+              });
+            }
+            console.log(formatAddress(res.address), 'address');
           }
         },
       });

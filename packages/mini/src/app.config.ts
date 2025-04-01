@@ -66,7 +66,7 @@ export default defineAppConfig({
   },
   lazyCodeLoading: 'requiredComponents', // 延迟加载 页面无法加载
   style: 'v2', // 使用2.0版本的样式
-  requiredPrivateInfos: ['getLocation', 'chooseLocation'],
+  requiredPrivateInfos: ['getLocation', 'chooseLocation', 'chooseAddress'],
   permission: {
     'scope.userLocation': {
       desc: '您的位置信息将用于小程序位置接口的效果展示',
