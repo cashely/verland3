@@ -51,6 +51,8 @@ router.post('/', async (req, res) => {
                 id: menuId
             }
         });
+
+        console.log(menu, '套餐信息')
         const menuAmount = menu.price;
 
         // 计算价格
