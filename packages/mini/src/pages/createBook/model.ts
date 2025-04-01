@@ -66,7 +66,7 @@ const otherFormList = [
     rules: [],
   },
   {
-    label: '日期选择', //"上门服务日期",
+    label: '上门服务日期', //"上门服务日期",
     prop: 'bookDateTime',
     type: 'picker-date',
     itemProps: {
