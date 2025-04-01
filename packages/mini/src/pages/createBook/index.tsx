@@ -92,7 +92,7 @@ export default () => {
         subType: combineInfo?.type?.split('/')[1],
         weight: +combineInfo.weight,
         isRite: +combineInfo.isRite,
-        handWay: +combineInfo.handleWay,
+        handleWay: +combineInfo.handleWay,
         bookDateTime: new Date(combineInfo.bookDateTime),
         riteDateTime: new Date(combineInfo.riteDateTime),
         handleDateTime: new Date(combineInfo.handleDateTime),
