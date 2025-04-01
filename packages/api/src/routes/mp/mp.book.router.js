@@ -80,7 +80,10 @@ router.post('/', async (req, res) => {
                 mark,
                 petId,
                 phone,
-                username
+                username,
+                menu: {
+                    connect: { id: menuId } 
+                }
             }
         });
 
