@@ -9,15 +9,26 @@ router.post('/', async (req, res) => {
     try {
         const { score, content, bookId } = req.body;
         const { id } = req.user;
-        const evaluate = await prisma.evaluate.create({
+        const updateBook = await prisma.book.update({
+            where: {
+                id: bookId
+            },
             data: {
-                userId: id,
-                content,
-                score,
-                bookId
+                evaluate: {
+                    create: {
+                        userId: id,
+                        user: {
+                            connect: {
+                                id
+                            }
+                        },
+                        score,
+                        content
+                    }
+                }
             }
         });
-        res.response.success(evaluate);
+        res.response.success(updateBook);
     } catch (error) {
         res.response.error(error);
     }
