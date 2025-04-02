@@ -7,8 +7,13 @@ const router = new Router({
 
 router.get('/', async (req, res) => {
     try {
-        const { pageSize = 20, pageNo = 1 } = req.query;
+        const { pageSize = 20, pageNo = 1, statu } = req.query;
+        const whereCondition = {}
+        if (statu ?? false) {
+            whereCondition.statu = statu;
+        }
         const books = await prisma.book.findMany({
+            where: whereCondition,
             include: {
                 user: true,
                 address: true,
