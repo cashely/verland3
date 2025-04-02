@@ -110,6 +110,7 @@ const formConfig = {
     {
       label: '缩略图',
       prop: 'thumb',
+      putProp: 'thumbId',
       type: 'upload',
       span: 24,
       uploadProps: {

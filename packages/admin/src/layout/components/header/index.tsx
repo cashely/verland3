@@ -1,12 +1,12 @@
-import { useEffect } from "react";
-import { Dropdown, Space, message, Progress, Flex } from "antd";
-import { useShallow } from "zustand/react/shallow";
-import styles from "./index.module.scss";
+import { useEffect } from 'react';
+import { Dropdown, Space, message, Progress, Flex } from 'antd';
+import { useShallow } from 'zustand/react/shallow';
+import styles from './index.module.scss';
 // import LocaleButton from "../common/LocaleButton";
-import useStore from '@/store'
-import Hamburger from '@/components/Hamburger'
-import { removeTokenFromLocalStorage } from "../../../utils";
-import { adminUser, logoutApi } from "@/apis/modules/common";
+import useStore from '@/store';
+import Hamburger from '@/components/Hamburger';
+import { removeTokenFromLocalStorage } from '../../../utils';
+import { adminUser, logoutApi } from '@/apis/modules/common';
 // import CreateUserButton from "./CreateUserButton";
 
 function Header() {
@@ -18,7 +18,7 @@ function Header() {
   //     }))
   //   );
   // fetchUserInfo()
-  const { userInfo } = useStore()
+  const { userInfo } = useStore();
   const menuItems: any = [
     // {
     //   label: (
@@ -30,7 +30,7 @@ function Header() {
     //   key: "0",
     // },
     {
-      type: "divider",
+      type: 'divider',
     },
     //     {
     //       label: (
@@ -42,7 +42,7 @@ function Header() {
     //     },
     {
       label: <a onClick={onLogout}>退出登录</a>,
-      key: "2",
+      key: '2',
     },
   ];
 
@@ -63,8 +63,8 @@ function Header() {
     const res = { code: 200 }; //await logoutApi<any>();
     if (res.code === 200) {
       removeTokenFromLocalStorage();
-      message.success("退出成功");
-      window.location.href = "/#/login";
+      message.success('退出成功');
+      window.location.href = '/#/login';
     }
   }
 
@@ -95,11 +95,11 @@ function Header() {
           <div className="flex items-center gap-2">
             <span
               className="border rounded-full block text-sm w-[25px] h-[25px] overflow-hidden text-center line-[25px] bg-gray-200 bg-cover bg-center"
-            //     style={{
-            //       backgroundImage: `url(${userInfo.avatar})`,
-            //     }}
+              //     style={{
+              //       backgroundImage: `url(${userInfo.avatar})`,
+              //     }}
             ></span>
-            {userInfo.username}
+            {userInfo?.username}
           </div>
         </Space>
       </Dropdown>

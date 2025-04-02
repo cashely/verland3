@@ -79,7 +79,7 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
       propName: keyof typeof formModel,
       fileObj: any
     ) => {
-      console.log('上传成功', fileObj);
+      console.log(propName, '上传成功441', fileObj);
       setFormLoading(false);
       detailForm.setFieldValue(propName, fileObj.id);
       setFormData((d) => {
@@ -101,28 +101,36 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
 
     //只能用setFieldsValue在初始化的时候设置默认值
     useEffect(() => {
-      console.log(formModel, 'formModel变更');
+      console.log(formModel, 'formModel变更441');
       detailForm.setFieldsValue(formModel);
       setFormData(formModel);
-    }, [formModel, detailForm]);
+    }, [formModel]);
 
-    const formatFileList = (
-      formData: any,
-      propName: keyof typeof formModel
-    ) => {
-      return formData[propName]
-        ? [
-            {
-              url:
-                FILE_URL +
-                '/' +
-                (formData['file']
-                  ? formData['file']?.path
-                  : formData[propName]),
-              name: formData['file'] ? formData['file']?.title : '',
-            },
-          ]
-        : [];
+    // _fileList={formatFileList(formData, item.prop)}
+    const formatFileList = (formData: any, item: any) => {
+      console.log(formData, '441++++++', item, '+++441');
+      if (item.prop === 'thumb') {
+        return [
+          {
+            url: FILE_URL + '/' + formData?.thumb,
+            name: formData?.thumb?.title,
+          },
+        ];
+      }
+
+      // return formData[item.propName]
+      //   ? [
+      //       {
+      //         url:
+      //           FILE_URL +
+      //           '/' +
+      //           (formData['file']
+      //             ? formData['file']?.path
+      //             : formData[propName]),
+      //         name: formData['file'] ? formData['file']?.title : '',
+      //       },
+      //     ]
+      //   : [];
     };
 
     return (
@@ -191,11 +199,11 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
                     <UploadButton
                       name={item.prop}
                       onUploadSuccess={(fileObj) =>
-                        handleUploadSuccess(item.prop, fileObj)
+                        handleUploadSuccess(item.putProp, fileObj)
                       }
                       setFormLoading={setFormLoading}
-                      _fileList={formatFileList(formData, item.prop)}
                       uploadProps={item.uploadProps}
+                      receiveFileList={formatFileList(formData, item)}
                     >
                       {/* {
                    (isUploading: boolean) => {

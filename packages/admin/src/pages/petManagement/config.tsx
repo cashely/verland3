@@ -56,7 +56,7 @@ const tableColumns = [
           variant="text"
           onClick={() => navigate(`/accountManagement/detail/${record.userId}`)}
         >
-          {record.user.username}
+          {record?.user?.username || '-'}
         </Button>
       );
     },

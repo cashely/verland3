@@ -4,15 +4,9 @@ import { CloudUploadOutlined } from '@ant-design/icons';
 import { checkFileType, getBase64 } from './uploadFn';
 import type { FileType } from './uploadFn';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
-import { acceptFileTypes } from './uploadConfig';
 import request from '@/apis/request';
 import { produce } from 'immer';
 
-interface Iprops {
-  onSuccess?: (result: any) => void;
-  projectId: number;
-  children?: any;
-}
 interface UniversalUploadProps {
   action?: string; // 上传地址
   headers?: Record<string, string>; // 请求头
@@ -31,7 +25,7 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
   setFormLoading = () => {},
   uploadProps = {},
   multiple = false,
-  _fileList = [],
+  receiveFileList = [], //回显的图片
   name = '', //该formItem表单的prop
   onUploadSuccess,
   onUploadError,
@@ -109,9 +103,11 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
       onUpload(_fileObj, file.originFileObj as File);
       return;
     }
-    console.log(newFileList, 'handleChange-newFileList');
+    console.log(newFileList, 'handleChange-newFileList441', name);
     setFileList(newFileList);
-    onUploadSuccess?.({ [name]: '', file: {} });
+    if (name === 'thumb') {
+      onUploadSuccess?.({ thumbId: '', thumb: '', file: {} });
+    }
   };
 
   //自定義上傳
@@ -137,8 +133,10 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
         fileObj.url = url;
         fileObj.status = 'done';
         fileObj.percent = 100;
+        console.log(fileObj, 'fileObj441');
         setFileList(
           produce((draft) => {
+            console.log(draft.length, 'draft441');
             if (draft.length === 1) {
               draft[0] = fileObj;
             } else {
@@ -158,9 +156,9 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
   };
 
   useEffect(() => {
-    console.log(fileList, _fileList);
-    setFileList(_fileList);
-  }, [_fileList]);
+    console.log('receiveFileList441', receiveFileList);
+    setFileList(receiveFileList);
+  }, [receiveFileList]);
 
   return (
     <>

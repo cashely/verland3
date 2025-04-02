@@ -42,6 +42,7 @@ export default function appointManagement() {
         if (record?.id) {
           formConfig.formModel = {
             ...record,
+            price: record?.price / 100,
             thumb: record?.thumb?.path,
           };
         }
