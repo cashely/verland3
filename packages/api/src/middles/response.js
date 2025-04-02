@@ -1,3 +1,4 @@
+import console from '../utils/console';
 function Response(req, res) {
     this.res = res;
 }
@@ -10,11 +11,11 @@ Response.prototype.success = function (data = true) {
     });
 };
 
-Response.prototype.error = function (message, code = 400) {
-    console.log(message, 'error')
+Response.prototype.error = function (error, code = 400) {
+    console.log(error, 'error')
     this.res.json({
         code: code,
-        message: message
+        message: error.message
     });
 };
 
