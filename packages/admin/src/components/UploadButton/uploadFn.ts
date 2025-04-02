@@ -1,21 +1,22 @@
 import { acceptFileTypes } from './uploadConfig'
 import { message, Upload } from 'antd'
-import type { GetProp, UploadProps } from 'antd';
+import type { GetProp, UploadFile, UploadProps } from 'antd';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
-
-const checkFileType = (file: File, {
-    accept = '',
-    maxSize = 10
-}) => {
-    if (!file) return;
-    // 文件大小校验
-    const isSizeValid = file.size / 1024 / 1024 <= maxSize;
-    if (!isSizeValid) {
+//判断上传文件大小是否超过限制 默认3M
+const isFileExceedsMaxSize = (file: UploadFile, maxSize: number = 3) => {
+    if (!file) return message.error('文件不存在');
+    const MAX_SIZE = 1024 * 1024 * maxSize;  //转为b
+    if (file.size! < MAX_SIZE || file.size === maxSize) {
+        return true;
+    } else {
         message.error(`文件大小不能超过 ${maxSize}MB`);
-        return Upload.LIST_IGNORE;
+        throw new Error('The file size exceeds the limit!')
     }
+}
+const checkFileType = (file: File, accept = "") => {
+    if (!file) return message.error('文件不存在');
     //文件類型校驗
     if (!!accept) {
         const fileType = file.type || '';
@@ -30,7 +31,6 @@ const checkFileType = (file: File, {
             return Upload.LIST_IGNORE;
         }
     }
-    return true;
 }
 
 const getBase64 = (file: FileType): Promise<string> =>
@@ -43,7 +43,8 @@ const getBase64 = (file: FileType): Promise<string> =>
 
 
 export {
-    checkFileType, getBase64
+    checkFileType, getBase64,
+    isFileExceedsMaxSize
 }
 export type {
     FileType

@@ -1,3 +1,4 @@
+import { RITE_TYPE, DELIVERY_TYPE } from '@/constants'
 import { formatPrice } from '@/utils';
 const searchItems = [
   {
@@ -79,6 +80,22 @@ const formConfig = {
       itemProps: {
         placeholder: '请输入套餐名称',
       },
+    }, {
+      label: '是否需要仪式',
+      prop: 'isRite',
+      type: 'radio',
+     
+      // rules: [{ required: true, message: '请输入产品名称' }],
+      span: 24,
+      options: RITE_TYPE
+    },
+    {
+      label: '是否寄送',
+      prop: 'isDelivery',
+      type: 'radio',
+      // rules: [{ required: true, message: '请输入产品名称' }],
+      span: 24,
+      options: DELIVERY_TYPE
     },
     {
       label: '价格(¥)',

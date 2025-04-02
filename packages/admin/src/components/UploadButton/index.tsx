@@ -1,11 +1,12 @@
 import { Button, Upload, Image } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { CloudUploadOutlined } from '@ant-design/icons';
-import { checkFileType, getBase64 } from './uploadFn';
+import { checkFileType, getBase64, isFileExceedsMaxSize } from './uploadFn';
 import type { FileType } from './uploadFn';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import request from '@/apis/request';
 import { produce } from 'immer';
+import { resolve } from 'path';
 
 interface UniversalUploadProps {
   action?: string; // 上传地址
@@ -21,15 +22,17 @@ interface UniversalUploadProps {
 }
 
 const UploadButton: React.FC<UniversalUploadProps> = ({
-  maxSize = 10,
-  setFormLoading = () => {},
-  uploadProps = {},
-  multiple = false,
+  setFormLoading = () => { },
+  uploadProps = {
+    accept: "image/*",
+    multiple: false,
+    maxSize: 3, //3M
+  },
   receiveFileList = [], //回显的图片
   name = '', //该formItem表单的prop
+  putProp = '', //另外一个参数
   onUploadSuccess,
-  onUploadError,
-  children,
+  onDeleteFile,
 }) => {
   // const { onSuccess, children, projectId } = props;
   //是否正在上传
@@ -39,41 +42,17 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState<any[]>([]);
 
-  const onBeforeUpload = (file: any) => {
-    console.log('onBeforeUpload', file);
-    if (checkFileType(file, { maxSize })) {
-      // setFileList([...fileList, file])
-      // onUpload([file]);
-      return;
-    }
-  };
-
-  /**
-   * @name onCollapseChange 折叠面板变化时
-   * @param key
-   */
-  const onCollapseChange = (keys: string[]) => {};
-
-  /**
-   * @name onSaveBulk 保存
-   */
-  const onSaveBulk = async () => {
-    // const res: any = await request.post('/document/import/swagger', {
-    //     projectId,
-    //     documents: documents.map((item: any) => {
-    //         return {
-    //             path: item.path,
-    //             method: item.method,
-    //             content: item.content,
-    //             description: item.description,
-    //         }
-    //     })
-    // });
-    // if (res.code === 200) {
-    //     message.success('保存成功');
-    //     setVisible(false);
-    //     onSuccess && onSuccess(res);
+  const handleBeforeUpload = (file: any, fileList: FileList[]) => {
+    console.log('onBeforeUpload', file, fileList);
+    // //判断文件大小
+    // if (isFileExceedsMaxSize(file, uploadProps.maxSize)) {
+    //   //判断文件类型
+    //   if (checkFileType(file, uploadProps.accept)) {
+    //     // onUpload([file]);
+    //     setFileList([...fileList, file])
+    //   }
     // }
+    return isFileExceedsMaxSize(file, uploadProps.maxSize) && checkFileType(file, uploadProps.accept);
   };
 
   const handlePreview = async (file: UploadFile) => {
@@ -81,7 +60,6 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
     }
-
     setPreviewImage(file.url || (file.preview as string));
     setPreviewOpen(true);
   };
@@ -91,88 +69,90 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
     fileList: newFileList,
   }) => {
     console.log(file, 'handleChange-file');
-    if (file.status === 'uploading') {
-      setIsUploading(true);
-      //去上传
-      const _fileObj = {
+    return;
+    onUpload(file.originFileObj as File).then(url => {
+      //构造图片对象
+      const fileObj = {
+        url,
         uid: file.uid,
-        name: file.name,
-        status: 'uploading',
-        url: '',
-      };
-      onUpload(_fileObj, file.originFileObj as File);
-      return;
-    }
+        status: 'done',
+        percent: 100
+      }
+      console.log(fileObj, 'fileObj441');
+      setFileList(
+        produce((draft) => {
+          console.log(draft.length, 'draft441');
+          if (draft.length === 1) {
+            draft[0] = fileObj;
+          } else {
+            draft.push(fileObj);
+          }
+        })
+      );
+      //将数据传到父组件
+      onUploadSuccess?.(fileObj);
+    })
     console.log(newFileList, 'handleChange-newFileList441', name);
-    setFileList(newFileList);
     if (name === 'thumb') {
-      onUploadSuccess?.({ thumbId: '', thumb: '', file: {} });
+      onUploadSuccess?.({ [putProp]: '', [name]: {} });
     }
   };
 
   //自定義上傳
-  const onUpload = async (fileObj, file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    try {
-      setFormLoading(true);
-      const res: any = await request.post('/file', formData, {
-        onUploadProgress(progressEvent: ProgressEvent) {
-          const { total, loaded } = progressEvent;
-          // const percentage = Math.ceil(loaded / total * 100);
-          // this.$emit('on-progress', percentage, progressEvent);
-          // progressCb(percentage);
-          setIsUploading(true);
-        },
-      });
-      if (res.code === 200) {
-        const { data } = res;
-        console.log(res, '接口调用成功');
-        const url = import.meta.env.VITE_API_BASE_URI + '/' + data?.path;
-        //构造图片对象
-        fileObj.url = url;
-        fileObj.status = 'done';
-        fileObj.percent = 100;
-        console.log(fileObj, 'fileObj441');
-        setFileList(
-          produce((draft) => {
-            console.log(draft.length, 'draft441');
-            if (draft.length === 1) {
-              draft[0] = fileObj;
-            } else {
-              draft.push(fileObj);
-            }
-          })
-        );
-        onUploadSuccess?.({
-          ...fileObj,
-          id: data?.id,
+  const onUpload = (file: File) => {
+    return new Promise(async (resolve, reject) => {
+      setIsUploading(true);
+      const formData = new FormData();
+      formData.append('file', file);
+      try {
+        setFormLoading(true);
+        const res: any = await request.post('/file', formData, {
+          onUploadProgress(progressEvent: ProgressEvent) {
+            const { total, loaded } = progressEvent;
+            // const percentage = Math.ceil(loaded / total * 100);
+            // this.$emit('on-progress', percentage, progressEvent);
+            // progressCb(percentage);
+            setIsUploading(true);
+          },
         });
+        if (res.code === 200) {
+          const { data } = res;
+          const url = import.meta.env.VITE_API_BASE_URI + '/' + data?.path;
+          resolve(url)
+        } else {
+          reject('上传失败')
+        }
+      } finally {
         setIsUploading(false);
       }
-    } finally {
-      setIsUploading(false);
-    }
+    })
+
   };
 
+  const handleRemove = (file: UploadFile) => {
+    console.log('42+++删除文件', file)
+    onDeleteFile && onDeleteFile?.(file.uid)
+  }
+
   useEffect(() => {
-    console.log('receiveFileList441', receiveFileList);
+    console.log('receiveFileList42', receiveFileList);
     setFileList(receiveFileList);
-  }, [receiveFileList]);
+  }, [receiveFileList.length]);
 
   return (
     <>
       <Upload
         name="file"
-        multiple={false}
         fileList={fileList}
         showUploadList={true}
         disabled={isUploading}
         maxCount={1}
         onPreview={name === 'fileId' ? undefined : handlePreview}
+        onRemove={handleRemove}
+        beforeUpload={handleBeforeUpload}
         onChange={handleChange}
         {...uploadProps}
-        // beforeUpload={onBeforeUpload}
+
       >
         <Button
           variant={name === 'thumb' ? 'link' : 'outlined'}

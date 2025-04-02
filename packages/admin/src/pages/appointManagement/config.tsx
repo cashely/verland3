@@ -85,9 +85,8 @@ const tableColumns = [
     width: 220,
     showTitle: true,
     render(_: any) {
-      return `${_.province || ''}${_.city || ''}${_.area || ''}${
-        _.detail || ''
-      }`;
+      return `${_.province || ''}${_.city || ''}${_.area || ''}${_.detail || ''
+        }`;
     },
   },
   {
@@ -228,9 +227,8 @@ const detailItems = [
     prop: 'address',
     render(_) {
       if (!_) return;
-      return `${_.province || ''}${_.city || ''}${_.area || ''}${
-        _.detail || ''
-      }`;
+      return `${_.province || ''}${_.city || ''}${_.area || ''}${_.detail || ''
+        }`;
     },
   },
   {
@@ -330,7 +328,7 @@ const formConfig = {
       prop: 'expressName',
       type: 'input',
       span: 24,
-      rules: [{ type: 'array', required: true, message: '请输入' }],
+      rules: [{ required: true, message: '请输入' }],
       itemProps: {
         placeholder: '请输入',
       },

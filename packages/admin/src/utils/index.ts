@@ -12,6 +12,37 @@ export function formatDate(
   };
 }
 
+function supportsAutomaticRotation(cb) {
+  const testAutoOrientationImageURL =
+    'data:image/jpeg;base64,/9j/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAYAAAA' +
+    'AAAD/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBA' +
+    'QEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE' +
+    'BAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf/AABEIAAEAAgMBEQACEQEDEQH/x' +
+    'ABKAAEAAAAAAAAAAAAAAAAAAAALEAEAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAA' +
+    'AAAAAEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8H//2Q==';
+  const img = new Image();
+  img.onload = () => {
+    // Check if browser supports automatic image orientation:
+    const supported = img.width === 1 && img.height === 2;
+    cb && cb(supported);
+  };
+  img.src = testAutoOrientationImageURL;
+}
+
+function isImg(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    const img = new Image();
+    reader.onload = (e) => {
+      img.src = e.target.result.replace('data:;', 'data:image/jpg;');
+    }
+    img.onerror = () => resolve(false);
+    img.onload = () => resolve(true);
+    reader.readAsDataURL(file);
+  });
+}
+
+
 export function editArray<T>(
   data: T[],
   callback: (item: Immutable<T[]>) => void

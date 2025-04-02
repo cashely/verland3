@@ -1,5 +1,5 @@
 import { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
-import { Col, Form, Input, Row, Select, InputNumber } from 'antd';
+import { Col, Form, Input, Row, Select, InputNumber, Radio } from 'antd';
 import type { FormProps, FormInstance } from 'antd';
 import UploadButton from '@/components/UploadButton';
 import { FILE_URL } from '@/apis/request';
@@ -41,9 +41,9 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
     {
       formModel = {},
       formList = [],
-      onSubmit = () => {},
-      onReset = () => {},
-      setFormLoading = () => {},
+      onSubmit = () => { },
+      onReset = () => { },
+      setFormLoading = () => { },
     }: any,
     ref
   ) => {
@@ -76,22 +76,25 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
 
     //图片上传成功
     const handleUploadSuccess = (
-      propName: keyof typeof formModel,
+      formItem: any,
       fileObj: any
     ) => {
-      console.log(propName, '上传成功441', fileObj);
+      console.log(formItem, '上传成功441', fileObj);
       setFormLoading(false);
-      detailForm.setFieldValue(propName, fileObj.id);
-      setFormData((d) => {
+      //设置图片路径到表单上
+      detailForm.setFieldValue(formItem.prop, fileObj.url); //thumb
+      setFormData((d: any) => {
         return {
           ...d,
-          [propName]: fileObj.id,
+          [formItem.prop]: fileObj[formItem.prop],
+          [formItem.putProp]: fileObj[formItem.putProp],
         };
       });
     };
 
     //表单值变化
     const handleValueChange = (_: any, values: Record<string, any>) => {
+      console.log('#42', _, values)
       setFormData({
         ...formData,
         ...values,
@@ -99,24 +102,27 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
       });
     };
 
-    //只能用setFieldsValue在初始化的时候设置默认值
-    useEffect(() => {
-      console.log(formModel, 'formModel变更441');
-      detailForm.setFieldsValue(formModel);
-      setFormData(formModel);
-    }, [formModel]);
+
 
     // _fileList={formatFileList(formData, item.prop)}
-    const formatFileList = (formData: any, item: any) => {
-      console.log(formData, '441++++++', item, '+++441');
-      if (item.prop === 'thumb') {
-        return [
+    const formatFileList = (formData: any) => {
+      console.log('42+++formData+++', formData, '+++42');
+      const fileList = [] as any;
+      if (formData.thumb) {
+        fileList.push(
           {
             url: FILE_URL + '/' + formData?.thumb,
-            name: formData?.thumb?.title,
+            name: formData.title || '缩略图',
+            uid: formData?.id,
           },
-        ];
+        )
       }
+      setFormData(d => {
+        return {
+          ...d,
+          fileList,
+        }
+      });
 
       // return formData[item.propName]
       //   ? [
@@ -133,14 +139,35 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
       //   : [];
     };
 
+
+    const handleDeleteFile = (fileId: string) => {
+      console.log('删除文件42', fileId)
+      setFormData((d: any) => {
+        return {
+          ...d,
+          fileList: formData.fileList.filter((item: any) => item.uid !== fileId)
+        }
+      });
+    }
+
+
+    //只能用setFieldsValue在初始化的时候设置默认值
+    useEffect(() => {
+      console.log(formModel, 'formModel变更441');
+      detailForm.setFieldsValue(formModel)
+      formatFileList(formModel);
+    }, [formModel]);
+
+
     return (
       <Form
-        layout="vertical"
+        layout='vertical'
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         initialValues={formData}
         form={detailForm}
         name="detailForm"
+        colon={false}
         onFinish={handleSubmit}
         labelAlign="left"
         onValuesChange={handleValueChange}
@@ -152,10 +179,11 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
           {formList.map((item: any, index: number) => (
             <Col span={item.span ?? 8} key={index}>
               <Form.Item
+                layout={item.type === 'radio' ? 'horizontal' : 'vertical'}
                 name={item.prop}
                 label={item.label}
-                labelCol={{ span: item.span }}
-                wrapperCol={{ span: item.span }}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 18 }}
                 rules={item.rules ?? []}
                 required={item.rules?.length}
               >
@@ -180,6 +208,9 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
                     {...item.itemProps}
                   />
                 ) : null}
+                {item.type === 'radio' ? (
+                  <Radio.Group options={item.options || []} defaultValue={item.options?.[0].value} />
+                ) : null}
                 {item.type === 'select' ? (
                   <Select
                     className={formItemClasses}
@@ -199,11 +230,12 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
                     <UploadButton
                       name={item.prop}
                       onUploadSuccess={(fileObj) =>
-                        handleUploadSuccess(item.putProp, fileObj)
+                        handleUploadSuccess(item, fileObj)
                       }
+                      onDeleteFile={handleDeleteFile}
                       setFormLoading={setFormLoading}
                       uploadProps={item.uploadProps}
-                      receiveFileList={formatFileList(formData, item)}
+                      receiveFileList={formData.fileList}
                     >
                       {/* {
                    (isUploading: boolean) => {
@@ -244,7 +276,7 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
 
         </div> : null
       } */}
-      </Form>
+      </Form >
     );
   }
 );

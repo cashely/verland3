@@ -147,6 +147,18 @@ const RITE_TYPE = [
   },
 ];
 
+//是否寄送
+const DELIVERY_TYPE = [
+  {
+    label: '是',
+    value: 1,
+  },
+  {
+    label: '否',
+    value: 0,
+  },
+];
+
 //性别
 const GENDER_TYPE = [
   {
@@ -188,6 +200,7 @@ export {
   RITE_TYPE,
   APPOINTMENT_STATUS,
   GENDER_TYPE,
+  DELIVERY_TYPE,
   getLabelByValue,
   tagColorMap,
 };
