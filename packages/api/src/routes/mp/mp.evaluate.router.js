@@ -22,12 +22,7 @@ router.post('/', async (req, res) => {
                             }
                         },
                         score,
-                        content,
-                        book: {
-                            connect: {
-                                id: bookId
-                            }
-                        }
+                        content
                     }
                 }
             }
