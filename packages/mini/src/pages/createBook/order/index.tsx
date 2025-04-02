@@ -8,18 +8,17 @@ import {
   showToast,
   requestPayment,
   requestSubscribeMessage,
-  getSetting,
-  openSetting,
 } from '@tarojs/taro';
 import { detail, prepay, pay } from '@/apis/book';
 import { formatPrice } from '@/utils';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash-es';
+import { PAY_TMP } from '@/constants';
 import './index.scss';
 
 export default () => {
   const [order, setOrder] = useState({
-    orderId: '',
+    id: '',
     username: '',
     phone: '',
     petname: '',
@@ -36,6 +35,7 @@ export default () => {
     bookGoods: [],
     mark: '',
     payAmount: '',
+    totalAmount: 0,
   });
   const [agreement, setAgreement] = useState(false);
   const [payDisabled, setPayDisabled] = useState(false);
@@ -79,10 +79,6 @@ export default () => {
       });
     }
     handlePrepay();
-    console.log('开始支付');
-    //退款状态模版id都是一次性模版
-    const refundTmpId = 'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY';
-    const tmpId = 'fIijh96IYidJFYVTWwW2FsvEu2b7yKaQ7MO9FDv8M7U';
     //判断授权状况
     // getSetting({
     //   withSubscriptions: true,
@@ -122,8 +118,8 @@ export default () => {
     //       } else {
     //         //没有订阅过消息
     //         requestSubscribeMessage({
-    //           tmplIds: [refundTmpId, tmpId],
-    //           entityIds: [refundTmpId, tmpId],
+    //           tmplIds: [tmpId, refundTmpId],
+    //           entityIds: [tmpId, refundTmpId],
     //           success(res) {
     //             console.log(res, 'res++++');
     //           },
@@ -146,7 +142,7 @@ export default () => {
   const handlePrepay = () => {
     setPayDisabled(true);
     prepay({
-      bookId: order.id,
+      bookId: order.id as string,
     }).then((res) => {
       if (res.code === 200) {
         console.log(res);
@@ -170,9 +166,17 @@ export default () => {
               signType,
               paySign,
               success: function () {
-                removeStorageSync('bookInfo');
-                reLaunch({
-                  url: '/pages/createBook/payResult/index?id=' + order.id,
+                //付款通知消息订阅
+                requestSubscribeMessage({
+                  tmplIds: [PAY_TMP],
+                  entityIds: [],
+                  complete() {
+                    console.log(2);
+                    removeStorageSync('bookInfo');
+                    reLaunch({
+                      url: '/pages/createBook/payResult/index?id=' + order.id,
+                    });
+                  },
                 });
               },
               fail: function (error) {
@@ -217,7 +221,7 @@ export default () => {
           <>
             <AtListItem title="附加服务" extraText="" />
             <View className="subInfo first-child">
-              {order.bookGoods?.map((item) => {
+              {order.bookGoods?.map((item: any) => {
                 return <View className="sub-item">{item.bookGood.title}</View>;
               })}
             </View>

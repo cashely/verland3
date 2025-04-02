@@ -28,6 +28,9 @@
         text-align: right;
       }
     }
+    &--disabled {
+      opacity: 1 !important;
+    }
   }
   .subBtn {
     margin-top: 100px;

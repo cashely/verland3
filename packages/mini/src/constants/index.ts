@@ -77,6 +77,11 @@ const TICKET_STATUS_TYPE = {
 const DEFAULT_IMAGE =
   'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0';
 
+//退款通知
+const REFUND_TMP = 'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY';
+//付款通知
+const PAY_TMP = 'fIijh96IYidJFYVTWwW2FsvEu2b7yKaQ7MO9FDv8M7U';
+
 export {
   APPOINTMENT_TYPES,
   ORDER_STATUS,
@@ -86,4 +91,6 @@ export {
   TICKET_TYPE,
   DEFAULT_IMAGE,
   TICKET_STATUS_TYPE,
+  REFUND_TMP,
+  PAY_TMP,
 };

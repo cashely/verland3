@@ -22,8 +22,8 @@ export default () => {
   const [menuList, setMenuList] = useState([]);
   const [formModel, setformModel] = useState({
     isRite: 1,
-    phone: '18334496112',
     handleWay: 1,
+    phone: '18334496112',
     menuId: '4e1a0400-632d-4525-a47e-6601a8788599',
     username: '23',
     petname: '23',
@@ -53,7 +53,6 @@ export default () => {
 
   useEffect(() => {
     menu().then((res) => {
-      console.log('menu', res);
       if (res?.code === 200) {
         setformModel((d) => {
           return {
@@ -118,11 +117,6 @@ export default () => {
   };
 
   useEffect(() => {
-    const userInfo = getStorageSync('userInfo');
-    console.log('userInfo', userInfo);
-    // if (userInfo?.username) {
-    //  setformModel({ ...formModel, username: userInfo?.username });
-    //}
     _setOtherFormList((d: any) => {
       console.log('setOtherFormList', d, menuList);
       return d.map((item: any) => {

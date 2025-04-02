@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { View, Text, Image } from '@tarojs/components';
-import { navigateTo, useDidShow, showToast } from '@tarojs/taro';
+import {
+  navigateTo,
+  useDidShow,
+  showToast,
+  requestSubscribeMessage,
+} from '@tarojs/taro';
 import {
   AtAvatar,
   AtRate,
@@ -10,10 +15,10 @@ import {
   AtTextarea,
   AtButton,
 } from 'taro-ui';
-import { evaluate, getEvaluate, list, cancel } from '@/apis/book';
+import { evaluate, list, cancel } from '@/apis/book';
 import sheetCat from '../../../subpackages/assets/images/sheetCat.png';
 import dayjs from 'dayjs';
-import { APPOINTMENT_TYPES, DEFAULT_IMAGE } from '@/constants';
+import { APPOINTMENT_TYPES, DEFAULT_IMAGE, REFUND_TMP } from '@/constants';
 import { formatPrice } from '@/utils';
 import './index.scss';
 
@@ -72,31 +77,38 @@ export default function Index() {
     );
   };
 
-  const handleEvalClick = (bookId: string) => {
-    setBookId(bookId);
-    getEvaluate(bookId).then((res) => {
-      if (res.code === 200) {
-        const { data } = res;
-        setRate(data?.score);
-        setContext(data?.content);
-        setIsOpened(true);
-      }
-    });
+  const handleEvalClick = (item: any) => {
+    setBookId(item.id);
+    if (item.evaluate?.id) {
+      showToast({
+        title: '已评价',
+        icon: 'none',
+      });
+      return;
+    }
+    setIsOpened(true);
   };
 
   const onCancel = (item) => {
-    cancel(item.id).then((res) => {
-      if (res.code === 200) {
-        showToast({
-          title: '取消成功',
-          icon: 'none',
-          success() {
-            setTimeout(() => {
-              getlist();
-            }, 1000);
-          },
+    //退款消息订阅
+    requestSubscribeMessage({
+      tmplIds: [REFUND_TMP],
+      entityIds: [],
+      complete() {
+        cancel(item.id).then((res) => {
+          if (res.code === 200) {
+            showToast({
+              title: '取消成功',
+              icon: 'none',
+              success() {
+                setTimeout(() => {
+                  getlist();
+                }, 1000);
+              },
+            });
+          }
         });
-      }
+      },
     });
   };
 
@@ -124,9 +136,9 @@ export default function Index() {
       }
     });
   };
-  const handleToInvoice = () => {
+  const handleToInvoice = (item: any) => {
     navigateTo({
-      url: `/pages/mine/afterSales/as-invoiceApply/index`,
+      url: `/pages/mine/afterSales/as-invoiceApply/index?id=${item.id}&totalAmount=${item.totalAmount}`,
     });
   };
 
@@ -201,14 +213,14 @@ export default function Index() {
                         <View
                           className="btn-item"
                           style="background-color:#C1E9EE"
-                          onClick={() => handleEvalClick(item.id)}
+                          onClick={() => handleEvalClick(item)}
                         >
-                          评价
+                          {item?.evaluate?.id ? '已评价' : '评价'}
                         </View>
                         <View
                           className="btn-item"
                           style="background-color:#ffc7c7"
-                          onClick={() => handleToInvoice(item?.id)}
+                          onClick={() => handleToInvoice(item)}
                         >
                           发票申请
                         </View>

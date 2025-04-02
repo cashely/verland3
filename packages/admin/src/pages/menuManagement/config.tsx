@@ -1,4 +1,4 @@
-import { RITE_TYPE, DELIVERY_TYPE } from '@/constants'
+import { RITE_TYPE, DELIVERY_TYPE } from '@/constants';
 import { formatPrice } from '@/utils';
 const searchItems = [
   {
@@ -27,7 +27,18 @@ const tableColumns = [
     dataIndex: 'price',
     slot: 'price',
   },
-
+  {
+    title: '是否需要仪式',
+    key: 'isRite',
+    dataIndex: 'isRite',
+    render: (_: number) => (_ === 1 ? '需要' : '不需要'),
+  },
+  {
+    title: '是否需要回收',
+    key: 'isHandleWay',
+    dataIndex: 'isRite',
+    render: (_: number) => (_ === 1 ? '需要' : '不需要'),
+  },
   {
     title: '创建时间',
     key: 'createdAt',
@@ -80,14 +91,15 @@ const formConfig = {
       itemProps: {
         placeholder: '请输入套餐名称',
       },
-    }, {
+    },
+    {
       label: '是否需要仪式',
       prop: 'isRite',
       type: 'radio',
-     
+
       // rules: [{ required: true, message: '请输入产品名称' }],
       span: 24,
-      options: RITE_TYPE
+      options: RITE_TYPE,
     },
     {
       label: '是否寄送',
@@ -95,7 +107,7 @@ const formConfig = {
       type: 'radio',
       // rules: [{ required: true, message: '请输入产品名称' }],
       span: 24,
-      options: DELIVERY_TYPE
+      options: DELIVERY_TYPE,
     },
     {
       label: '价格(¥)',
