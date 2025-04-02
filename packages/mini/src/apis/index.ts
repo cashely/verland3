@@ -2,9 +2,12 @@ import Taro, { clearStorageSync, getStorageSync } from '@tarojs/taro';
 import { showToast, showLoading, hideLoading } from '@tarojs/taro';
 export const baseUrl = process.env.TARO_APP_API;
 export const fileUrl = process.env.TARO_APP_API;
+let loadingInstance: any = null;
 export default function (url: string, options: any = {}) {
   return new Promise<any>((resolve, reject) => {
-    showLoading();
+    if (!loadingInstance) {
+      loadingInstance = showLoading();
+    }
     const token = getStorageSync('token') || '';
     const userInfo = getStorageSync('userInfo') || {};
     Taro.request({
@@ -42,7 +45,7 @@ export default function (url: string, options: any = {}) {
         }
         setTimeout(function () {
           resolve(res.data);
-          hideLoading();
+          loadingInstance && (hideLoading(), (loadingInstance = null));
         }, 1000);
       },
       fail: (err) => {
@@ -52,7 +55,7 @@ export default function (url: string, options: any = {}) {
           icon: 'none',
           success: () => {
             setTimeout(function () {
-              hideLoading();
+              loadingInstance && (hideLoading(), (loadingInstance = null));
             }, 1000);
             clearStorageSync();
             reject(err);

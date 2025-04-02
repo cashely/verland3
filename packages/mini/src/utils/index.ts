@@ -7,6 +7,7 @@ const formatDateTime = (date: string | Date) => {
 
 //格式化金额 分为单位
 const formatPrice = (price: number) => {
+  if (isNaN(price)) return 0;
   return (price / 100).toLocaleString() || 0;
 };
 //给出完整地址，返回省市区

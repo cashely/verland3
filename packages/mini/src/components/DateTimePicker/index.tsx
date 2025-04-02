@@ -83,11 +83,18 @@ export default (props) => {
     closeSheet();
   };
 
+  //月份和日前面补0
+  const padZero = (num: number) => {
+    return num.toString().padStart(2, '0');
+  };
+
   const handleConfirm = () => {
     console.log(data, props.data.formProp, '--------');
     props?.onConfirm?.({
       formProp: props.data.formProp,
-      value: `${year}-${data.month}-${data.day} ${timeRanges[data.value[3]]}`,
+      value: `${year}-${padZero(data.month)}-${padZero(data.day)} ${
+        timeRanges[data.value[3]]
+      }`,
     });
     closeSheet();
   };
@@ -99,7 +106,7 @@ export default (props) => {
       onClose={closeSheet}
     >
       <View className="datetimePicker">
-        <View className="sheetHeader flex items-center justify-between">
+        <View className="flex items-center justify-between sheetHeader">
           {/* {year}年{data.month}月{data.day}日 */}
           <View onClick={handleCancel}>取消</View>
           <View className="title">请选择时间</View>

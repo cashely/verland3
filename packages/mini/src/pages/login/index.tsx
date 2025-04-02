@@ -21,7 +21,7 @@ export default function Index() {
   });
 
   const [pageFlag, setPageFlag] = useState('');
-
+  const [btnDisabled, setBtnDisabled] = useState(false);
   useLoad(({ type = '' }) => {
     console.log(type, 'pageload');
 
@@ -59,6 +59,7 @@ export default function Index() {
   // 获取用户信息
   const fetchUserInfo = async (code, initUserInfo: any) => {
     try {
+      setBtnDisabled(true);
       mpLogin({ code }).then(async (res) => {
         if (res.code === 200) setStorageSync('token', res.data);
         console.log(res, '====');
@@ -78,7 +79,7 @@ export default function Index() {
           await putUser(data);
           setStorageSync('userInfo', data);
           showToast({ title: '登录成功', icon: 'none' });
-
+          setBtnDisabled(false);
           setTimeout(() => {
             pageFlag === '1'
               ? reLaunch({
@@ -91,6 +92,7 @@ export default function Index() {
         }
       });
     } catch (error) {
+      setBtnDisabled(false);
       console.log(error);
     }
   };
@@ -113,6 +115,7 @@ export default function Index() {
     }
     // 登录逻辑
     const res = await login();
+    console.log(res, '441+++');
     if (res.errMsg === 'login:ok') {
       fetchUserInfo(res.code, userInfo);
     }
@@ -163,7 +166,7 @@ export default function Index() {
           />
         </View>
       </View>
-      <AtButton type="primary" onClick={handleLogin}>
+      <AtButton type="primary" disabled={btnDisabled} onClick={handleLogin}>
         登录
       </AtButton>
     </View>

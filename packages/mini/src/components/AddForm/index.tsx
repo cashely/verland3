@@ -570,11 +570,13 @@ export default forwardRef((props, ref) => {
                       {formItem.label}
                     </Text>
                   </View>
-                  <AtSegmentedControl
-                    values={formItem.tabsTitle}
-                    current={tabIndex}
-                    onClick={(e) => handleChange(e, formItem)}
-                  ></AtSegmentedControl>
+                  {formItem.tabsTitle?.length && (
+                    <AtSegmentedControl
+                      values={formItem.tabsTitle}
+                      current={tabIndex}
+                      onClick={(e) => handleChange(e, formItem)}
+                    ></AtSegmentedControl>
+                  )}
                 </View>
                 {
                   <View className="tab-content">

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useContext, Suspense } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import { View, Label, Checkbox, Text, CheckboxGroup } from '@tarojs/components';
 import {
   useLoad,
@@ -21,9 +21,24 @@ export default () => {
   const [agreement, setAggreement] = useState('');
   const [menuList, setMenuList] = useState([]);
   const [formModel, setformModel] = useState({
-    isRite: '1',
+    isRite: 1,
     phone: '18334496112',
-    handleWay: '1', //处理方式
+    handleWay: 1,
+    menuId: '4e1a0400-632d-4525-a47e-6601a8788599',
+    username: '23',
+    petname: '23',
+    type: '猫',
+    weight: 2,
+    bookDateTime: '2025-04-02T02:00:00.000Z',
+    riteDateTime: '2025-04-02T02:00:00.000Z',
+    handleDateTime: '2025-04-02T02:00:00.000Z',
+    postAddress: '浙江省-杭州市-拱墅区',
+    detail: '湖墅南路28号',
+    province: '浙江省',
+    city: '杭州市',
+    area: '拱墅区',
+    mark: '23',
+    subType: '英短',
   });
   useLoad(() => {
     console.log('Page loaded.');
@@ -77,27 +92,19 @@ export default () => {
       return toast('请勾选用户购买套餐协议');
     }
 
-    const combineInfo = {
+    //添加数据到缓存
+    setStorageSync('bookInfo', {
       ...baseInfo,
       ...otherInfo,
-    };
-
-    console.log('combineInfo？》》》》》》》》》', combineInfo);
-    //添加数据到缓存
-    setStorageSync(
-      'bookInfo',
-      JSON.stringify({
-        ...combineInfo,
-        type: combineInfo?.type?.split('/')[0],
-        subType: combineInfo?.type?.split('/')[1],
-        weight: +combineInfo.weight,
-        isRite: +combineInfo.isRite,
-        handleWay: +combineInfo.handleWay,
-        bookDateTime: new Date(combineInfo.bookDateTime),
-        riteDateTime: new Date(combineInfo.riteDateTime),
-        handleDateTime: new Date(combineInfo.handleDateTime),
-      })
-    );
+      type: baseInfo?.type?.split('/')[0],
+      subType: baseInfo?.type?.split('/')[1],
+      weight: +baseInfo.weight,
+      isRite: +otherInfo.isRite,
+      handleWay: +otherInfo.handleWay,
+      bookDateTime: new Date(otherInfo.bookDateTime),
+      riteDateTime: new Date(otherInfo.riteDateTime),
+      handleDateTime: new Date(otherInfo.handleDateTime),
+    });
     navigateTo({
       url: './additionalService/index',
     });

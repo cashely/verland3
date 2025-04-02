@@ -9,10 +9,12 @@ import {
   requestPayment,
   requestSubscribeMessage,
   getSetting,
+  openSetting,
 } from '@tarojs/taro';
 import { detail, prepay, pay } from '@/apis/book';
 import { formatPrice } from '@/utils';
 import dayjs from 'dayjs';
+import { debounce } from 'lodash-es';
 import './index.scss';
 
 export default () => {
@@ -68,83 +70,81 @@ export default () => {
     setAgreement(e.detail.value[0] === '1');
     // setOrder({ ...order, book: e.detail.value.join(',') });
   };
-  const handleTest = () => {
-    console.log('test');
 
-    getSetting({
-      withSubscriptions: true,
-      success: function (res) {
-        console.log(res, '>>>>>>');
-
-        if (
-          res.subscriptionsSetting.mainSwitch &&
-          res.subscriptionsSetting.mainSwitch != null
-        ) {
-          if (res.subscriptionsSetting.itemSettings) {
-            let moIdState =
-              res.subscriptionsSetting.itemSettings[
-                'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY'
-              ];
-            if (moIdState === 'accept') {
-              console.log('同意消息推送');
-            } else if (moIdState === 'reject') {
-              console.log('拒绝消息推送');
-            } else if (moIdState === 'ban') {
-              console.log('已被后台封禁');
-            }
-          }
-        } else {
-          if (requestSubscribeMessage) {
-            requestSubscribeMessage({
-              tmplIds: [
-                'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY',
-                'fIijh96IYidJFYVTWwW2FsvEu2b7yKaQ7MO9FDv8M7U',
-              ],
-              entityIds: [
-                'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY',
-                'fIijh96IYidJFYVTWwW2FsvEu2b7yKaQ7MO9FDv8M7U',
-              ],
-              success(res) {
-                console.log('同意消息推送');
-              },
-              fail(res) {
-                console.log('requestSubscribeMessage fail', res);
-              },
-            });
-          }
-        }
-      },
-      fail: function (error) {
-        console.log(error);
-      },
-    });
-  };
-  const handlePay = () => {
+  const handlePay = debounce(() => {
     if (!agreement) {
       return showToast({
         title: '请勾选商品支付协议',
         icon: 'none',
       });
     }
+    handlePrepay();
+    console.log('开始支付');
+    //退款状态模版id都是一次性模版
+    const refundTmpId = 'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY';
+    const tmpId = 'fIijh96IYidJFYVTWwW2FsvEu2b7yKaQ7MO9FDv8M7U';
+    //判断授权状况
+    // getSetting({
+    //   withSubscriptions: true,
+    //   success(res) {
+    //     console.log(res, '+++++');
+    //     if (res.subscriptionsSetting.mainSwitch) {
+    //       // 用户打开了订阅消息总开关
+    //       if (res.subscriptionsSetting?.itemSettings) {
+    //         // 用户同意总是保持是否推送消息的选择, 这里表示以后不会再拉起推送消息的授权
+    //         let moIdState = res.subscriptionsSetting.itemSettings[refundTmpId];
+    //         // 如果用户已经同意
+    //         console.log(moIdState, 'moIdState');
 
-    //弹窗授权窗口
-    requestSubscribeMessage({
-      tmplIds: [
-        'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY',
-        'fIijh96IYidJFYVTWwW2FsvEu2b7yKaQ7MO9FDv8M7U',
-      ],
-      entityIds: [
-        'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY',
-        'fIijh96IYidJFYVTWwW2FsvEu2b7yKaQ7MO9FDv8M7U',
-      ],
-      success: function (res) {
-        console.log(res, '订阅成功');
-      },
-      fail: function (err) {
-        console.log(err, '订阅消息失败');
-      },
-    });
-    //发起预支付
+    //         if (moIdState === 'accept') {
+    //           requestSubscribeMessage({
+    //             tmplIds: [refundTmpId, tmpId],
+    //             entityIds: [refundTmpId, tmpId],
+    //             complete() {
+    //               console.log(1);
+    //               // handlePrepay();
+    //             },
+    //           });
+    //         } else if (moIdState === 'reject') {
+    //           showToast({
+    //             title: '拒绝了消息推送',
+    //             icon: 'none',
+    //           });
+    //           openSetting({
+    //             withSubscriptions: true,
+    //           });
+    //         } else if (moIdState === 'ban') {
+    //           showToast({
+    //             title: '已被封禁',
+    //             icon: 'none',
+    //           });
+    //         }
+    //       } else {
+    //         //没有订阅过消息
+    //         requestSubscribeMessage({
+    //           tmplIds: [refundTmpId, tmpId],
+    //           entityIds: [refundTmpId, tmpId],
+    //           success(res) {
+    //             console.log(res, 'res++++');
+    //           },
+    //           complete() {
+    //             console.log(2);
+    //             // handlePrepay();
+    //           },
+    //         });
+    //       }
+    //     } else {
+    //       openSetting({
+    //         withSubscriptions: true,
+    //       });
+    //     }
+    //   },
+    // });
+  }, 300);
+
+  //发起预支付
+  const handlePrepay = () => {
+    setPayDisabled(true);
     prepay({
       bookId: order.id,
     }).then((res) => {
@@ -171,7 +171,6 @@ export default () => {
               paySign,
               success: function () {
                 removeStorageSync('bookInfo');
-                setPayDisabled(true);
                 reLaunch({
                   url: '/pages/createBook/payResult/index?id=' + order.id,
                 });
@@ -179,8 +178,11 @@ export default () => {
               fail: function (error) {
                 console.log(error);
                 showToast({
-                  title: '支付失败',
+                  title: '支付失败,请重新支付!',
                   icon: 'none',
+                  success() {
+                    setPayDisabled(false);
+                  },
                 });
               },
             });
@@ -193,7 +195,6 @@ export default () => {
 
   return (
     <View className="page-order">
-      <View onClick={handleTest}></View>
       <AtList>
         <AtListItem title="基础服务" extraText={order.menu?.name || '-'} />
         <AtListItem title="联系人" extraText={<>{order.username || '-'}</>} />

@@ -18,7 +18,7 @@ interface IDataItem {
 export default function AdditionalService() {
   //附加服务的价格加上基本服务的价格
   const [totalAmount, setToalAmount] = useState(0); //1分钱
-  const [selectedIndex, setSelectedIndex] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState<number[]>([]);
   const [isOpened, setIsOpened] = useState(false);
   const [selectedItem, setSelectedItem] = useState<IDataItem>();
   const [data, setData] = useState<IDataItem[]>([]);
@@ -38,11 +38,12 @@ export default function AdditionalService() {
   }, [selectedIndex]);
 
   const createAppointBill = () => {
-    const bookInfo = JSON.parse(getStorageSync('bookInfo') || '{}');
+    const bookInfo = getStorageSync('bookInfo') || {};
+    console.log('bookInfo', bookInfo);
     add({
       ...bookInfo,
       bookGoodIds: data
-        .filter((item, index) => selectedIndex.includes(index))
+        .filter((_, index) => selectedIndex.includes(index))
         .map((item) => item.id),
       totalAmount,
     }).then((res) => {
@@ -80,7 +81,6 @@ export default function AdditionalService() {
   };
 
   const getData = async () => {
-    ///await new Promise((resolve) => setTimeout(resolve, 3000));
     await list().then((res) => {
       const { data = [] } = res;
       console.log('data', data);
