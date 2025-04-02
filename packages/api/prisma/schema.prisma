@@ -9,9 +9,10 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  // url      = env("DATABASE_URL")
-  url      = "file:../data.db"
+  // provider = "sqlite"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // url      = "file:../data.db"
 }
 
 model adminUser {
@@ -170,7 +171,7 @@ model Advise {
   id            String   @id @default(uuid())
   type          Int      @default(1) // 投诉建议类型 1-建议 2-投诉
   content       String
-  replayAt      DateTime?
+  replayAt      Int?
   replayContent String?
   userId        String
   user          User     @relation(fields: [userId], references: [id])
@@ -217,6 +218,8 @@ model Menu {
   updatedAt DateTime  @updatedAt
   images  MenuRelationImage[]
   book    Book[]
+  isRite  Int @default(2) // 是否需要仪式 1 是 2否
+  isHandleWay Int @default(2) // 是否需要寄送回收 1 是 2 否
 }
 
 // 套餐图片关联表
@@ -226,4 +229,16 @@ model MenuRelationImage {
   menu   Menu   @relation(fields: [menuId], references: [id])
   imageId String
   image   Image @relation(fields: [imageId], references: [id])
+}
+
+// 宠物门店表
+model PetStore {
+  id  String  @id @default(uuid())
+  name  String // 店名
+  address String // 门店地址
+  price Int?  // 门店收费价格
+  tel String? // 门店联系方式
+  contact String? // 门店对接人
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
