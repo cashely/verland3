@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
         const { pageSize = 20, pageNo = 1, statu } = req.query;
         const whereCondition = {}
         if (statu ?? false) {
-            whereCondition.statu = statu;
+            whereCondition.statu = Number(statu);
         }
         const books = await prisma.book.findMany({
             where: whereCondition,
