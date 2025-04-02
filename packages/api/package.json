@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "api:dev": "nodemon --exec babel-node src/index.js",
-    "api:prod": "babel-node src/index.js",
+    "api:dev": "nodemon --exec babel-node ./main.js",
+    "api:prod": "cross-env NODE_ENV=production babel-node ./main.js",
     "postinstall": "prisma generate",
-    "api:migrate": "prisma migrate dev"
+    "api:migrate:prod": "cross-env NODE_ENV=production prisma migrate dev"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,8 @@
     "@babel/node": "^7.26.0",
     "@babel/plugin-proposal-export-default-from": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
+    "cross-env": "^7.0.3",
+    "dotenv-expand": "^12.0.1",
     "log4js": "^6.9.1",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.9"
