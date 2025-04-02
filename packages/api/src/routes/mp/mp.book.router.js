@@ -123,10 +123,11 @@ router.get('/', async (req, res) => {
                 pet: true,
                 bookGoods: {
                     include: {
-                        bookGood: true 
+                        bookGood: true
                     }
                 },
-                menu: true
+                menu: true,
+                evaluate: true
             },
             orderBy: {
                 createdAt: 'desc'
@@ -155,7 +156,8 @@ router.get('/:id', async (req, res) => {
                         bookGood: true 
                     }
                 },
-                menu: true
+                menu: true,
+                evaluate: true
             }
         });
         res.response.success(book);
