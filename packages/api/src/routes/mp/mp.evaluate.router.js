@@ -16,14 +16,18 @@ router.post('/', async (req, res) => {
             data: {
                 evaluate: {
                     create: {
-                        userId: id,
                         user: {
                             connect: {
                                 id
                             }
                         },
                         score,
-                        content
+                        content,
+                        book: {
+                            connect: {
+                                id: bookId
+                            }
+                        }
                     }
                 }
             }
