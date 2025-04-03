@@ -128,7 +128,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, price, description, imageIds = [] } = req.body;
+        const { name, price, description, imageIds = [], isRite, isHandleWay } = req.body;
         const menu = await prisma.menu.update({
             where: {
                 id
@@ -137,6 +137,8 @@ router.put('/:id', async (req, res) => {
                 name,
                 price,
                 description,
+                isRite,
+                isHandleWay,
                 images: {
                     deleteMany: {},
                     createMany: {
