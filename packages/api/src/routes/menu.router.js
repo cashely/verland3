@@ -90,12 +90,14 @@ router.get('/:id', async (req, res) => {
  */
 router.post('/', async (req, res) => {
     try {
-        const { name, price, description, imageIds = [] } = req.body;
+        const { name, price, description, imageIds = [], isRite, isHandleWay } = req.body;
         const menu = await prisma.menu.create({
             data: {
                 name,
                 price,
                 description,
+                isHandleWay,
+                isRite,
                 images: {
                     createMany: {
                         data: imageIds.map((imageId) => ({
