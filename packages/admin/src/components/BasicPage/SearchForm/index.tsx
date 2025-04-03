@@ -14,7 +14,7 @@ export default function SearchForm({ items = [], onSearch = () => { } }: any) {
   const [formData, setFormData] = useState(initData);
   //提交
   const onFinish = (values: any) => {
-    console.log(values, formData, '331')
+    console.log(values, formData, '43onFinish')
     // const values = searchForm.validateFields()
     onSearch && onSearch(formData);
   };
@@ -22,13 +22,14 @@ export default function SearchForm({ items = [], onSearch = () => { } }: any) {
   //重置
   const handleResetForm = () => {
     searchForm.resetFields();
+    setFormData(initData)
     onSearch && onSearch(initData);
   };
 
 
   const handleChange = (prop: string, value: any) => {
-    console.log(prop, value, '331')
-    setFormData(prev => ({ ...prev, [prop]: value }));
+    console.log(prop, value, '43handleChange')
+    setFormData(prev => ({ ...prev, [prop]: value ?? '' }));
   };
 
   return (

@@ -11,7 +11,7 @@ const PET_TYPES = [
   ['英短', '金渐层', '田园猫', '银渐层', '比鲁斯'],
 ];
 
-const GENDER = ['男', '女'];
+const GENDER = ['', '男', '女'];
 
 const TICKET_TYPE = [
   {

@@ -99,12 +99,12 @@ const otherFormList = [
     options: [
       {
         label: '是',
-        value: '1',
+        value: 1,
         checked: true,
       },
       {
         label: '否',
-        value: '0',
+        value: 2,
       },
     ],
     rules: [],

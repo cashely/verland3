@@ -107,34 +107,34 @@ export default (props: IProps) => {
     //表格行选择
     rowSelection: otherConfig?.rowSelection
       ? {
-          // type: 'checkbox',
-          selections: [
-            {
-              key: Table.SELECTION_ALL,
-              text: '全选',
-              onSelect: (allKeys: React.Key[]) => setSelectedRowKeys(allKeys),
-            },
-            {
-              key: Table.SELECTION_INVERT,
-              text: '反选',
-              onSelect: (allKeys: React.Key[]) =>
-                setSelectedRowKeys(
-                  allKeys.filter((key) => !selectedRowKeys.includes(key))
-                ),
-            },
-            {
-              key: Table.SELECTION_NONE,
-              text: '清空',
-              onSelect: () => setSelectedRowKeys([]),
-            },
-          ],
-          selectedRowKeys,
-          onChange: (newSelectedRowKeys: React.Key[]) => {
-            console.log(`rowSelection---selectedRowKeys: ${selectedRowKeys}`);
-            setSelectedRowKeys(newSelectedRowKeys);
+        // type: 'checkbox',
+        selections: [
+          {
+            key: Table.SELECTION_ALL,
+            text: '全选',
+            onSelect: (allKeys: React.Key[]) => setSelectedRowKeys(allKeys),
           },
-          ...otherConfig?.rowSelection,
-        }
+          {
+            key: Table.SELECTION_INVERT,
+            text: '反选',
+            onSelect: (allKeys: React.Key[]) =>
+              setSelectedRowKeys(
+                allKeys.filter((key) => !selectedRowKeys.includes(key))
+              ),
+          },
+          {
+            key: Table.SELECTION_NONE,
+            text: '清空',
+            onSelect: () => setSelectedRowKeys([]),
+          },
+        ],
+        selectedRowKeys,
+        onChange: (newSelectedRowKeys: React.Key[]) => {
+          console.log(`rowSelection---selectedRowKeys: ${selectedRowKeys}`);
+          setSelectedRowKeys(newSelectedRowKeys);
+        },
+        ...otherConfig?.rowSelection,
+      }
       : false,
     //分页、排序、筛选变化时触发
     // onChange(
@@ -232,7 +232,7 @@ export default (props: IProps) => {
         dataSource={dataSource}
         {...tableConfig}
       >
-        {columns?.map((item: any, index: number) => (
+        {columns?.map((item: any) => (
           <Table.Column
             width={item.width ?? 160}
             fixed={item.fixed || false}
@@ -241,7 +241,7 @@ export default (props: IProps) => {
             ellipsis={{
               showTitle: item.showTitle || false,
             }}
-            key={index}
+            key={item.key}
             render={(value, record) =>
               item?.render?.(value, record, navigate) ??
               columnRender(item, { value })

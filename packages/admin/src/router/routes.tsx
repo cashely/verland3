@@ -1,6 +1,6 @@
 
 import { Navigate } from 'react-router-dom';
-import { TeamOutlined, CustomerServiceOutlined } from '@ant-design/icons';
+import { TeamOutlined, HeartOutlined, MenuOutlined, ShopOutlined } from '@ant-design/icons';
 import IcontFont from '@/components/IcontFont';
 import {
   Login,
@@ -21,7 +21,9 @@ import {
   AdviceManagement,
   AdviceManagementDetail,
   BookGoodsDetail,
-  AccountDetail
+  AccountDetail,
+  StoreManagement,
+  StoreDetail
 } from './routeComps.ts'
 
 const constantRoutesList = [
@@ -77,6 +79,38 @@ const anyncRoutesList = [
     ],
   },
   {
+    path: '/storeManagement',
+    title: '门店管理',
+    element: <Layout />,
+    icon: <ShopOutlined />,
+    handle: { title: '门店管理' },
+    redirect: '/storeManagement/list',
+    children: [
+      {
+        index: true,
+        path: '/storeManagement/list',
+        title: '门店列表',
+        handle: {
+          title: '门店列表',
+        },
+        element: <StoreManagement />,
+      },
+      {
+        path: '/storeManagement/detail/:id',
+        title: '门店详情',
+        handle: {
+          title: '门店详情',
+        },
+        hidden: true,
+        element: <StoreDetail />,
+      },
+      {
+        index: true,
+        element: <Navigate to="/storeManagement/list" />,
+      }
+    ],
+  },
+  {
     path: '/appointManagement',
     title: '预约管理',
     element: <Layout />,
@@ -112,7 +146,7 @@ const anyncRoutesList = [
     path: '/menuManagement',
     title: '套餐管理',
     element: <Layout />,
-    icon: <IcontFont type="icon-yuyueguanli"></IcontFont>,
+    icon: <MenuOutlined />,
     handle: { title: '套餐管理' },
     redirect: '/menuManagement/list',
     children: [
@@ -140,7 +174,6 @@ const anyncRoutesList = [
       }
     ],
   },
-
   {
     path: '/ticketManagement',
     title: '发票管理',
@@ -235,13 +268,7 @@ const anyncRoutesList = [
     path: '/petManagement',
     title: '宠物管理',
     element: <Layout />,
-    icon: (
-      <CustomerServiceOutlined
-        style={{
-          fontSize: 16,
-        }}
-      />
-    ),
+    icon: <HeartOutlined />,
     handle: { title: '宠物管理' },
     children: [
       {

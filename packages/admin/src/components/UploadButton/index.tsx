@@ -6,7 +6,7 @@ import type { FileType } from './uploadFn';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import request from '@/apis/request';
 import { produce } from 'immer';
-import { resolve } from 'path';
+import { getId } from '@/utils'
 
 interface UniversalUploadProps {
   action?: string; // 上传地址
@@ -23,11 +23,7 @@ interface UniversalUploadProps {
 
 const UploadButton: React.FC<UniversalUploadProps> = ({
   setFormLoading = () => { },
-  uploadProps = {
-    accept: "image/*",
-    multiple: false,
-    maxSize: 3, //3M
-  },
+  uploadProps = {},
   receiveFileList = [], //回显的图片
   name = '', //该formItem表单的prop
   putProp = '', //另外一个参数
@@ -41,7 +37,13 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState<any[]>([]);
-
+  const combinUplodProps = {
+    accept: "image/*",
+    multiple: false,
+    maxSize: 3, //3M
+    maxCount: 1,
+    ...uploadProps
+  }
   const handleBeforeUpload = (file: any, fileList: FileList[]) => {
     console.log('onBeforeUpload', file, fileList);
     // //判断文件大小
@@ -69,14 +71,23 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
     fileList: newFileList,
   }) => {
     console.log(file, 'handleChange-file');
+    setFileList(newFileList);
     return;
+    Promise.all(newFileList.map(async (file) => onUpload(file.originFileObj as File))).then(result => {
+      const _files = result.map(url => ({
+        url: url,
+        uid: getId(),
+        status: 'done',
+        percent: 100
+      }))
+      setFileList(_files)
+      //暂时只传一个文件所有一个文件对象
+      onUploadSuccess?.(_files[0]);
+    })
     onUpload(file.originFileObj as File).then(url => {
       //构造图片对象
       const fileObj = {
-        url,
-        uid: file.uid,
-        status: 'done',
-        percent: 100
+
       }
       console.log(fileObj, 'fileObj441');
       setFileList(
@@ -92,10 +103,6 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
       //将数据传到父组件
       onUploadSuccess?.(fileObj);
     })
-    console.log(newFileList, 'handleChange-newFileList441', name);
-    if (name === 'thumb') {
-      onUploadSuccess?.({ [putProp]: '', [name]: {} });
-    }
   };
 
   //自定義上傳
@@ -141,17 +148,18 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
 
   return (
     <>
+      {JSON.stringify(combinUplodProps)}
       <Upload
+        action={undefined}
         name="file"
         fileList={fileList}
         showUploadList={true}
         disabled={isUploading}
-        maxCount={1}
         onPreview={name === 'fileId' ? undefined : handlePreview}
         onRemove={handleRemove}
         beforeUpload={handleBeforeUpload}
         onChange={handleChange}
-        {...uploadProps}
+        {...combinUplodProps}
 
       >
         <Button

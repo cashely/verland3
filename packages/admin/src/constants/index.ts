@@ -143,7 +143,7 @@ const RITE_TYPE = [
   },
   {
     label: '否',
-    value: 0,
+    value: 2,
   },
 ];
 
@@ -155,7 +155,7 @@ const DELIVERY_TYPE = [
   },
   {
     label: '否',
-    value: 0,
+    value: 2,
   },
 ];
 
@@ -186,7 +186,7 @@ function getLabelByValue(arr: any[], value: any) {
       label = item.label;
     }
   });
-  return label;
+  return label || '-';
 }
 export {
   TICKET_TYPE,

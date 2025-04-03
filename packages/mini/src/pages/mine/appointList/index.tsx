@@ -152,9 +152,8 @@ export default function Index() {
     console.log(item);
     if (!item?.id) return;
     navigateTo({
-      url: `./detail/index?id=${item.id}&statuName=${
-        APPOINTMENT_TYPES[item.statu]?.label
-      }`,
+      url: `./detail/index?id=${item.id}&statuName=${APPOINTMENT_TYPES[item.statu]?.label
+        }`,
     });
   };
 
@@ -162,7 +161,7 @@ export default function Index() {
     <View className="page-appointList">
       <AtTabs current={current} tabList={tabList} onClick={handleTabClick}>
         {tabList.map((_, index) => (
-          <AtTabsPane current={current} index={index}>
+          <AtTabsPane current={current} key={index}>
             <View className="tab-content">
               {getData(current - 1).map((item, index) => (
                 <View className="relative bg-red-700 item" key={index}>

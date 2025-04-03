@@ -10,6 +10,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    }
+  },
   server: {
     proxy: {
       '/api': {
@@ -20,6 +28,6 @@ export default defineConfig({
         },
       },
     },
-    allowedHosts: ['658gjvuw-mqy3qsam-yahiny0cgwh0.vcc3p.mcprev.cn'],
+    allowedHosts: ['3twqdr10-1brks9o4-nfjobspi7vz6.vcc3p.mcprev.cn'],
   },
 });

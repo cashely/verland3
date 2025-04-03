@@ -74,14 +74,16 @@ export default function Index() {
                 >
                   详情
                 </Button>
-                <Button
-                  onClick={() => handleReplay(record)}
-                  size="small"
-                  color="primary"
-                  variant="link"
-                >
-                  回复
-                </Button>
+                {
+                  !record?.replayContent &&
+                  <Button
+                    onClick={() => handleReplay(record)}
+                    size="small"
+                    color="primary"
+                    variant="link"
+                  >
+                    回复
+                  </Button>}
               </Flex>
             );
           },

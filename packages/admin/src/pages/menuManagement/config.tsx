@@ -36,7 +36,7 @@ const tableColumns = [
   {
     title: '是否需要回收',
     key: 'isHandleWay',
-    dataIndex: 'isRite',
+    dataIndex: 'isHandleWay',
     render: (_: number) => (_ === 1 ? '需要' : '不需要'),
   },
   {
@@ -98,16 +98,18 @@ const formConfig = {
       type: 'radio',
 
       // rules: [{ required: true, message: '请输入产品名称' }],
-      span: 24,
-      options: RITE_TYPE,
+      labelCol: 6,
+      wrapperCol: 18,
+      options: RITE_TYPE
     },
     {
       label: '是否寄送',
-      prop: 'isDelivery',
+      prop: 'isHandleWay',
       type: 'radio',
       // rules: [{ required: true, message: '请输入产品名称' }],
-      span: 24,
-      options: DELIVERY_TYPE,
+      labelCol: 6,
+      wrapperCol: 18,
+      options: DELIVERY_TYPE
     },
     {
       label: '价格(¥)',
@@ -135,7 +137,10 @@ const formConfig = {
       },
     },
   ],
-  formModel: {},
+  formModel: {
+    isRite: 1,
+    isHandleWay: 1
+  },
   rules: [],
 };
 

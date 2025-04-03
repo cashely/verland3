@@ -45,7 +45,7 @@ function SideMenu(props) {
       const obj = {
         ...item,
         label: menuLink(item.path, item.title),
-        key: item.path.includes(':id') ? item.key : item.path,  //唯一标识
+        key: item.path.includes(':id') ? (item.key || '') : item.path,  //唯一标识
         icon: item.icon,
       };
 

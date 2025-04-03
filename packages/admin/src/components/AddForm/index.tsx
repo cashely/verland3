@@ -162,12 +162,12 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
     return (
       <Form
         layout='vertical'
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
+        // labelCol={{ span: 8 }}
+        // wrapperCol={{ span: 16 }}
         initialValues={formData}
         form={detailForm}
         name="detailForm"
-        colon={false}
+        colon={true}
         onFinish={handleSubmit}
         labelAlign="left"
         onValuesChange={handleValueChange}
@@ -177,13 +177,13 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
       formData-- {JSON.stringify(formData)} */}
         <Row gutter={24}>
           {formList.map((item: any, index: number) => (
-            <Col span={item.span ?? 8} key={index}>
+            <Col span={24} key={index}>
               <Form.Item
-                layout={item.type === 'radio' ? 'horizontal' : 'vertical'}
                 name={item.prop}
                 label={item.label}
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 18 }}
+                layout={item.type === 'radio' ? 'horizontal' : 'vertical'}
+                labelCol={{ span: item.labelCol || 24 }}
+                wrapperCol={{ span: item.wrapperCol || 24 }}
                 rules={item.rules ?? []}
                 required={item.rules?.length}
               >
@@ -209,7 +209,7 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
                   />
                 ) : null}
                 {item.type === 'radio' ? (
-                  <Radio.Group options={item.options || []} defaultValue={item.options?.[0].value} />
+                  <Radio.Group options={item.options || []} />
                 ) : null}
                 {item.type === 'select' ? (
                   <Select

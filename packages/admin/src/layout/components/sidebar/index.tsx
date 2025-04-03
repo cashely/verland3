@@ -16,9 +16,7 @@ const SiderBar = () => {
 
   return (
     <aside
-      className={`h-full bg-gray-200 sidebar ${sidebarStatus ? 'w-[200px]' : 'w-[80px]'}`}
-
-      style={{ minWidth: sidebarStatus ? 200 : 80 }}
+      className={`h-full bg-gray-200 sidebar`}
     >
       <h1 className="text-sm text-gray-100">
         <Logo width={50} fontSize={18} />

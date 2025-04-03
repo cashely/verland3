@@ -48,55 +48,55 @@ export default function TickManagement() {
     });
   };
 
-  const handleItems = (record: any) => {
-    const statu = record.statu;
-    const id = record.id;
-    const items = [];
-    if (statu === 1) {
-      items.push({
-        key: '2',
-        label: (
-          <Button
-            onClick={() => handleChangeStatu(id, { statu: 2 })}
-            size="small"
-            color="primary"
-            variant="link"
-          >
-            完成预约
-          </Button>
-        ),
-      });
-    }
-    if (statu === 2) {
-      items.push({
-        key: '3',
-        label: (
-          <Button
-            onClick={() => handlePost(id, 3)}
-            size="small"
-            color="primary"
-            variant="link"
-          >
-            完成寄送
-          </Button>
-        ),
-      });
-    }
-    return items.length ? (
-      <Dropdown
-        menu={{
-          items,
-        }}
-      >
-        <a onClick={(e) => e.preventDefault()}>
-          <Space>
-            <Typography.Link>更多</Typography.Link>
-            <DownOutlined />
-          </Space>
-        </a>
-      </Dropdown>
-    ) : null;
-  };
+  // const handleItems = (record: any) => {
+  //   const statu = record.statu;
+  //   const id = record.id;
+  //   const items = [];
+  //   if (statu === 1) {
+  //     items.push({
+  //       key: '2',
+  //       label: (
+  //         <Button
+  //           onClick={() => handleChangeStatu(id, { statu: 2 })}
+  //           size="small"
+  //           color="primary"
+  //           variant="link"
+  //         >
+  //           完成预约
+  //         </Button>
+  //       ),
+  //     });
+  //   }
+  //   if (statu === 2) {
+  //     items.push({
+  //       key: '3',
+  //       label: (
+  //         <Button
+  //           onClick={() => handlePost(id, 3)}
+  //           size="small"
+  //           color="primary"
+  //           variant="link"
+  //         >
+  //           完成寄送
+  //         </Button>
+  //       ),
+  //     });
+  //   }
+  //   return items.length ? (
+  //     <Dropdown
+  //       menu={{
+  //         items,
+  //       }}
+  //     >
+  //       <a onClick={(e) => e.preventDefault()}>
+  //         <Space>
+  //           <Typography.Link>更多</Typography.Link>
+  //           <DownOutlined />
+  //         </Space>
+  //       </a>
+  //     </Dropdown>
+  //   ) : null;
+  // };
 
   const handleOk = async (values: any) => {
     handleChangeStatu(selectItems.id, {
@@ -119,7 +119,7 @@ export default function TickManagement() {
         searchItems={searchItems}
       >
         {{
-          showColumnActions: (_, record) => {
+          showColumnActions: (_, record: any) => {
             const detailRoute = `/appointManagement/detail/${record.id}`;
             return (
               <>
@@ -131,7 +131,26 @@ export default function TickManagement() {
                 >
                   详情
                 </Button>
-                {handleItems(record)}
+                {
+                  record.statu === 1 && <Button
+                    onClick={() => handleChangeStatu(record.id, { statu: 2 })}
+                    size="small"
+                    color="primary"
+                    variant="link"
+                  >
+                    完成预约
+                  </Button>
+                }
+                {record.statu === 2 &&
+                  <Button
+                    onClick={() => handlePost(record.id, 3)}
+                    size="small"
+                    color="primary"
+                    variant="link"
+                  >
+                    完成寄送
+                  </Button>
+                }
               </>
             );
           },

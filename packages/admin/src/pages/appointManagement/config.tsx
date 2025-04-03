@@ -35,11 +35,13 @@ const tableColumns = [
   },
   {
     title: '预约上门时间',
+    key: 'bookDateTime',
     dataIndex: 'bookDateTime',
     slot: 'datetime',
   },
   {
     title: '用户信息',
+    key: 'user',
     dataIndex: 'user',
     width: 150,
     render: (_: any) => {
@@ -57,11 +59,13 @@ const tableColumns = [
   },
   {
     title: '宠物信息',
+    key: 'pet',
     dataIndex: 'pet',
     render: (_: any) => _?.type + '/' + _?.subType,
   },
   {
     title: '遗物处理方式',
+    key: 'handleWay',
     dataIndex: 'handleWay',
     render(_: number) {
       if (!_) return;
@@ -92,6 +96,8 @@ const tableColumns = [
   {
     title: '是否需要仪式',
     dataIndex: 'isRite',
+    key: 'isRite',
+    width: 120,
     render: (_: number) => getLabelByValue(RITE_TYPE, _),
   },
   {
@@ -116,6 +122,7 @@ const tableColumns = [
     title: '付款渠道',
     key: 'payChannel',
     dataIndex: 'payChannel',
+    width: 120,
     render: (_: number) => getLabelByValue(PAY_CHANNEL, _),
   },
   {
@@ -141,12 +148,14 @@ const tableColumns = [
     title: '订单来源渠道',
     key: 'channel',
     dataIndex: 'channel',
+    width: 120,
     render: (_: number) => getLabelByValue(ORDER_CHANNEL, _),
   },
   {
     title: '付款状态',
     key: 'statu',
     dataIndex: 'statu',
+    width: 120,
     render(_: number, record: any) {
       // 待付款  已预约  待寄送  已完成  已取消
       switch (_) {
@@ -181,7 +190,21 @@ const tableColumns = [
     },
   },
   {
+    title: '评价',
+    key: 'evaluate',
+    dataIndex: 'evaluate',
+    render(_: any) {
+      return (
+        <div style={{ whiteSpace: 'wrap' }}>
+          <p>评分：{_?.score}</p>
+          <p>评价内容：{_?.content || '-'}</p>
+        </div>
+      )
+    }
+  },
+  {
     title: '创建时间',
+    key: 'createdAt',
     prop: 'createdAt',
     dataIndex: 'createdAt',
     slot: 'datetime',

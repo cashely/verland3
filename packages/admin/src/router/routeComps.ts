@@ -35,8 +35,8 @@ const BookGoodsDetail = loadable(
 const AccountDetail = loadable(
   () => import('../pages/accountManagement/detail')
 );
-
-
+const StoreManagement = loadable(() => import('../pages/storeManagement'));
+const StoreDetail = loadable(() => import('../pages/storeManagement/detail'));
 
 export {
   Login,
@@ -57,5 +57,7 @@ export {
   TickManagement,
   TickManagementDetail,
   AdviceManagement,
-  AccountDetail
+  AccountDetail,
+  StoreManagement,
+  StoreDetail,
 }
