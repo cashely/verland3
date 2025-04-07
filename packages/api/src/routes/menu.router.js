@@ -7,6 +7,8 @@ import Router from "../middles/route";
  */
 import prisma from "../configs/prisma";
 
+import validate from "../utils/validate";
+
 /**
  * 创建一个新的路由实例，并设置需要进行身份验证
  * @type {Router}
@@ -25,7 +27,15 @@ const router = new Router({
  * @returns {object} 200 - 成功响应，包含菜单列表
  * @returns {object} 500 - 服务器内部错误
  */
-router.get('/', async (req, res) => {
+router.get('/',validate(z => (
+    z.object({
+        query: z.object({
+            pageSize: z.number().min(1).default(20),
+            pageNo: z.number().min(1).default(1),
+            name: z.string().optional()
+        })
+    })
+)), async (req, res) => {
     try {
         const { pageSize = 20, pageNo = 1, name } = req.query;
         const whereCondition = {};
@@ -60,7 +70,13 @@ router.get('/', async (req, res) => {
  * @returns {object} 200 - 成功响应，包含菜单详情
  * @returns {object} 500 - 服务器内部错误
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', validate((z) => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const menu = await prisma.menu.findUnique({
@@ -88,7 +104,18 @@ router.get('/:id', async (req, res) => {
  * @returns {object} 200 - 成功响应，包含创建的菜单
  * @returns {object} 500 - 服务器内部错误
  */
-router.post('/', async (req, res) => {
+router.post('/', validate((z) => (
+    z.object({
+        body: z.object({
+            name: z.string().min(1),
+            price: z.number().min(1),
+            description: z.string().min(1),
+            imageIds: z.array(z.string().min(1)).optional(),
+            isRite: z.optional(z.union([z.literal(1), z.literal(2)])),
+            isHandleWay: z.optional(z.union([z.literal(1), z.literal(2)])),
+        })
+    })
+)), async (req, res) => {
     try {
         const { name, price, description, imageIds = [], isRite, isHandleWay } = req.body;
         const menu = await prisma.menu.create({
@@ -125,7 +152,21 @@ router.post('/', async (req, res) => {
  * @returns {object} 200 - 成功响应，包含更新的菜单
  * @returns {object} 500 - 服务器内部错误
  */
-router.put('/:id', async (req, res) => {
+router.put('/:id', validate((z) => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        }),
+        body: z.object({
+            name: z.string().min(1),
+            price: z.number().min(1),
+            description: z.string().min(1),
+            imageIds: z.array(z.string().min(1)).optional(),
+            isRite: z.optional(z.union([z.literal(1), z.literal(2)])),
+            isHandleWay: z.optional(z.union([z.literal(1), z.literal(2)]))
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const { name, price, description, imageIds = [], isRite, isHandleWay } = req.body;
@@ -163,7 +204,13 @@ router.put('/:id', async (req, res) => {
  * @returns {object} 200 - 成功响应，包含删除的菜单
  * @returns {object} 500 - 服务器内部错误
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const menu = await prisma.menu.delete({

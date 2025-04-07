@@ -1,11 +1,20 @@
 import z from "zod";
 import Router from "../middles/route";
 import prisma, { transaction } from "../configs/prisma";
+import validate from "../utils/validate";
 
 const bookGoodRouter = new Router({
     auth: true
 })
-.get('/', (req, res) => {
+.get('/', validate(z => (
+    z.object({
+        query: z.object({
+            title: z.string().optional(),
+            pageSize: z.number().min(1).default(20),
+            pageNo: z.number().min(1).default(1)
+        })
+    })
+)), (req, res) => {
     transaction(async (prisma) => {
         const { title, pageSize = 20, pageNo = 1 } = req.query;
         const bookGood = await prisma.bookGood.findMany({
@@ -28,7 +37,13 @@ const bookGoodRouter = new Router({
         res.response.success(bookGood);
     }, res);
 })
-.get('/:id', async (req, res) => {
+.get('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const bookGood = await prisma.bookGood.findUnique({
@@ -45,21 +60,18 @@ const bookGoodRouter = new Router({
         res.response.error(error.message);
     }
 })
-.post('/', async (req, res) => {
-    try {
-        const { title, price, content, thumbId } = req.body;
-        const validated = z.object({
+.post('/', validate(z => (
+    z.object({
+        body: z.object({
             title: z.string().min(1),
             price: z.number().min(1),
-            content: z.string().min(1)
-        }).safeParse({
-            title,
-            price,
-            content
-        });
-        if (!validated.success) {
-            throw new Error(JSON.stringify(validated.error.format()));
-        }
+            content: z.string().min(1),
+            thumbId: z.string().optional()
+        })
+    })
+)), async (req, res) => {
+    try {
+        const { title, price, content, thumbId } = req.body;
 
         const createResult = await prisma.bookGood.create({
             data: {
@@ -74,7 +86,13 @@ const bookGoodRouter = new Router({
         res.response.error(error.message);
     }
 })
-.delete('/:id', (req, res) => {
+.delete('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        })
+    })
+)), (req, res) => {
     transaction(async (prisma) => {
         const deleteResult = await prisma.bookGood.delete({
             where: {
@@ -84,7 +102,19 @@ const bookGoodRouter = new Router({
         res.response.success(deleteResult);
     }, res);
 })
-.put('/:id', (req, res) => {
+.put('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        }),
+        body: z.object({
+            title: z.string().min(1),
+            price: z.number().min(1),
+            content: z.string().min(1),
+            thumbId: z.string().optional()
+        })
+    })
+)), (req, res) => {
     transaction(async (prisma) => {
         const { id } = req.params;
         const { title, price, content, thumbId } = req.body;

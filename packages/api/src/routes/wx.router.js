@@ -4,6 +4,7 @@ import Router from "../middles/route";
 import prisma from "../configs/prisma";
 import { sendTemplateMessage } from "../utils/wechat.helper";
 import wxConfig from '../configs/wx.config';
+import validate from '../utils/validate';
 
 const router = new Router();
 
@@ -223,7 +224,13 @@ router.post('/wxpay/notify_url', async (req, res) => {
 })
 
 // 查询退款状态
-router.get('/wxpay/refundStatu/:outRefundNo', async (req, res) => {
+router.get('/wxpay/refundStatu/:outRefundNo', validate(z => (
+    z.object({
+        params: z.object({
+            outRefundNo: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { outRefundNo } = req.params;
         const refundResult = await payment.getRefund({ out_refund_no: outRefundNo });
@@ -234,7 +241,13 @@ router.get('/wxpay/refundStatu/:outRefundNo', async (req, res) => {
 })
 
 // 关闭订单
-router.post('/wxpay/closeOrder', async (req, res) => {
+router.post('/wxpay/closeOrder', validate(z => (
+    z.object({
+        body: z.object({
+            outTradeNo: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { outTradeNo } = req.body;
         const closeResult = await payment.close({ out_trade_no: outTradeNo });

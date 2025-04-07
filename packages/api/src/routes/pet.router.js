@@ -1,5 +1,6 @@
 import Router from "../middles/route";
 import prisma from "../configs/prisma";
+import validate from "../utils/validate";
 
 const router = new Router({
     auth: true
@@ -8,7 +9,16 @@ const router = new Router({
 /**
  * @name 获取所有宠物
  */
-router.get('/', async (req, res) => {
+router.get('/', validate(z => (
+    z.object({
+        query: z.object({
+            pageSize: z.number().min(1).default(20),
+            pageNo: z.number().min(1).default(1),
+            userIds: z.array(z.string()).optional(),
+            username: z.string().optional()
+        })
+    })
+)), async (req, res) => {
     try {
 
         const { userIds = [], pageSize = 20, pageNo = 1, username } = req.query;
@@ -52,7 +62,13 @@ router.get('/', async (req, res) => {
 /**
  * @name 根据id获取单只宠物详情
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const pet = await prisma.pet.findUnique({

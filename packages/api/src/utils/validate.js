@@ -1,3 +1,4 @@
+import z from 'zod';
 /**
  *  * 验证函数
  * @param { object } schema 
@@ -5,9 +6,9 @@
  */
 function validate(schema) {
     return (req, res, next) => {
-        const validateResult = schema.safeParse(req);
+        const validateResult = schema(z).safeParse(req);
         if (!validateResult.success) {
-            return res.response.error(validateResult.error);
+            return res.response.error({ message: validateResult.error.issues });
         }
         next();
     };

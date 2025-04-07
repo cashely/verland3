@@ -1,11 +1,20 @@
 import Router from "../middles/route";
 import prisma from "../configs/prisma";
+import validate from "../utils/validate";
 
 const router = new Router({
     auth: true
 });
 
-router.get('/', async (req, res) => {
+router.get('/', validate(z => (
+    z.object({
+        query: z.object({
+            pageSize: z.number().min(1).default(20),
+            pageNo: z.number().min(1).default(1),
+            statu: z.number().int().gte(0).lte(6)
+        })
+    })
+)), async (req, res) => {
     try {
         const { pageSize = 20, pageNo = 1, statu } = req.query;
         const whereCondition = {}
@@ -39,7 +48,13 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const book = await prisma.book.findUnique({
@@ -66,7 +81,18 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        }),
+        body: z.object({
+            statu: z.number().int().gte(0).lte(6),
+            expressNo: z.string().optional(),
+            expressName: z.string().optional()
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const { statu, expressNo, expressName } = req.body;

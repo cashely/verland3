@@ -55,8 +55,8 @@ router.post('/', async (req, res) => {
         console.log(menu, '套餐信息')
         const menuAmount = menu.price;
 
-        // 计算价格
-        const totalAmount = bookGoodsAmount + menuAmount;
+        // 计算价格  总价格 = 附加服务价格 + 套餐价格 + (体重范围 - 1) * 1分
+        const totalAmount = bookGoodsAmount + menuAmount + (weight - 1) * 1;
 
 
         

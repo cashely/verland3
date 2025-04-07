@@ -1,13 +1,19 @@
 import Router from "../../middles/route";
 import prisma from "../../configs/prisma";
 import payment from "../../utils/wechat.pay.sdk";
-import { boolean } from "zod";
+import validate from "../../utils/validate";
 
 const router = new Router({
     auth: true
 });
 
-router.post('/prepay', async (req, res) => {
+router.post('/prepay', validate(z => (
+    z.object({
+        body: z.object({
+            bookId: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         // 订单id
         const { bookId: id } = req.body;
@@ -62,7 +68,13 @@ router.post('/prepay', async (req, res) => {
     }
 })
 
-router.post('/pay', async (req, res) => {
+router.post('/pay', validate(z => (
+    z.object({
+        body: z.object({
+            prepayId: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { prepayId } = req.body;
 
@@ -101,7 +113,13 @@ router.post('/pay', async (req, res) => {
 /**
  * 退款
  */
-router.post('/refund/:bookId', async (req, res) => {
+router.post('/refund/:bookId', validate(z => (
+    z.object({
+        params: z.object({
+            bookId: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { bookId: id } = req.params;
         const book = await prisma.book.findUnique({

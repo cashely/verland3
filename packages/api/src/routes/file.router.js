@@ -2,6 +2,7 @@ import multer from 'multer';
 import path from 'node:path';
 import Router from '../middles/route';
 import prisma from '../configs/prisma';
+import validate from '../utils/validate';
 import fs from 'node:fs'
 
 const fileRouter = new Router({
@@ -36,7 +37,11 @@ fileRouter.post('/', (req, res, next) => {
             _cb(null, `${_file.originalname}`)
         }
     })
-}).single('file'), async (req, res) => {
+}).single('file'), validate(z => (
+    z.object({
+        file: z.any()
+    })
+)), async (req, res) => {
     const { file } = req;
 
     if (!file) {

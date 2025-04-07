@@ -1,5 +1,6 @@
 import Router from "../middles/route.js";
 import prisma, { transaction } from "../configs/prisma.js";
+import validate from "../utils/validate.js";
 
 const router = new Router({
     auth: true
@@ -8,7 +9,15 @@ const router = new Router({
 /**
  * 获取宠物门店列表
  */
-router.get('/', async (req, res) => {
+router.get('/', validate(z => (
+    z.object({
+        query: z.object({
+            pageSize: z.number().min(1).default(20),
+            pageNo: z.number().min(1).default(1),
+            name: z.string().optional()
+        })
+    })
+)), async (req, res) => {
     try {
         const { pageSize = 20, pageNo = 1, name } = req.query;
         const whereCondition = {};
@@ -35,7 +44,17 @@ router.get('/', async (req, res) => {
 /**
  * 新建宠物门店
  */
-router.post('/', async (req, res) => {
+router.post('/', validate(z => (
+    z.object({
+        body: z.object({
+            name: z.string().min(1),
+            address: z.string().min(1),
+            tel: z.string().min(1),
+            contact: z.string().min(1),
+            price: z.number().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { name, address, tel, contact, price} = req.body;
         await transaction(async (tx) => {
@@ -58,7 +77,20 @@ router.post('/', async (req, res) => {
 /**
  * 更新宠物门店
  */
-router.put('/:id', async (req, res) => {
+router.put('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        }),
+        body: z.object({
+            name: z.string().min(1),
+            address: z.string().min(1),
+            tel: z.string().min(1),
+            contact: z.string().min(1),
+            price: z.number().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const { name, address, tel, contact, price} = req.body;
@@ -85,7 +117,13 @@ router.put('/:id', async (req, res) => {
 /**
  * 获取单个宠物门店
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const petStore = await prisma.petStore.findUnique({
