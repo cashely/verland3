@@ -77,6 +77,28 @@ const TICKET_STATUS_TYPE = {
 const DEFAULT_IMAGE =
   'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0';
 
+const WEIGHT_OPTIONS = ['0-5斤', '5-10斤', '10-20斤', '20斤以上'];
+
+//上门服务时间段
+const SERVICE_TIME_RANGES = [
+  '10:00',
+  '11:00',
+  '12:00',
+  '13:00',
+  '14:00',
+  '15:00',
+  '16:00',
+  '17:00',
+  '18:00',
+  '19:00',
+  '20:00',
+  '21:00',
+  '22:00',
+];
+
+//仪式服务时间段
+const RITE_SERVICE_TIME_RANGES = ['10:00', '12:00', '14:00', '16:00', '24:00'];
+
 //退款通知
 const REFUND_TMP = 'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY';
 //付款通知
@@ -93,4 +115,7 @@ export {
   TICKET_STATUS_TYPE,
   REFUND_TMP,
   PAY_TMP,
+  WEIGHT_OPTIONS,
+  SERVICE_TIME_RANGES,
+  RITE_SERVICE_TIME_RANGES,
 };

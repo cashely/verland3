@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View, PickerView, PickerViewColumn } from '@tarojs/components';
-import { AtButton, AtActionSheet } from 'taro-ui';
+import { AtActionSheet } from 'taro-ui';
+import { showToast } from '@tarojs/taro';
 import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
@@ -12,14 +13,14 @@ export default (props) => {
   const year = date.getFullYear();
   const months: Array<number> = [];
   const days: Array<number> = [];
-
+  console.log(props.data, 'fsafasfsa');
   for (let i = 1; i <= 12; i++) {
-    if (i >= date.getMonth() + 1) {
+    if (i >= Math.max(date.getMonth() + 1, props.data.minDate.month)) {
       months.push(i);
     }
   }
   for (let i = 1; i <= 31; i++) {
-    if (i >= date.getDate()) {
+    if (i >= Math.max(date.getDate(), props.data.minDate.day)) {
       days.push(i);
     }
   }
@@ -48,7 +49,7 @@ export default (props) => {
   }
 
   //2小时间隔
-  const timeRanges = ['10:00', '12:00', '14:00', '16:00'];
+  // const timeRange = ['10:00', '12:00', '14:00', '16:00'];
 
   const [data, setData] = useState({
     month: 2,
@@ -56,23 +57,76 @@ export default (props) => {
     value: [0, 0, 0, 0],
   });
 
-  useEffect(() => {
-    countData(data.value);
-    console.log(timeRanges.filter((item) => isTimeBetween(item)));
-  }, []);
+  const [availableRanges, setAvailableRanges] = useState<string[]>([]);
 
-  const countData = (val) => {
+  useEffect(() => {
+    console.log('打开日期组件弹框', data);
+    // countData(data.value, () => {});
+    setData({
+      ...data,
+      value: [0, 0, 0, 0],
+    });
+  }, [props.isOpened]);
+
+  // 筛选未过期的时间段
+  const filterAvailableRanges = (times: string[]) => {
+    return times.filter((slot) => {
+      // 将时间段转换为今天的日期时间对象
+      const slotTime = dayjs()
+        .set('hour', parseInt(slot.split(':')[0]))
+        .set('minute', parseInt(slot.split(':')[1] || '0'));
+
+      // 比较时间段是否在当前时间之后
+      return slotTime.isAfter(dayjs());
+    });
+  };
+
+  useEffect(() => {
+    const timeRanges = props.data.timeRange;
+    if (props.data.supportAll) {
+      console.log('支持全部', timeRanges);
+      setAvailableRanges(timeRanges);
+    } else {
+      setAvailableRanges(filterAvailableRanges(timeRanges));
+    }
+  }, [props.data.timeRange.length]);
+
+  const countData = (val, callback) => {
     setData((_data) => {
       _data.month = months[val[1]];
       _data.day = days[val[2]];
       _data.value = val;
+      callback && callback(_data);
       return _data;
     });
   };
 
   const onChange = (e) => {
+    console.log(e, '+++++');
+    if (!props.data.supportAll) {
+      const dayIndex = e.detail.value[2];
+      const monthIndex = e.detail.value[1];
+      console.log(dayjs().format('M'), '+++++');
+      if (
+        months[monthIndex] > +dayjs().format('M') ||
+        days[dayIndex] > +dayjs().format('D')
+      ) {
+        console.log(dayjs().format('D'), '+++++');
+        setAvailableRanges(props.data.timeRange);
+      } else {
+        setAvailableRanges(filterAvailableRanges(props.data.timeRange));
+      }
+    }
     const val = e.detail.value;
-    countData(val);
+    countData(val, (value) => {
+      props?.onDatePickerColumn &&
+        props.onDatePickerColumn({
+          propName: props.data.formProp,
+          value,
+          setAvailableRanges,
+          selectedTime: `${year}-${padZero(data.month)}-${padZero(data.day)}`,
+        });
+    });
   };
 
   const closeSheet = () => {
@@ -89,12 +143,23 @@ export default (props) => {
   };
 
   const handleConfirm = () => {
-    console.log(data, props.data.formProp, '--------');
-    props?.onConfirm?.({
-      formProp: props.data.formProp,
-      value: `${year}-${padZero(data.month)}-${padZero(data.day)} ${
-        timeRanges[data.value[3]]
-      }`,
+    const curTime = availableRanges[data.value[3]];
+    if (!curTime) {
+      return showToast({
+        title: '请选择具体时间段',
+        icon: 'none',
+      });
+    }
+    console.log(data, props.data, '----46---');
+    setData((d) => {
+      props?.onConfirm?.({
+        formProp: props.data.formProp,
+        value: `${year}-${padZero(data.month)}-${padZero(data.day)} ${
+          availableRanges[data.value[3]]
+        }`,
+      });
+      // d.value = [0, 0, 0, 0];
+      return d;
     });
     closeSheet();
   };
@@ -134,7 +199,7 @@ export default (props) => {
             })}
           </PickerViewColumn>
           <PickerViewColumn>
-            {timeRanges.map((item) => {
+            {availableRanges.map((item) => {
               return <View className="column-item">{item}</View>;
             })}
           </PickerViewColumn>

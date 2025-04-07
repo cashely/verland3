@@ -1,23 +1,28 @@
+import {
+  RITE_SERVICE_TIME_RANGES,
+  SERVICE_TIME_RANGES,
+  WEIGHT_OPTIONS,
+} from '@/constants';
 const baseInfoFormList = [
-  {
-    label: '联系人',
-    prop: 'username',
-    type: 'input',
-    itemProps: {
-      placeholder: '请填写联系人的名字',
-      // required: true,
-    },
-    rules: [],
-  },
-  {
-    label: '联系电话',
-    prop: 'phone',
-    type: 'phone',
-    itemProps: {
-      placeholder: '请填写联系人的电话',
-    },
-    rules: [],
-  },
+  // {
+  //   label: '联系人',
+  //   prop: 'username',
+  //   type: 'input',
+  //   itemProps: {
+  //     placeholder: '请填写联系人的名字',
+  //     // required: true,
+  //   },
+  //   rules: [],
+  // },
+  // {
+  //   label: '联系电话',
+  //   prop: 'phone',
+  //   type: 'phone',
+  //   itemProps: {
+  //     placeholder: '请填写联系人的电话',
+  //   },
+  //   rules: [],
+  // },
   {
     label: '爱宠名字',
     prop: 'petname',
@@ -42,14 +47,13 @@ const baseInfoFormList = [
     rules: [],
   },
   {
-    label: '爱宠体重(kg)',
+    label: '爱宠体重',
     prop: 'weight',
-    type: 'digit',
-    maxLength: 2,
+    type: 'selector',
     itemProps: {
-      placeholder: '请输入数值',
+      placeholder: '请选择',
     },
-    rules: [],
+    options: WEIGHT_OPTIONS,
   },
 ];
 
@@ -66,13 +70,14 @@ const otherFormList = [
     rules: [],
   },
   {
-    label: '上门服务日期', //"上门服务日期",
+    label: '上门服务时间', //"上门服务日期",
     prop: 'bookDateTime',
     type: 'picker-date',
     itemProps: {
-      placeholder: '请选择上门服务日期',
+      placeholder: '请选择',
     },
     rules: [],
+    timeRange: SERVICE_TIME_RANGES,
   },
   // {
   //   label: "收取地址",
@@ -99,12 +104,12 @@ const otherFormList = [
     options: [
       {
         label: '是',
-        value: 1,
+        value: '1',
         checked: true,
       },
       {
         label: '否',
-        value: 2,
+        value: '2',
       },
     ],
     rules: [],
@@ -117,21 +122,23 @@ const otherFormList = [
       placeholder: '请选择预约仪式日期',
     },
     rules: [],
+    timeRange: RITE_SERVICE_TIME_RANGES,
+    supportAll: true,
     hidden: false,
   },
   {
-    label: '遗物处理方式',
+    label: '纪念物获取方式',
     prop: 'handleWay',
     type: 'radio',
     options: [
       {
-        label: '邮寄寄送',
-        value: '1',
+        label: '自行提取',
+        value: '2',
         checked: true,
       },
       {
-        label: '自行提取',
-        value: '2',
+        label: '邮寄寄送',
+        value: '1',
       },
       {
         label: '放弃处置',
@@ -153,13 +160,16 @@ const otherFormList = [
     hidden: true,
   },
   {
-    label: '遗物处理时间',
+    label: '纪念物获取时间',
     prop: 'handleDateTime',
     type: 'picker-date',
     itemProps: {
       placeholder: '请选择遗物处理时间',
     },
     rules: [],
+    hidden: false,
+    timeRange: SERVICE_TIME_RANGES,
+    supportAll: true,
   },
   {
     label: '接收地址',

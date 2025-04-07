@@ -27,7 +27,7 @@ import dateIcon from '../../assets/imgs/date-icon.png';
 import { formatAddress } from '@/utils';
 import './index.scss';
 export default forwardRef((props, ref) => {
-  const { formList = [], formModel = {}, children, handleSubmit } = props;
+  const { formList = [], formModel = {}, handleSubmit } = props;
 
   const [otherConfig, setOtherConfig] = useState({
     dtPicker: {
@@ -35,25 +35,26 @@ export default forwardRef((props, ref) => {
       data: {
         formProp: '',
         value: '',
+        timeRange: [],
+        supportAll: false,
+        minDate: {
+          month: 0,
+          day: 0,
+        },
       },
     },
   });
-  const [_formList, setFormList] = useState([]);
-  const [formData, setFormData] = useState({});
+  const [_formList, setFormList] = useState(formList);
+  const [formData, setFormData] = useState(formModel);
   const [tabIndex, setTabIndex] = useState(0);
   const handleChange = (e, formItem: Record<string, any>) => {
-    console.log(e, formItem, 'handleChange');
-    const _formData = { ...formData };
-
+    console.log(e, formItem, 'handleChange46');
+    const Obj = { ...formData };
     if (formItem?.type === 'tabs') {
       setTabIndex(e);
-      _formData[formItem.prop] = formItem.tabsOptions[e]?.id;
-      setFormData({
-        ..._formData,
-        [formItem.prop]: formItem.tabsOptions[e]?.id,
-      });
+      Obj[formItem.prop] = formItem.tabsOptions[e]?.id;
     } else if (formItem?.type === 'radio') {
-      _formData[formItem.prop] = e.detail.value;
+      Obj[formItem.prop] = e.detail.value;
       const curObj = _formList.find((item) => item.prop === formItem.prop);
 
       curObj?.options.forEach((item) => {
@@ -62,39 +63,14 @@ export default forwardRef((props, ref) => {
       // children?.handleRiteChange?.(e.detail.value);
       if (formItem.prop === 'isRite') {
         _formList.find((item) => item.prop === 'riteDateTime').hidden =
-          e.detail.value === '0';
-        console.log('isRite', e.detail.value, '++++++');
-      } else if (formItem.prop === 'handleWay') {
-        console.log(e.detail.value, 'e.detail.value');
-        formData['handleWayCheck'] = '';
-        _formList.find((item) => item.prop === 'handleWayCheck').hidden =
-          e.detail.value !== '3';
-        if (e.detail.value === '3') formData['handleDateTime'] = null;
-        _formList.find((item) => item.prop === 'handleDateTime').hidden =
-          e.detail.value === '3';
+          e.detail.value === '2';
+        Obj[formItem.prop] = e.detail.value;
       }
-
-      setFormData({
-        ..._formData,
-        [formItem.prop]: e.detail.value,
-      });
+      Obj[formItem.prop] = e.detail.value;
       setFormList([..._formList]);
     } else if (formItem?.type === 'checkbox') {
       if (formItem.prop === 'handleWayCheck') {
-        _formData[formItem.prop] = e.detail.value;
-        const curObj = _formList.find((item) => item.prop === formItem.prop);
-        console.log(curObj);
-        // curObj?.options.forEach((item) => {
-        //   item.checked = item.value === e.detail.value;
-        // });
-        // // children?.handleRiteChange?.(e.detail.value);
-        // _formList.find((item) => item.prop === "legcyWayCheck").hidden =
-        //   e.detail.value === "0";
-        setFormData({
-          ..._formData,
-          [formItem.prop]: e.detail.value,
-        });
-        setFormList([..._formList]);
+        Obj[formItem.prop] = e.detail.value;
       }
     } else if (formItem?.type === 'multiSelector') {
       const selectValues = e.detail.value;
@@ -102,21 +78,22 @@ export default forwardRef((props, ref) => {
         formItem.options[0][selectValues[0]] +
         '/' +
         formItem.options[1][selectValues[1]];
-      formData[formItem.prop] = getLabel;
-      setFormData({
-        ..._formData,
-        [formItem.prop]: getLabel,
-      });
+      Obj[formItem.prop] = getLabel;
+    } else if (formItem?.type === 'selector') {
+      const getLabel = formItem.options[e.detail.value];
+      Obj[formItem.prop] = getLabel;
     } else {
-      _formData[formItem.prop] = e;
-      setFormData((d) => {
-        return {
-          ...d,
-          [formItem.prop]: e,
-        };
-      });
+      console.log('handleChangexxxxxx', formItem, e);
+      Obj[formItem.prop] = e;
     }
-    console.log(_formData);
+
+    setFormData((f) => {
+      props.onFormChange && props?.onFormChange?.(formItem.prop, Obj);
+      return {
+        ...f,
+        ...Obj,
+      };
+    });
   };
 
   const getlocal = (formItem: Record<string, any>) => {
@@ -163,7 +140,7 @@ export default forwardRef((props, ref) => {
     });
   };
   const handleListClick = (formItem) => {
-    console.log('item click', formItem);
+    console.log('item click46', formItem);
 
     if (formItem.type === 'picker-date') {
       setOtherConfig((state: any) => {
@@ -175,6 +152,12 @@ export default forwardRef((props, ref) => {
             data: {
               ...state.dtPicker.data,
               formProp: formItem.prop,
+              timeRange: formItem.timeRange,
+              supportAll: formItem.supportAll,
+              minDate: formItem.minDate ?? {
+                month: 0,
+                day: 0,
+              },
             },
           },
         };
@@ -227,10 +210,34 @@ export default forwardRef((props, ref) => {
   //时间选择确认回调
   const handleDateTimeConfirm = ({ formProp, value }) => {
     console.log('选择时间的值', formProp, value);
-    setFormData({
-      ...formData,
-      [formProp]: value,
+    setFormData((d) => {
+      d[formProp] = value;
+      //筛选可以预约的时间段
+      props.filterTimes && props.filterTimes(formProp, value, d);
+      return d;
     });
+  };
+
+  //pickerCloumn更改回调
+  const handleDatePickerColumn = ({
+    propName,
+    value,
+    setAvailableRanges,
+    selectedTime,
+  }) => {
+    console.log('选择日期的值', propName, value);
+    // setFormData({
+    //   ...formData,
+    //   [formProp]: value,
+    // });
+    props.onDatePickColumnChange &&
+      props.onDatePickColumnChange(
+        propName,
+        value,
+        setAvailableRanges,
+        selectedTime,
+        formData
+      );
   };
 
   const validateForm = (): boolean => {
@@ -299,36 +306,9 @@ export default forwardRef((props, ref) => {
   }, [formList]);
 
   useEffect(() => {
+    console.log('首次加载FormModel46', formModel);
     setFormData(formModel);
   }, [formModel]);
-
-  //初始化数据
-  useEffect(() => {
-    console.log('初始化', formModel);
-    const collectData = {};
-    _formList?.forEach((item) => {
-      if (item.type === 'radio') {
-        // Check if
-
-        if (!!formData[item.prop]) {
-          const selectIndex = item.options.findIndex(
-            (item) => item.value === formData[item.prop]
-          );
-          item.options[selectIndex].checked = true;
-          return;
-        }
-        collectData[item.prop] =
-          formData[item.prop] ??
-          (item.options.find((option) => option.checked)?.value ||
-            item.options[0].value);
-
-        setFormData({
-          ...formData,
-          ...collectData,
-        });
-      }
-    });
-  }, []);
 
   return (
     <>
@@ -338,7 +318,7 @@ export default forwardRef((props, ref) => {
       <AtForm className="addForm" onSubmit={onSubmit} onReset={onReset}>
         {_formList.map((formItem, index) => (
           <>
-            {['digit', 'input'].includes(formItem.type) ? (
+            {['digit', 'input'].includes(formItem.type) && !formItem.hidden ? (
               <AtInput
                 key={index}
                 name={formItem.prop}
@@ -354,7 +334,7 @@ export default forwardRef((props, ref) => {
                 onChange={(e) => handleChange(e, formItem)}
               />
             ) : null}
-            {formItem.type === 'phone' ? (
+            {formItem.type === 'phone' && !formItem.hidden ? (
               <AtInput
                 key={index}
                 name={formItem.prop}
@@ -371,7 +351,7 @@ export default forwardRef((props, ref) => {
                 maxLength={formItem.maxLength || 12}
               />
             ) : null}
-            {formItem.type === 'radio' ? (
+            {formItem.type === 'radio' && !formItem.hidden ? (
               <View
                 className="flex items-center justify-between customItem"
                 key={index}
@@ -418,7 +398,7 @@ export default forwardRef((props, ref) => {
                 })}
               </View>
             ) : null}
-            {formItem.type === 'textarea' ? (
+            {formItem.type === 'textarea' && !formItem.hidden ? (
               <View className="customItem" key={index}>
                 <View className="mb-20 label">
                   {formItem.itemProps?.required ? (
@@ -484,7 +464,7 @@ export default forwardRef((props, ref) => {
                 </AtList>
               </View>
             ) : null}
-            {formItem.type === 'location' ? (
+            {formItem.type === 'location' && !formItem.hidden ? (
               <View className="formItemView" key={index}>
                 <AtList className="flex items-center justify-between">
                   <AtListItem
@@ -519,10 +499,12 @@ export default forwardRef((props, ref) => {
                 </AtList>
               </View>
             ) : null}
-            {formItem.type === 'multiSelector' ? (
+
+            {['multiSelector', 'selector'].includes(formItem.type) &&
+            !formItem.hidden ? (
               <Picker
                 range={formItem?.options}
-                mode="multiSelector"
+                mode={formItem.type}
                 onChange={(e) => handleChange(e, formItem)}
                 value={formData[formItem.prop]}
                 key={index}
@@ -557,7 +539,7 @@ export default forwardRef((props, ref) => {
                 </AtList>
               </Picker>
             ) : null}
-            {formItem.type === 'tabs' ? (
+            {formItem.type === 'tabs' && !formItem.hidden ? (
               <View className="tabs customItem" key={index}>
                 <View className="flex items-center">
                   <View className="label">
@@ -594,6 +576,7 @@ export default forwardRef((props, ref) => {
         data={otherConfig.dtPicker.data}
         onConfirm={handleDateTimeConfirm}
         onClose={handleCloseDateTimePicker}
+        onDatePickerColumn={handleDatePickerColumn}
       >
         <Text>slot</Text>
       </DateTimePicker>
