@@ -15,7 +15,6 @@ router.post('/', validate(z => (
             area: z.string().min(1),
             detail: z.string().min(1),
             petname: z.string().min(1),
-            age: z.number().min(1),
             type: z.string().min(1),
             subType: z.string().min(1),
             bookGoodIds: z.array(z.string()).optional(),
