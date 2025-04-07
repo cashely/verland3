@@ -48,7 +48,10 @@ router.get('/:id', validate(z => (
         const ticket = await prisma.ticket.findUnique({
             where: {
                 id
-            }
+            },
+            include: {
+                book: true
+            },
         });
         res.response.success(ticket);
     } catch (error) {
