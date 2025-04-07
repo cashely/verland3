@@ -1,5 +1,6 @@
 import Router from "../../middles/route"
 import prisma, { transaction } from "../../configs/prisma"
+import validate from "../../utils/validate"
 
 const router = new Router({
     auth: true
@@ -8,7 +9,15 @@ const router = new Router({
 /**
  * 获取宠物门店列表
  */
-router.get('/', async (req, res) => {
+router.get('/', validate(z => (
+    z.object({
+        query: z.object({
+            pageSize: z.number().min(1).default(20),
+            pageNo: z.number().min(1).default(1),
+            name: z.string().optional()
+        })
+    })
+)), async (req, res) => {
     try {
         const { pageSize = 20, pageNo = 1, name } = req.query;
         const whereCondition = {};

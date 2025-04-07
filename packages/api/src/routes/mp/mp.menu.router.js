@@ -8,6 +8,11 @@ import Router from "../../middles/route";
 import prisma from "../../configs/prisma";
 
 /**
+ * 导入验证中间件
+ */
+import validate from "../../utils/validate";
+
+/**
  * 创建一个新的路由实例，并设置需要进行身份验证
  * @type {Router}
  */
@@ -25,7 +30,15 @@ const router = new Router({
  * @returns {object} 200 - 成功响应，包含菜单列表
  * @returns {object} 500 - 服务器内部错误
  */
-router.get('/', async (req, res) => {
+router.get('/', validate(z => (
+    z.object({
+        query: z.object({
+            pageSize: z.number().min(1).default(20),
+            pageNo: z.number().min(1).default(1),
+            name: z.string().optional()
+        })
+    })
+)), async (req, res) => {
     try {
         const { pageSize = 20, pageNo = 1, name } = req.query;
         const whereCondition = {};
@@ -57,7 +70,13 @@ router.get('/', async (req, res) => {
  * @returns {object} 200 - 成功响应，包含菜单详情
  * @returns {object} 500 - 服务器内部错误
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const menu = await prisma.menu.findUnique({

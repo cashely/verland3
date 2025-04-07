@@ -1,11 +1,19 @@
 import Router from "../../middles/route";
 import prisma from "../../configs/prisma";
+import validate from "../../utils/validate";
 
 const router = new Router({
     auth: true
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validate(z => (
+    z.object({
+        body: z.object({
+            type:z.union([z.literal(1), z.literal(2)]).default(1),
+            content: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { type, content } = req.body;
         const { id } = req.user;
@@ -22,7 +30,14 @@ router.post('/', async (req, res) => {
     }
 })
 
-router.get('/', async (req, res) => {
+router.get('/', validate(z => (
+    z.object({
+        query: z.object({
+            pageSize: z.number().min(1).default(20),
+            pageNo: z.number().min(1).default(1),
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.user;
         const { pageSize = 20, pageNo = 1 } = req.query;
@@ -45,7 +60,13 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const advise = await prisma.advise.findUnique({

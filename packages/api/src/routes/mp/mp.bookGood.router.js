@@ -1,12 +1,20 @@
 import Router from '../../middles/route';
 import prisma from '../../configs/prisma';
+import validate from '../../utils/validate';
 
 const router = new Router({
     auth: true,
 });
 
 
-router.get('/', async (req, res) => {
+router.get('/', validate(z => (
+    z.object({
+        query: z.object({
+            pageSize: z.number().min(1).default(20),
+            pageNo: z.number().min(1).default(1),
+        })
+    })
+)), async (req, res) => {
     try {
         const { pageSize = 20, pageNo = 1 } = req.query;
         const bookGoods = await prisma.bookGood.findMany({
@@ -25,7 +33,13 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string(),
+        }),
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const bookGood = await prisma.bookGood.findUnique({

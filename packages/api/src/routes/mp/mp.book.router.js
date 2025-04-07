@@ -1,12 +1,39 @@
 import Router from "../../middles/route";
 import prisma, { transaction } from "../../configs/prisma";
 import payment from "../../utils/wechat.pay.sdk";
+import validate from "../../utils/validate";
 
 const router = new Router({
     auth: true
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validate(z => (
+    z.object({
+        body: z.object({
+            province: z.string().min(1),
+            city: z.string().min(1),
+            area: z.string().min(1),
+            detail: z.string().min(1),
+            petname: z.string().min(1),
+            weight: z.number().int().min(1),
+            age: z.number().min(1),
+            type: z.string().min(1),
+            subType: z.string().min(1),
+            bookGoodIds: z.array(z.string()).optional(),
+            menuId: z.string().min(1),
+            bookDateTime: z.string().min(1),
+            handleWay: z.string().optional(),
+            handleDateTime: z.string().optional(),
+            isRite: z.union([z.literal(1), z.literal(2)]).default(2),
+            riteDateTime: z.string().optional(),
+            mark: z.string().optional(),
+            payChannel: z.number().int().default(1),
+            channel: z.number().int().default(1),
+            phone: z.string().length(11),
+            username: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     transaction(async (prisma) => {
         const { province, city, area, detail } = req.body;
         const { id } = req.user;
@@ -20,7 +47,7 @@ router.post('/', async (req, res) => {
             }
         });
 
-        const { petname, weight, age, type, subType, statu = 2 } = req.body;
+        const { petname, weight, age, type, subType } = req.body;
         const pet = await prisma.pet.create({
             data: {
                 userId: id,
@@ -29,7 +56,7 @@ router.post('/', async (req, res) => {
                 age,
                 type,
                 subType,
-                statu
+                statu: 2
             }
         });
 
@@ -51,8 +78,6 @@ router.post('/', async (req, res) => {
                 id: menuId
             }
         });
-
-        console.log(menu, '套餐信息')
         const menuAmount = menu.price;
 
         // 计算价格  总价格 = 附加服务价格 + 套餐价格 + (体重范围 - 1) * 1分
@@ -106,7 +131,15 @@ router.post('/', async (req, res) => {
     }, res);
 })
 
-router.get('/', async (req, res) => {
+router.get('/', validate(z => (
+    z.object({
+        query: z.object({
+            statu: z.number().int().optional(),
+            pageSize: z.number().min(1).default(20),
+            pageNo: z.number().min(1).default(1),
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.user;
         const { statu, pageSize = 20, pageNo = 1 } = req.query;
@@ -141,7 +174,13 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const book = await prisma.book.findUnique({

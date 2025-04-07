@@ -36,7 +36,13 @@ router.get('/', validate(z => (
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const ticket = await prisma.ticket.findUnique({
@@ -50,7 +56,17 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', validate(z => (
+    z.object({
+        body: z.object({
+            bookId: z.string().min(1),
+            type: z.union([z.literal(1), z.literal(2)]).default('phone'),
+            number: z.string().optional(),
+            email: z.string().min(1),
+            header: z.string().optional()
+        })
+    })
+)), async (req, res) => {
     try {
         const { bookId, type, number, email, header } = req.body;
         const { id } = req.user;

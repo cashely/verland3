@@ -1,11 +1,20 @@
 import Router from "../../middles/route";
 import prisma from "../../configs/prisma";
+import validate from "../../utils/validate";
 
 const router = new Router({
     auth: true
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validate(z => (
+    z.object({
+        body: z.object({
+            score: z.number().min(1).max(5),
+            content: z.string().min(1),
+            bookId: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { score, content, bookId } = req.body;
         const { id } = req.user;
@@ -33,7 +42,15 @@ router.post('/', async (req, res) => {
     }
 })
 
-router.get('/', async (req, res) => {
+router.get('/', validate(z => (
+    z.object({
+        query: z.object({
+            bookIds: z.string().min(1),
+            pageSize: z.number().min(1).default(20),
+            pageNo: z.number().min(1).default(1),
+        })
+    })
+)), async (req, res) => {
     try {
         const { bookIds = [], pageSize = 20, pageNo = 1 } = req.query;
         const { id } = req.user;
@@ -60,7 +77,13 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', validate(z => (
+    z.object({
+        params: z.object({
+            id: z.string().min(1)
+        })
+    })
+)), async (req, res) => {
     try {
         const { id } = req.params;
         const advise = await prisma.advise.findUnique({
