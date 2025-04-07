@@ -41,9 +41,9 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
     {
       formModel = {},
       formList = [],
-      onSubmit = () => { },
-      onReset = () => { },
-      setFormLoading = () => { },
+      onSubmit = () => {},
+      onReset = () => {},
+      setFormLoading = () => {},
     }: any,
     ref
   ) => {
@@ -67,34 +67,34 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
     };
 
     //暂时用不到
-    const handleSubmit = (values?: any) => {
-      console.log('提交表单++++++', detailForm, values);
-      setTimeout(() => {
-        onSubmit?.(values);
-      }, 2000);
-    };
+    // const handleSubmit = (values?: any) => {
+    //   console.log('提交表单43++++++', detailForm, values);
+    //   setTimeout(() => {
+    //     onSubmit?.({
+    //       ...values,
+    //       fileList: undefined,
+    //     });
+    //   }, 2000);
+    // };
 
     //图片上传成功
-    const handleUploadSuccess = (
-      formItem: any,
-      fileObj: any
-    ) => {
-      console.log(formItem, '上传成功441', fileObj);
+    const handleUploadSuccess = (formItem: any, fileId: string) => {
+      console.log(formItem, '上传成功43', fileId);
       setFormLoading(false);
       //设置图片路径到表单上
-      detailForm.setFieldValue(formItem.prop, fileObj.url); //thumb
+      detailForm.setFieldValue(formItem.prop, '111');
+      detailForm.setFieldValue(formItem.putProp, fileId); //thumb
       setFormData((d: any) => {
         return {
           ...d,
-          [formItem.prop]: fileObj[formItem.prop],
-          [formItem.putProp]: fileObj[formItem.putProp],
+          [formItem.putProp]: fileId,
         };
       });
     };
 
     //表单值变化
     const handleValueChange = (_: any, values: Record<string, any>) => {
-      console.log('#42', _, values)
+      console.log('#111143', _, values);
       setFormData({
         ...formData,
         ...values,
@@ -102,73 +102,48 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
       });
     };
 
-
-
     // _fileList={formatFileList(formData, item.prop)}
-    const formatFileList = (formData: any) => {
-      console.log('42+++formData+++', formData, '+++42');
+    const formatFileList = (item: any) => {
+      console.log('43+++formData+++', formData, '+++43');
       const fileList = [] as any;
-      if (formData.thumb) {
-        fileList.push(
-          {
-            url: FILE_URL + '/' + formData?.thumb,
-            name: formData.title || '缩略图',
-            uid: formData?.id,
-          },
-        )
+      if (formData[item.prop]) {
+        fileList.push({
+          url: FILE_URL + '/' + formData[item.prop],
+          name: formData.title || '缩略图',
+          uid: formData?.id,
+        });
       }
-      setFormData(d => {
-        return {
-          ...d,
-          fileList,
-        }
-      });
-
-      // return formData[item.propName]
-      //   ? [
-      //       {
-      //         url:
-      //           FILE_URL +
-      //           '/' +
-      //           (formData['file']
-      //             ? formData['file']?.path
-      //             : formData[propName]),
-      //         name: formData['file'] ? formData['file']?.title : '',
-      //       },
-      //     ]
-      //   : [];
+      return fileList;
     };
 
-
-    const handleDeleteFile = (fileId: string) => {
-      console.log('删除文件42', fileId)
+    const handleDeleteFile = (putProp: string, fileId: string) => {
+      console.log('删除文件43', fileId, formData);
       setFormData((d: any) => {
         return {
           ...d,
-          fileList: formData.fileList.filter((item: any) => item.uid !== fileId)
-        }
+          [putProp]: undefined,
+          thumb: undefined,
+        };
       });
-    }
-
+    };
 
     //只能用setFieldsValue在初始化的时候设置默认值
     useEffect(() => {
       console.log(formModel, 'formModel变更441');
-      detailForm.setFieldsValue(formModel)
-      formatFileList(formModel);
+      detailForm.setFieldsValue(formModel);
+      // formatFileList(formModel);
     }, [formModel]);
-
 
     return (
       <Form
-        layout='vertical'
+        layout="vertical"
         // labelCol={{ span: 8 }}
         // wrapperCol={{ span: 16 }}
         initialValues={formData}
         form={detailForm}
         name="detailForm"
         colon={true}
-        onFinish={handleSubmit}
+        // onFinish={handleSubmit}
         labelAlign="left"
         onValuesChange={handleValueChange}
       >
@@ -229,13 +204,14 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
                     {/* {JSON.stringify(item.uploadProps)} */}
                     <UploadButton
                       name={item.prop}
-                      onUploadSuccess={(fileObj) =>
-                        handleUploadSuccess(item, fileObj)
+                      putProp={item.putProp}
+                      onUploadSuccess={(fileId) =>
+                        handleUploadSuccess(item, fileId)
                       }
                       onDeleteFile={handleDeleteFile}
                       setFormLoading={setFormLoading}
                       uploadProps={item.uploadProps}
-                      receiveFileList={formData.fileList}
+                      receiveFileList={() => formatFileList(item)}
                     >
                       {/* {
                    (isUploading: boolean) => {
@@ -276,7 +252,7 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
 
         </div> : null
       } */}
-      </Form >
+      </Form>
     );
   }
 );

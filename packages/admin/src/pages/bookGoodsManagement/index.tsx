@@ -41,9 +41,12 @@ export default function appointManagement() {
         formConfig.formModel = {};
         if (record?.id) {
           formConfig.formModel = {
-            ...record,
+            title: record.title,
+            id: record?.id,
+            content: record?.content,
             price: record?.price / 100,
-            thumb: record?.thumb?.path,
+            thumb: record?.thumb.path,
+            thumbId: record?.thumb.id,
           };
         }
       })

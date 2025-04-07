@@ -69,7 +69,7 @@ const detailItems = [
   {
     label: '发票附件',
     prop: 'file',
-    type: 'image',
+    type: 'file',
   },
   {
     label: '发票抬头',
@@ -118,13 +118,15 @@ const formConfig = {
   formList: [
     {
       label: '发票附件',
-      prop: 'fileId',
+      prop: 'file',
+      putProp: 'fileId',
       type: 'upload',
       uploadProps: {
         accept: '.pdf,.PDF', // 接受上传的文件类型
+        // onPreview:false
       },
       valuePropName: 'fileList',
-      rules: [{ trigger: 'change', required: true, message: '请上传发票附件' }],
+      rules: [{ required: true, message: '请上传发票附件' }],
       span: 24,
     },
   ],

@@ -15,6 +15,22 @@ export default function DetailTemplate(props: any) {
         return `¥${(value / 100).toFixed(2).toLocaleString()}`;
       }
       return '-';
+    } else if (item.type === 'file') {
+      return (
+        <a
+          href={FILE_URL + '/' + value?.path}
+          target="_blank"
+          download={item?.title}
+          rel="noopener noreferrer"
+          style={{
+            textDecoration: 'underline',
+            color: '#c696da',
+            cursor: 'pointer',
+          }}
+        >
+          发票附件
+        </a>
+      );
     } else if (item.type === 'image') {
       if (value?.length && value instanceof Array) {
         return (

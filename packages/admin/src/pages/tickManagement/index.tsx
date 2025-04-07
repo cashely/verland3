@@ -80,7 +80,7 @@ export default function TickManagement() {
                 >
                   详情
                 </Button>
-                {record.fileId && (
+                {!record.fileId && (
                   <Button
                     onClick={() => handleTicket(record)}
                     size="small"
