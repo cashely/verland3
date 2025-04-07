@@ -20,7 +20,7 @@ router.post('/', validate(z => (
             bookGoodIds: z.array(z.string()).optional(),
             menuId: z.string().min(1),
             bookDateTime: z.string().min(1),
-            handleWay: z.string().optional(),
+            handleWay: z.number().int().default(1),
             handleDateTime: z.string().optional(),
             isRite: z.union([z.literal(1), z.literal(2)]).default(2),
             riteDateTime: z.string().optional(),
