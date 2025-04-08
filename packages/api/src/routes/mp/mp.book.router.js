@@ -155,7 +155,8 @@ router.get('/', validate(z => (
                     }
                 },
                 menu: true,
-                evaluate: true
+                evaluate: true,
+                ticket: true
             },
             orderBy: {
                 createdAt: 'desc'
@@ -191,7 +192,8 @@ router.get('/:id', validate(z => (
                     }
                 },
                 menu: true,
-                evaluate: true
+                evaluate: true,
+                ticket: true
             }
         });
         res.response.success(book);
