@@ -90,7 +90,7 @@ router.post('/', validate(z => (
 
         let totalAmount = bookGoodsAmount + menuAmount;
 
-        if (isSelfExpress === 1) {
+        if (isSelfExpress === 1 && petStoreId) {
             // 查询选择宠物门店信息
             const petStore = await prisma.petStore.findUnique({
                 where: {
@@ -132,15 +132,15 @@ router.post('/', validate(z => (
                 pet: {
                     connect: { id: petId }
                 },
-                address: {
-                    connect: { id: addressId } 
-                },
+                address: addressId ? {
+                    connect: { id: addressId }
+                } : null,
                 user: {
                     connect: { id }
                 },
-                petStore: {
+                petStore: petStoreId ? {
                     connect: { id: petStoreId }
-                }
+                }: null
             }
         });
 
