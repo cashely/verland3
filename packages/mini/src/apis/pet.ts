@@ -5,6 +5,7 @@ const APIS = {
   ADD: '/mp/pet', // 新增
   DETAIL: '/mp/pet/:id', // 详情
   PUT: '/mp/pet', // 更新
+  STORE: '/mp/petStore', // 删除
 };
 
 /**
@@ -13,6 +14,12 @@ const APIS = {
  */
 const list = () => {
   return request(APIS.LIST, {
+    method: 'get',
+  });
+};
+
+const storeList = () => {
+  return request(APIS.STORE, {
     method: 'get',
   });
 };
@@ -38,4 +45,4 @@ const put = (id) => {
     method: 'put',
   });
 };
-export { list, add, detail, put };
+export { list, add, detail, put, storeList };

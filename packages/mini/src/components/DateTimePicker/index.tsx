@@ -13,7 +13,7 @@ export default (props) => {
   const year = date.getFullYear();
   const months: Array<number> = [];
   const days: Array<number> = [];
-  console.log(props.data, 'fsafasfsa');
+
   for (let i = 1; i <= 12; i++) {
     if (i >= Math.max(date.getMonth() + 1, props.data.minDate.month)) {
       months.push(i);
@@ -52,8 +52,8 @@ export default (props) => {
   // const timeRange = ['10:00', '12:00', '14:00', '16:00'];
 
   const [data, setData] = useState({
-    month: 2,
-    day: 2,
+    month: 0,
+    day: 0,
     value: [0, 0, 0, 0],
   });
 
@@ -61,11 +61,11 @@ export default (props) => {
 
   useEffect(() => {
     console.log('打开日期组件弹框', data);
-    // countData(data.value, () => {});
-    setData({
-      ...data,
-      value: [0, 0, 0, 0],
-    });
+    countData([0, 0, 0, 0], () => {});
+    // setData({
+    //   ...data,
+    //   value: [0, 0, 0, 0],
+    // });
   }, [props.isOpened]);
 
   // 筛选未过期的时间段

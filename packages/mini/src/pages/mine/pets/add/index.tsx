@@ -33,6 +33,7 @@ export default function Add() {
       ...formData,
       petType: undefined,
       weight: Number(formData.weight),
+      age: Number(formData.age),
     }).then((res) => {
       if (res.code === 200) {
         showToast({

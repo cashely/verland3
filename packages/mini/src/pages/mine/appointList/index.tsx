@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, Image } from '@tarojs/components';
 import {
   navigateTo,
@@ -20,6 +20,7 @@ import sheetCat from '../../../subpackages/assets/images/sheetCat.png';
 import dayjs from 'dayjs';
 import { APPOINTMENT_TYPES, DEFAULT_IMAGE, REFUND_TMP } from '@/constants';
 import { formatPrice } from '@/utils';
+import { fileUrl } from '@/apis';
 import './index.scss';
 
 const tabList = [
@@ -43,24 +44,24 @@ export default function Index() {
   const [context, setContext] = useState('');
   const [rateValue, setRate] = useState(5);
   const [bookId, setBookId] = useState('');
-  const getlist = async () => {
+  const getlist = async (current = 0) => {
     const res = await list();
     if (res.code === 200) {
       const result = res.data.map((item) => ({
         ...item,
         bookDateTime: dayjs(item.bookDateTime).format('YYYY-MM-DD HH:mm:ss'),
       }));
-      setData(result);
+
+      setData(
+        current !== 0
+          ? result.filter((item) => item.statu === current - 1)
+          : result
+      );
+      setCurrent(+current);
     }
   };
   const handleTabClick = (value) => {
-    setCurrent(value);
-    getData(value);
-  };
-
-  const getData = (val) => {
-    if (val === -1) return data;
-    return data.filter((item) => item?.statu === val) || [];
+    getlist(value);
   };
 
   const handleChange = (value) => {
@@ -125,7 +126,7 @@ export default function Index() {
       if (res.code === 200) {
         showToast({
           title: '评价成功',
-          icon: 'success',
+          icon: 'none',
           success() {
             setTimeout(() => {
               setIsOpened(false);
@@ -137,6 +138,12 @@ export default function Index() {
     });
   };
   const handleToInvoice = (item: any) => {
+    if (item.ticket?.id) {
+      return showToast({
+        title: '已申请发票',
+        icon: 'none',
+      });
+    }
     navigateTo({
       url: `/pages/mine/afterSales/as-invoiceApply/index?id=${item.id}&totalAmount=${item.totalAmount}`,
     });
@@ -152,19 +159,25 @@ export default function Index() {
     console.log(item);
     if (!item?.id) return;
     navigateTo({
-      url: `./detail/index?id=${item.id}&statuName=${APPOINTMENT_TYPES[item.statu]?.label
-        }`,
+      url: `./detail/index?id=${item.id}&statuName=${
+        APPOINTMENT_TYPES[item.statu]?.label
+      }`,
     });
+  };
+
+  const showImage = (path: string) => {
+    if (!path) return;
+    return fileUrl + '/' + path;
   };
 
   return (
     <View className="page-appointList">
       <AtTabs current={current} tabList={tabList} onClick={handleTabClick}>
         {tabList.map((_, index) => (
-          <AtTabsPane current={current} key={index}>
-            <View className="tab-content">
-              {getData(current - 1).map((item, index) => (
-                <View className="relative bg-red-700 item" key={index}>
+          <AtTabsPane current={current} index={index}>
+            <View className="tab-content" key={index}>
+              {data.map((item, indey) => (
+                <View className="relative bg-red-700 item" key={indey}>
                   <View className="items-center item-head">
                     <View className="text-888">
                       预约日期：{item.bookDateTime}
@@ -172,7 +185,13 @@ export default function Index() {
                     {getStatusBg(item.statu)}
                   </View>
                   <View className="item-body">
-                    <AtAvatar size="large" image={DEFAULT_IMAGE}></AtAvatar>
+                    <AtAvatar
+                      size="large"
+                      image={
+                        showImage(item?.menu?.images?.[0]?.image?.path) ||
+                        DEFAULT_IMAGE
+                      }
+                    ></AtAvatar>
                     <View className="ml-20 item-body-right">
                       <View className="mb-10 title">
                         {item.menu?.name}
@@ -221,7 +240,7 @@ export default function Index() {
                           style="background-color:#ffc7c7"
                           onClick={() => handleToInvoice(item)}
                         >
-                          发票申请
+                          {item?.ticket?.id ? '已申请发票' : '发票申请'}
                         </View>
                       </>
                     )}
@@ -244,9 +263,7 @@ export default function Index() {
                   </View>
                 </View>
               ))}
-              {!getData(current - 1)?.length && (
-                <View className="text-center">暂无数据</View>
-              )}
+              {!data?.length && <View className="text-center">暂无数据</View>}
             </View>
           </AtTabsPane>
         ))}

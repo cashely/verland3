@@ -6,9 +6,61 @@ const ORDER_STATUS = {
   4: '已取消',
 };
 
-const PET_TYPES = [
-  ['猫', '脊柱动物'],
-  ['英短', '金渐层', '田园猫', '银渐层', '比鲁斯'],
+const PET_TYPES = ['猫', '狗', '异宠'];
+
+const PET_SUBTYPES = [
+  [
+    '英国短毛猫',
+    '美国短毛猫',
+    '中华田园猫',
+    '布偶猫',
+    '暹罗猫',
+    '波斯猫',
+    '缅因猫',
+    '德文卷毛猫',
+    '斯芬克斯猫（无毛猫）',
+    '阿比西尼亚猫',
+    '金吉拉',
+    '卷耳猫',
+  ],
+  [
+    '贵宾犬（泰迪）',
+    '博美犬',
+    '吉娃娃',
+    '比熊犬',
+    '柯基犬',
+    '雪纳瑞',
+    '腊肠犬',
+    '边境牧羊犬',
+    '金毛寻回犬',
+    '拉布拉多犬',
+    '哈士奇',
+    '阿拉斯加犬',
+    '德国牧羊犬',
+    '柴犬',
+    '英国可卡犬',
+    '约克夏梗',
+  ],
+  [
+    '龙猫',
+    '蜜袋鼯',
+    '刺猬',
+    '蛇',
+    '蜥蜴',
+    '龟',
+    '蜘蛛',
+    '蝎',
+    '蜈蚣',
+    '兔',
+    '鸟',
+    '水母',
+    '蛙',
+    '猪',
+    '貂',
+    '松鼠',
+    '寄居蟹',
+    '鱼',
+  ],
 ];
 
 const GENDER = ['', '男', '女'];
@@ -77,7 +129,15 @@ const TICKET_STATUS_TYPE = {
 const DEFAULT_IMAGE =
   'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0';
 
-const WEIGHT_OPTIONS = ['0-5斤', '5-10斤', '10-20斤', '20斤以上'];
+const WEIGHT_OPTIONS = [
+  {
+    label: '0-5斤',
+    value: 1,
+  },
+  { label: '5-10斤', value: 2 },
+  { label: '10-20斤', value: 3 },
+  { label: '20斤以上', value: 4 },
+];
 
 //上门服务时间段
 const SERVICE_TIME_RANGES = [
@@ -93,12 +153,12 @@ const SERVICE_TIME_RANGES = [
   '19:00',
   '20:00',
   '21:00',
-  '22:00',
+  // '22:00',
 ];
 
 //仪式服务时间段
-const RITE_SERVICE_TIME_RANGES = ['10:00', '12:00', '14:00', '16:00', '24:00'];
-
+const RITE_SERVICE_TIME_RANGES = ['10:00', '12:00', '14:00', '16:00'];
+//  '24:00'
 //退款通知
 const REFUND_TMP = 'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY';
 //付款通知
@@ -118,4 +178,5 @@ export {
   WEIGHT_OPTIONS,
   SERVICE_TIME_RANGES,
   RITE_SERVICE_TIME_RANGES,
+  PET_SUBTYPES,
 };

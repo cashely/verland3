@@ -4,8 +4,10 @@ import { useLoad, showToast, navigateTo, setStorageSync } from '@tarojs/taro';
 import { AtButton, AtToast } from 'taro-ui';
 import { otherFormList, baseInfoFormList } from './model';
 import AddForm from '@/components/AddForm';
-import { RITE_SERVICE_TIME_RANGES, SERVICE_TIME_RANGES } from '@/constants';
+import { PET_SUBTYPES, RITE_SERVICE_TIME_RANGES } from '@/constants';
+import regexObj from '@/utils/regexObj';
 //import AppContext from '@/hooks/useContext';
+import { storeList } from '@/apis/pet';
 import { menu } from '@/apis/common';
 import dayjs from 'dayjs';
 import './index.scss';
@@ -16,11 +18,17 @@ export default () => {
   const [agreement, setAggreement] = useState('');
   const [menuList, setMenuList] = useState([]);
   const [isMenuA, setIsMenuA] = useState(false);
-  const [formModel, setformModel] = useState({});
+  const [formModel, setformModel] = useState({
+    isRite: '1',
+    handleWay: '2',
+    isSelfExpress: '1',
+    phone: '18334496112',
+  });
   useLoad(() => {
     console.log('Page loaded.');
   });
   const [_otherFormList, _setOtherFormList] = useState(otherFormList);
+  const [_baseInfoFormList, _setBaseInfoFormList] = useState(baseInfoFormList);
   const toast = (text: string) => {
     showToast({
       title: text,
@@ -40,17 +48,27 @@ export default () => {
         setMenuList(res?.data || []);
       }
     });
+    _otherFormList.forEach(async (item) => {
+      if (item.prop === 'petStoreId') {
+        const { data } = await storeList();
+        console.log(data, 'data');
+        item.options = data.map((n) => ({
+          label: n.name,
+          value: n.id,
+        }));
+      }
+    });
+    _setOtherFormList(_otherFormList);
   }, []);
   const handleSubmit = () => {
     const baseInfo = baseInfoRef.current?.getFormValues() || {};
     const otherInfo = otherInfoRef.current?.getFormValues() || {};
     console.log('handleSubmit', baseInfo, otherInfo);
-    // if (!baseInfo?.username) {
-    //   return toast('联系人不为空');
-    // } else if (!baseInfo?.phone || !regexObj.phone.test(baseInfo.phone)) {
-    //   return toast('请输入正确的手机号');
-    // }
-    if (!baseInfo?.petname) {
+    if (!baseInfo?.username) {
+      return toast('联系人不为空');
+    } else if (!baseInfo?.phone || !regexObj.phone.test(baseInfo.phone)) {
+      return toast('请输入正确的手机号');
+    } else if (!baseInfo?.petname) {
       return toast('爱宠名字不为空');
     } else if (!baseInfo?.type) {
       return toast('爱宠类型不为空');
@@ -67,9 +85,13 @@ export default () => {
         !otherInfo?.handleDateTime
       ) {
         return toast('纪念物获取时间不为空');
-      }
-      if (!otherInfo?.postAddress || !otherInfo?.detail) {
-        return toast('接收地址不完整（包含门牌号）');
+      } else if (otherInfo.isSelfExpress === '1') {
+        if (!otherInfo.petStoreId) {
+          return toast('请选择宠物门店');
+        }
+        if (!otherInfo?.postAddress || !otherInfo?.detail) {
+          return toast('接收地址不完整（包含门牌号）');
+        }
       }
     }
 
@@ -79,16 +101,20 @@ export default () => {
 
     //添加数据到缓存
     setStorageSync('bookInfo', {
-      ...baseInfo,
       ...otherInfo,
-      type: baseInfo?.type?.split('/')[0],
-      subType: baseInfo?.type?.split('/')[1],
-      weight: baseInfo.weight,
-      isRite: +otherInfo.isRite,
-      handleWay: +otherInfo.handleWay,
-      bookDateTime: new Date(otherInfo.bookDateTime),
-      riteDateTime: new Date(otherInfo.riteDateTime),
-      handleDateTime: new Date(otherInfo.handleDateTime),
+      ...baseInfo,
+      isRite: otherInfo.isRite ? +otherInfo.isRite : undefined,
+      handleWay: otherInfo.handleWay ? +otherInfo.handleWay : undefined,
+      bookDateTime: otherInfo.bookDateTime
+        ? new Date(otherInfo.bookDateTime)
+        : undefined,
+      riteDateTime: otherInfo.riteDateTime
+        ? new Date(otherInfo.riteDateTime)
+        : undefined,
+      handleDateTime: otherInfo.handleDateTime
+        ? new Date(otherInfo.handleDateTime)
+        : undefined,
+      isSelfExpress: +otherInfo.isSelfExpress,
     });
     navigateTo({
       url: './additionalService/index',
@@ -110,41 +136,57 @@ export default () => {
       'bookDateTime',
       'isRite',
       'riteDateTime',
-      'detail',
-      'postAddress',
       'handleWayCheck',
+      'postAddress',
+      'detail',
     ];
+    const { menuId, petname, type, subType } = val;
+    const isMenuA = menuList.findIndex((n) => n.id === val.menuId) === 1;
     if (propName === 'menuId') {
-      setIsMenuA(() => {
-        const isMenuA = menuList.findIndex((n) => n.id === val.menuId) === 1;
-        const { menuId, petname, weight, type, subType } = formModel;
-        console.log('选择了套餐A', isMenuA);
-        _otherFormList.forEach((item: any) => {
-          if (item.prop === 'handleWayCheck') {
-            console.log('当前handleWay的值', formModel.handleWay);
-            item.hidden = formModel.handleWay !== '3';
-          } else {
-            item.hidden = checkProps.includes(item.prop) && isMenuA;
-          }
-        });
+      setIsMenuA(isMenuA);
 
-        setformModel(
-          Object.assign(
-            {
-              menuId,
-              petname,
-              weight,
-              type,
-              subType,
-            },
-            isMenuA ? {} : { handleWay: '2', isRite: '1' }
-          )
-        );
-        return isMenuA;
+      _otherFormList.forEach((item: any) => {
+        if (item.prop === 'handleWayCheck') {
+          console.log('当前handleWay的值', formModel.handleWay);
+          item.hidden = formModel.handleWay !== '3';
+        } else {
+          item.hidden = checkProps.includes(item.prop) && isMenuA;
+        }
       });
+      if (isMenuA) {
+        setformModel((d) => {
+          return {
+            ...d,
+            ...val,
+            menuId,
+            petname,
+            type,
+            subType,
+            handleDateTime: '',
+            bookDateTime: '',
+            riteDateTime: '',
+            handleWay: '',
+            isRite: '',
+            mark: '',
+          };
+        });
+      } else {
+        setformModel((d) => {
+          return {
+            ...d,
+            ...val,
+            menuId,
+            petname,
+            type,
+            subType,
+            handleWay: '2',
+            isRite: '1',
+          };
+        });
+      }
+
       _setOtherFormList(_otherFormList);
     } else if (propName === 'handleWay') {
-      console.log('propNamehandleWay', val.handleWay);
       _otherFormList.forEach((item: any) => {
         if (item.prop === 'handleWayCheck') {
           item.hidden = val.handleWay !== '3';
@@ -152,13 +194,60 @@ export default () => {
           item.hidden = val.handleWay === '1' || val.handleWay === '3';
         }
       });
-      formModel.handleWayCheck = null;
-      _setOtherFormList(_otherFormList);
-    } else if (propName === 'bookDateTime') {
-      console.log('propNamehandleDateTime', val);
-    }
 
-    console.log('item4666', formModel);
+      _setOtherFormList(_otherFormList);
+    } else if (propName === 'isSelfExpress') {
+      //清空
+      _otherFormList.forEach((item: any) => {
+        if (isMenuA) {
+          if (item.prop === 'postAddress' || item.prop === 'detail') {
+            item.hidden = true;
+          }
+        }
+        if (item.prop === 'petStoreId') {
+          item.hidden = val.isSelfExpress === '2';
+        }
+      });
+
+      setformModel((d) => {
+        return {
+          ...d,
+          ...val,
+          postAddress: '',
+          province: '',
+          city: '',
+          area: '',
+          detail: '',
+        };
+      });
+    } else {
+      setformModel((d) => {
+        return {
+          ...d,
+          ...val,
+        };
+      });
+    }
+    // else if (propName === 'isSelfExpress') {
+    //   setformModel((d) => {
+    //     return {
+    //       ...d,
+    //       ...val,
+    //     };
+    //   });
+    // }
+    // else {
+    //   console.log('handleFormDataChange++', val);
+    //   setformModel((d) => {
+    //     return {
+    //       ...d,
+    //       menuId,
+    //       petname,
+    //       type,
+    //       subType,
+    //     };
+    //   });
+    // }
   };
 
   useEffect(() => {
@@ -180,50 +269,42 @@ export default () => {
         return item;
       });
     });
-    setformModel((d: any) => {
-      return {
-        ...d,
-        isRite: '1',
-        handleWay: '2',
-      };
-    });
+    // setformModel((d: any) => {
+    //   return {
+    //     ...d,
+    //     isRite: '1',
+    //     handleWay: '2',
+    //   };
+    // });
   }, [menuList]);
 
   const handleFilterTimes = (propName: string, val: any, formData: any) => {
     if (propName === 'bookDateTime') {
-      const curTime = val.split(' ')[1];
-      console.log('formDatabookDateTime', dayjs(formData.bookDateTime).date());
-      console.log('curTime', curTime.split(':')[0]);
+      console.log(
+        'formDatabookDateTime47',
+        val,
+        dayjs(formData.bookDateTime).date(),
+        dayjs().date()
+      );
+      const bookDateHour = val.split(' ')[1].split(':')[0];
       _otherFormList.forEach((item: any) => {
         if (item.prop === 'riteDateTime') {
-          item.timeRange = RITE_SERVICE_TIME_RANGES.filter((iten: any) => {
-            return iten.split(':')[0] > curTime.split(':')[0];
-          });
           item.minDate = {
             month: dayjs(formData.bookDateTime).month(),
             day: dayjs(formData.bookDateTime).date(),
           };
+          console.log('item.formDatabookDateTime47', item.minDate);
+          // if (item.minDate.day === dayjs().date()) {
+          item.timeRange = RITE_SERVICE_TIME_RANGES.filter((iten: any) => {
+            return iten.split(':')[0] > bookDateHour;
+          });
+          // } else {
+          //   item.timeRange = RITE_SERVICE_TIME_RANGES;
+          // }
         }
+        formData.riteDateTime = '';
       });
       console.log('_otherFormList', _otherFormList);
-      _setOtherFormList(_otherFormList);
-    } else if (propName === 'riteDateTime') {
-      console.log('handleDateTfasdfasime', formData.riteDateTime);
-      //纪念物领取时间
-      const riteTime = formData.riteDateTime.split(' ')[1].split(':')[0];
-      _otherFormList.forEach((item: any) => {
-        if (item.prop === 'handleDateTime') {
-          item.timeRange = SERVICE_TIME_RANGES.filter((iten: any) => {
-            return (
-              iten.split(':')[0] > riteTime && iten.split(':')[0] !== riteTime
-            );
-          });
-          item.minDate = {
-            month: dayjs(formData.riteDateTime).month(),
-            day: dayjs(formData.riteDateTime).date(),
-          };
-        }
-      });
       _setOtherFormList(_otherFormList);
     }
   };
@@ -237,14 +318,14 @@ export default () => {
   ) => {
     if (propName === 'riteDateTime') {
       console.log(
-        'handleDatePickerColumnChange',
+        'handleDatePickerColumnChange47',
         val,
         selectedTime,
         dayjs().format('YYYY-MM-DD'),
         formData.bookDateTime
       );
       const curTimeForHour = formData.bookDateTime.split(' ')[1].split(':')[0];
-      if (selectedTime === dayjs().format('YYYY-MM-DD')) {
+      if (selectedTime === dayjs(formData.bookDateTime)?.format('YYYY-MM-DD')) {
         setAvailableRanges(
           RITE_SERVICE_TIME_RANGES.filter(
             (n) => n.split(':')[0] > curTimeForHour && n !== curTimeForHour
@@ -258,14 +339,22 @@ export default () => {
       }
     }
   };
+
+  const handlePickerClick = (formItem: any, formData: any) => {
+    console.log('handlePickerClick', formItem, formData);
+    if (formItem.prop === 'petStoreId') {
+    }
+  };
+
   return (
     <Suspense fallback={<AtToast isOpened text="loading"></AtToast>}>
       <View className="pt-20 page-createBox">
         <View className="formCon">
           <AddForm
             ref={baseInfoRef}
-            formList={baseInfoFormList}
+            formList={_baseInfoFormList}
             formModel={formModel}
+            onFormChange={handleFormDataChange}
           ></AddForm>
         </View>
         <View className="formCon">
@@ -276,6 +365,7 @@ export default () => {
             filterTimes={handleFilterTimes}
             onDatePickColumnChange={handleDatePickerColumnChange}
             onFormChange={handleFormDataChange}
+            onPickerClick={handlePickerClick}
           >
             {{
               handleRiteChange,
