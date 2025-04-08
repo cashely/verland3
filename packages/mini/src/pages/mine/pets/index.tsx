@@ -8,12 +8,7 @@ import { DEFAULT_IMAGE } from '@/constants';
 import './index.scss';
 
 export default function Pets() {
-  const [pets, setPets] = useState([
-    {
-      age: '',
-      petname: '',
-    },
-  ]);
+  const [pets, setPets] = useState([]);
   useDidShow(() => {
     getlist();
   });

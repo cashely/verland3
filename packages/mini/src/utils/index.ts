@@ -13,7 +13,8 @@ const formatPrice = (price: number) => {
 //给出完整地址，返回省市区
 const formatAddress = (address: string) => {
   // 正则表达式匹配中国地址格式：省+市+区+详细地址
-  const regex = /^(.+省)(.+市)(.+区)(.+)$/;
+  const regex =
+    /^(.*?(?:省|自治区|特别行政区))?(.*?(?:市|自治州|盟))?(.*?(?:区|县|旗|市))?(.*)$/; ///^(.+省)(.+市)(.+区)(.+)$/;
   const match = address.match(regex);
   let result = {};
   if (match) {

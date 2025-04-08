@@ -13,7 +13,6 @@ import {
 import {
   AtForm,
   AtInput,
-  AtIcon,
   AtTextarea,
   AtList,
   AtListItem,
@@ -25,7 +24,9 @@ import QQMapWX from '@/utils/qqmap-wx-jssdk.min.js';
 import locationIcon from '../../assets/imgs/location.png';
 import dateIcon from '../../assets/imgs/date-icon.png';
 import { formatAddress } from '@/utils';
+import PetPicker from '@/components/PetPicker';
 import './index.scss';
+
 export default forwardRef((props, ref) => {
   const { formList = [], formModel = {}, handleSubmit } = props;
 
@@ -44,6 +45,8 @@ export default forwardRef((props, ref) => {
       },
     },
   });
+
+  const [petPickerShow, setPetPickerShow] = useState(false);
   const [_formList, setFormList] = useState(formList);
   const [formData, setFormData] = useState(formModel);
   const [tabIndex, setTabIndex] = useState(0);
@@ -52,9 +55,9 @@ export default forwardRef((props, ref) => {
     const Obj = { ...formData };
     if (formItem?.type === 'tabs') {
       setTabIndex(e);
+      console.log(formItem.tabsOptions[e]?.id, 'handleChange488');
       Obj[formItem.prop] = formItem.tabsOptions[e]?.id;
     } else if (formItem?.type === 'radio') {
-      Obj[formItem.prop] = e.detail.value;
       const curObj = _formList.find((item) => item.prop === formItem.prop);
 
       curObj?.options.forEach((item) => {
@@ -64,10 +67,16 @@ export default forwardRef((props, ref) => {
       if (formItem.prop === 'isRite') {
         _formList.find((item) => item.prop === 'riteDateTime').hidden =
           e.detail.value === '2';
-        Obj[formItem.prop] = e.detail.value;
+      }
+      if (formItem.prop === 'isSelfExpress') {
+        _formList.find((item) => item.prop === 'postAddress').hidden =
+          e.detail.value === '2';
+        _formList.find((item) => item.prop === 'detail').hidden =
+          e.detail.value === '2';
       }
       Obj[formItem.prop] = e.detail.value;
-      setFormList([..._formList]);
+
+      // setFormList([..._formList]);
     } else if (formItem?.type === 'checkbox') {
       if (formItem.prop === 'handleWayCheck') {
         Obj[formItem.prop] = e.detail.value;
@@ -80,15 +89,22 @@ export default forwardRef((props, ref) => {
         formItem.options[1][selectValues[1]];
       Obj[formItem.prop] = getLabel;
     } else if (formItem?.type === 'selector') {
-      const getLabel = formItem.options[e.detail.value];
-      Obj[formItem.prop] = getLabel;
+      if (formItem.itemProps?.rangeKey) {
+        console.log('++++++++++', e.detail.value);
+        Obj[formItem.prop] = formItem.options[e.detail.value]?.value;
+      } else {
+        const getLabel = formItem.options[e.detail.value];
+        Obj[formItem.prop] = getLabel;
+      }
     } else {
-      console.log('handleChangexxxxxx', formItem, e);
       Obj[formItem.prop] = e;
     }
 
+    props.onFormChange &&
+      props?.onFormChange?.(formItem.prop, {
+        ...Obj,
+      });
     setFormData((f) => {
-      props.onFormChange && props?.onFormChange?.(formItem.prop, Obj);
       return {
         ...f,
         ...Obj,
@@ -121,7 +137,9 @@ export default forwardRef((props, ref) => {
             } = res;
             setFormData({
               ...formData,
-              [formItem.prop]: `${province}-${city}-${district}`,
+              [formItem.prop]: `${province}-${city}${
+                district ? '-' + district : ''
+              }`,
               detail: street,
               province,
               city,
@@ -178,12 +196,14 @@ export default forwardRef((props, ref) => {
             if (!formatAddress(res.address).province) {
               setFormData({
                 ...formData,
-                [formItem.prop]: '',
+                [formItem.prop]: res?.address,
               });
             } else {
               setFormData({
                 ...formData,
-                [formItem.prop]: `${province}-${city}-${district}`,
+                [formItem.prop]: `${province}-${city}${
+                  district ? '-' + district : ''
+                }`,
                 detail,
                 province,
                 city,
@@ -194,6 +214,23 @@ export default forwardRef((props, ref) => {
           }
         },
       });
+    } else if (formItem.type === 'petPicker') {
+      console.log('点击了multiSelector', formItem);
+      // props.onPickerColumnChange && props.onPickerColumnChange();
+      // setFormList((d) => {
+      //   const newList = [...d].map((item) => {
+      //     if (item.prop === formItem.prop) {
+      //       item.options[1] = PET_SUBTYPES[0];
+      //     }
+      //     return item;
+      //   });
+      //   console.log(newList, 'newList');
+      //   return newList;
+      // });
+      setPetPickerShow(true);
+    } else if (formItem.type === 'selector') {
+      console.log('点击了selector', formItem);
+      props.onPickerClick && props.onPickerClick(formItem, formData);
     }
   };
 
@@ -209,7 +246,6 @@ export default forwardRef((props, ref) => {
 
   //时间选择确认回调
   const handleDateTimeConfirm = ({ formProp, value }) => {
-    console.log('选择时间的值', formProp, value);
     setFormData((d) => {
       d[formProp] = value;
       //筛选可以预约的时间段
@@ -275,6 +311,16 @@ export default forwardRef((props, ref) => {
     setFormData(newState);
     return isValid;
   };
+
+  const handleColumnChange = (e: any, formItem: any) => {
+    console.log('handleColumnChange', e, formItem);
+    props.onPickerColumnChange && props.onPickerColumnChange(e.detail);
+  };
+
+  // const handlePickerColumnChange = (formProp, formItem) => {
+  //   console.log('handlePickerColumnChange', formProp, formItem);
+  //   props.onPickerColumnChange && props.onPickerColumnChange(propName, value);
+  // };
   //提交表单
   const onSubmit = () => {
     console.log('提交表单', formData);
@@ -306,7 +352,7 @@ export default forwardRef((props, ref) => {
   }, [formList]);
 
   useEffect(() => {
-    console.log('首次加载FormModel46', formModel);
+    // console.log('首次加载FormModel46', formModel);
     setFormData(formModel);
   }, [formModel]);
 
@@ -364,6 +410,7 @@ export default forwardRef((props, ref) => {
                     {formItem.label}
                   </Text>
                 </View>
+
                 <RadioGroup
                   name={formItem.prop}
                   className="radioGroup"
@@ -372,7 +419,10 @@ export default forwardRef((props, ref) => {
                   {formItem?.options?.map((item, i) => {
                     return (
                       <Label className="radioItem" for={i} key={i}>
-                        <Radio value={item.value} checked={item.checked}>
+                        <Radio
+                          value={item.value}
+                          checked={item.value == formData[formItem.prop]}
+                        >
                           {item.label}
                         </Radio>
                       </Label>
@@ -500,6 +550,37 @@ export default forwardRef((props, ref) => {
               </View>
             ) : null}
 
+            {formItem.type === 'petPicker' && !formItem.hidden ? (
+              <View className="formItemView" key={index}>
+                <AtList className="flex items-center justify-between">
+                  <AtListItem
+                    onClick={() => handleListClick(formItem)}
+                    title={
+                      <View>
+                        {formItem.itemProps?.required ? (
+                          <Text className="error-dot text-color-red">* </Text>
+                        ) : null}
+                        <Text
+                          className={`${
+                            formItem.error ? 'text-color-red' : ''
+                          }`}
+                        >
+                          {formItem.label}
+                        </Text>
+                      </View>
+                    }
+                    extraText={
+                      formData[formItem.prop]
+                        ? formData[formItem.prop] +
+                            '/' +
+                            formData[formItem.subProp] || ''
+                        : formItem.itemProps.placeholder
+                    }
+                  />
+                </AtList>
+              </View>
+            ) : null}
+
             {['multiSelector', 'selector'].includes(formItem.type) &&
             !formItem.hidden ? (
               <Picker
@@ -507,10 +588,13 @@ export default forwardRef((props, ref) => {
                 mode={formItem.type}
                 onChange={(e) => handleChange(e, formItem)}
                 value={formData[formItem.prop]}
+                rangeKey={formItem?.itemProps?.rangeKey}
                 key={index}
+                // onColumnChange={(e) => handleColumnChange(e, formItem)}
               >
                 <AtList>
                   <AtListItem
+                    onClick={() => handleListClick(formItem)}
                     title={
                       <View>
                         {formItem.itemProps?.required ? (
@@ -533,12 +617,15 @@ export default forwardRef((props, ref) => {
                     }
                     arrow="right"
                     extraText={
-                      formData[formItem.prop] ?? formItem.itemProps.placeholder
+                      formItem.options?.find(
+                        (item) => item.value === formData[formItem.prop]
+                      )?.label ?? formItem.itemProps.placeholder
                     }
                   />
                 </AtList>
               </Picker>
             ) : null}
+
             {formItem.type === 'tabs' && !formItem.hidden ? (
               <View className="tabs customItem" key={index}>
                 <View className="flex items-center">
@@ -552,7 +639,7 @@ export default forwardRef((props, ref) => {
                       {formItem.label}
                     </Text>
                   </View>
-                  {formItem.tabsTitle?.length && (
+                  {formItem.tabsOptions?.length && (
                     <AtSegmentedControl
                       values={formItem.tabsTitle}
                       current={tabIndex}
@@ -560,11 +647,11 @@ export default forwardRef((props, ref) => {
                     ></AtSegmentedControl>
                   )}
                 </View>
-                {
+                {formItem.tabsOptions[tabIndex]?.content && (
                   <View className="tab-content">
-                    {formItem.tabsOptions[tabIndex]?.content || '暫無內容'}
+                    {formItem.tabsOptions[tabIndex]?.content}
                   </View>
-                }
+                )}
               </View>
             ) : null}
           </>
@@ -580,6 +667,25 @@ export default forwardRef((props, ref) => {
       >
         <Text>slot</Text>
       </DateTimePicker>
+
+      <PetPicker
+        isShow={petPickerShow}
+        onConfirm={(info) => {
+          console.log(info, '宠物选择器的值');
+          props.onFormChange &&
+            props?.onFormChange?.('petPicker', {
+              ...info,
+            });
+          setFormData((prev) => {
+            return {
+              ...prev,
+              ...info,
+            };
+          });
+        }}
+        onClose={() => setPetPickerShow(false)}
+      ></PetPicker>
+
       <AtMessage />
     </>
   );

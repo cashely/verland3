@@ -45,7 +45,6 @@ export default function AdditionalService() {
       bookGoodIds: data
         .filter((_, index) => selectedIndex.includes(index))
         .map((item) => item.id),
-      totalAmount,
     }).then((res) => {
       console.log('res', res);
       if (res.code === 200) {

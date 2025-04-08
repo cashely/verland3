@@ -1,5 +1,7 @@
 import { RITE_TYPE, DELIVERY_TYPE } from '@/constants';
 import { formatPrice } from '@/utils';
+import { Image } from 'antd';
+import { FILE_URL } from '@/apis/request';
 const searchItems = [
   {
     label: '套餐名称',
@@ -17,9 +19,22 @@ const tableColumns = [
   },
   {
     title: '缩略图',
-    key: 'image',
-    dataIndex: 'image',
-    slot: 'thumb',
+    key: 'images',
+    dataIndex: 'images',
+    render(_: any) {
+      if (!_?.length) return '-';
+      return (
+        <Image.PreviewGroup>
+          {_?.map((img: any) => (
+            <Image
+              key={img.id}
+              src={FILE_URL + '/' + img?.image.path}
+              alt="宠物图片"
+            />
+          ))}
+        </Image.PreviewGroup>
+      );
+    },
   },
   {
     title: '套餐内容',

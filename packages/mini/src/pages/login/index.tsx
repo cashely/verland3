@@ -76,7 +76,10 @@ export default function Index() {
             data.phone = initUserInfo.phone; //手机号
           }
           //更新用户信息
-          await putUser(data);
+          await putUser({
+            ...data,
+            addressId: data.addressId || undefined,
+          });
           setStorageSync('userInfo', data);
           showToast({ title: '登录成功', icon: 'none' });
           setBtnDisabled(false);

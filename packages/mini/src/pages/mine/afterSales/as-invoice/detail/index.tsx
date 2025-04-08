@@ -4,6 +4,7 @@ import { AtInput } from 'taro-ui';
 import './index.scss';
 import { useLoad } from '@tarojs/taro';
 import { detail } from '@/apis/ticket';
+import { formatPrice } from '@/utils';
 interface IProps {
   number: string;
   header: string;
@@ -15,6 +16,7 @@ interface IProps {
 export default () => {
   const [formData, setFormData] = useState<IProps>();
   useLoad((option) => {
+    console.log(option, '+++++');
     option?.id && getData(option);
   });
 
@@ -23,7 +25,7 @@ export default () => {
     if (res.code === 200) {
       setFormData({
         ...res.data,
-        payAmount: option.payAmount / 100,
+        totalAmount: formatPrice(option.totalAmount),
       });
     }
   };
@@ -35,7 +37,7 @@ export default () => {
           name="value"
           title="开票金额"
           type="text"
-          value={formData?.payAmount}
+          value={formData?.totalAmount}
         />
         <AtInput
           name="value"

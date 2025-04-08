@@ -4,7 +4,7 @@ const APIS = {
   LOGIN: '/login/mp',
   TEST: '/mp/user',
   File: '/file',
-  MENU: '/menu',
+  MENU: '/mp/menu',
 };
 
 const loginApi = (data) => {

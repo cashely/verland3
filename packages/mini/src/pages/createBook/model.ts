@@ -1,28 +1,28 @@
 import {
   RITE_SERVICE_TIME_RANGES,
   SERVICE_TIME_RANGES,
-  WEIGHT_OPTIONS,
+  PET_TYPES,
 } from '@/constants';
 const baseInfoFormList = [
-  // {
-  //   label: '联系人',
-  //   prop: 'username',
-  //   type: 'input',
-  //   itemProps: {
-  //     placeholder: '请填写联系人的名字',
-  //     // required: true,
-  //   },
-  //   rules: [],
-  // },
-  // {
-  //   label: '联系电话',
-  //   prop: 'phone',
-  //   type: 'phone',
-  //   itemProps: {
-  //     placeholder: '请填写联系人的电话',
-  //   },
-  //   rules: [],
-  // },
+  {
+    label: '联系人',
+    prop: 'username',
+    type: 'input',
+    itemProps: {
+      placeholder: '请填写联系人的名字',
+      // required: true,
+    },
+    rules: [],
+  },
+  {
+    label: '联系电话',
+    prop: 'phone',
+    type: 'phone',
+    itemProps: {
+      placeholder: '请填写联系人的电话',
+    },
+    rules: [],
+  },
   {
     label: '爱宠名字',
     prop: 'petname',
@@ -35,26 +35,25 @@ const baseInfoFormList = [
   {
     label: '爱宠类型',
     prop: 'type',
-    type: 'multiSelector',
+    type: 'petPicker',
+    subProp: 'subType',
     itemProps: {
       placeholder: '请选择',
       // required: true,
     },
-    options: [
-      ['猫', '脊柱动物'],
-      ['英短', '金渐层', '田园猫', '银渐层', '比鲁斯'],
-    ],
+    options: PET_TYPES,
     rules: [],
   },
-  {
-    label: '爱宠体重',
-    prop: 'weight',
-    type: 'selector',
-    itemProps: {
-      placeholder: '请选择',
-    },
-    options: WEIGHT_OPTIONS,
-  },
+  // {
+  //   label: '爱宠体重',
+  //   prop: 'weight',
+  //   type: 'selector',
+  //   itemProps: {
+  //     placeholder: '请选择',
+  //     rangeKey: 'label',
+  //   },
+  //   options: WEIGHT_OPTIONS,
+  // },
 ];
 
 const otherFormList = [
@@ -137,10 +136,6 @@ const otherFormList = [
         checked: true,
       },
       {
-        label: '邮寄寄送',
-        value: '1',
-      },
-      {
         label: '放弃处置',
         value: '3',
       },
@@ -164,18 +159,51 @@ const otherFormList = [
     prop: 'handleDateTime',
     type: 'picker-date',
     itemProps: {
-      placeholder: '请选择遗物处理时间',
+      placeholder: '请选择',
     },
     rules: [],
     hidden: false,
     timeRange: SERVICE_TIME_RANGES,
-    supportAll: true,
+    // supportAll: true,
+  },
+
+  {
+    label: '是否自送',
+    prop: 'isSelfExpress',
+    itemProps: {
+      placeholder: '请输入接收人姓名',
+    },
+    type: 'radio',
+    options: [
+      {
+        label: '是',
+        value: '1',
+        checked: true,
+      },
+      {
+        label: '否',
+        value: '2',
+      },
+    ],
+  },
+  {
+    label: '选择宠物门店',
+    prop: 'petStoreId',
+    type: 'selector',
+    itemProps: {
+      placeholder: '请选择',
+      rangeKey: 'label',
+    },
+    hidden: false, // 控制显示隐藏
+    rules: [],
+    options: [],
   },
   {
     label: '接收地址',
     prop: 'postAddress',
     // type: "textarea",
     type: 'location',
+    hidden: false, // 控制显示隐藏
     itemProps: {
       placeholder: '点击选择位置',
     },
@@ -185,6 +213,7 @@ const otherFormList = [
     label: '门牌号',
     prop: 'detail',
     type: 'input',
+    hidden: false,
     itemProps: {
       placeholder: '详细地址，例1层101室',
     },

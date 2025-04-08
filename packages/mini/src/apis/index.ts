@@ -24,7 +24,7 @@ export default function (url: string, options: any = {}) {
         const data = res.data;
         if (data?.code === 400) {
           showToast({
-            title: data.message ?? '系统错误',
+            title: (data.message?.[0].message || data.message) ?? '系统错误',
             icon: 'none',
           });
           return;

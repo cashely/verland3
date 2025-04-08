@@ -3,7 +3,8 @@ import { View, Text, RadioGroup, Label, Radio } from '@tarojs/components';
 import { AtForm, AtInput, AtButton, AtModal } from 'taro-ui';
 import { TICKET_TYPE } from '@/constants';
 import { add } from '@/apis/ticket';
-import { useLoad, navigateBack } from '@tarojs/taro';
+import { useLoad, navigateBack, showToast } from '@tarojs/taro';
+import regexObj from '@/utils/regexObj';
 import { formatPrice } from '@/utils';
 import './index.scss';
 
@@ -42,6 +43,14 @@ export default function AsApplyInvoice() {
   });
 
   const handleSubmit = () => {
+    if (!regexObj.email.test(formData.email)) {
+      showToast({
+        title: '请输入正确的邮箱',
+        icon: 'none',
+        duration: 1000,
+      });
+      return;
+    }
     add({
       ...formData,
       type: Number(formData.type),
@@ -50,7 +59,7 @@ export default function AsApplyInvoice() {
       if (res.code === 200) {
         setStatus(1);
         if (!isOpened) setIsOpened(true);
-        navigateBack();
+        // navigateBack();
       }
     });
 
