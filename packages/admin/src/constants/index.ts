@@ -111,7 +111,7 @@ const COMPLAINT_TYPE = [
 
 const HANDLE_WAYS = [
   {
-    label: '邮寄',
+    label: '无需处理',
     value: 1,
   },
   {

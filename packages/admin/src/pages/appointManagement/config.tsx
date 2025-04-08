@@ -153,7 +153,7 @@ const tableColumns = [
     render: (_: number) => getLabelByValue(ORDER_CHANNEL, _),
   },
   {
-    title: '付款状态',
+    title: '预约单状态',
     key: 'statu',
     dataIndex: 'statu',
     width: 120,
@@ -165,7 +165,7 @@ const tableColumns = [
         case 1:
           return '已预约';
         case 2:
-          return '待寄送';
+          return '待处理';
         case 3:
           return '已完成';
         case 4:

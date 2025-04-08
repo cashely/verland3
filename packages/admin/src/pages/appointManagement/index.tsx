@@ -148,7 +148,7 @@ export default function TickManagement() {
                     color="primary"
                     variant="link"
                   >
-                    完成寄送
+                    完成处理
                   </Button>
                 }
               </>

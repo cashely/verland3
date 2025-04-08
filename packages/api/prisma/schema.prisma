@@ -106,7 +106,7 @@ model Book {
   menuId          String      // 套餐类型,默认为套餐1
   menu            Menu        @relation(fields: [menuId], references: [id])
   bookDateTime    DateTime? // 预约上门时间
-  handleWay       Int        @default(1) // 处理方式 1-邮寄 2-自行提取 3-放弃处理
+  handleWay       Int        @default(1) // 处理方式 1-无需处理 2-自行提取 3-放弃处理
   handleDateTime  DateTime?   // 邮寄时间/提取时间
   // expressDateTime DateTime? // 快递时间
   addressId       String?
