@@ -29,7 +29,15 @@ router.get('/', validate(z => (
                        bookGood: true 
                     }
                 },
-                menu: true,
+                menu: {
+                    include: {
+                        images: {
+                            include: {
+                                image: true
+                            }
+                        } 
+                    }
+                },
                 petStore: true
             },
             orderBy: {
@@ -68,7 +76,15 @@ router.get('/:id', validate(z => (
                        bookGood: true 
                     }
                 },
-                menu: true,
+                menu: {
+                    include: {
+                        images: {
+                            include: {
+                                image: true
+                            }
+                        } 
+                    }
+                },
                 petStore: true
             }
         });

@@ -181,7 +181,15 @@ router.get('/', validate(z => (
                         bookGood: true
                     }
                 },
-                menu: true,
+                menu: {
+                    include: {
+                        images: {
+                            include: {
+                                image: true
+                            }
+                        } 
+                    }
+                },
                 evaluate: true,
                 ticket: true,
                 petStore: true
@@ -219,7 +227,15 @@ router.get('/:id', validate(z => (
                         bookGood: true 
                     }
                 },
-                menu: true,
+                menu: {
+                    include: {
+                        images: {
+                            include: {
+                                image: true
+                            }
+                        } 
+                    }
+                },
                 evaluate: true,
                 ticket: true,
                 petStore: true
