@@ -82,12 +82,19 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
       console.log(formItem, '上传成功43', fileId);
       setFormLoading(false);
       //设置图片路径到表单上
-      detailForm.setFieldValue(formItem.prop, '111');
-      detailForm.setFieldValue(formItem.putProp, fileId); //thumb
+      if (formItem.uploadProps?.maxCount > 1) {
+        detailForm.setFieldValue(formItem.prop, [fileId]);
+        detailForm.setFieldValue(formItem.putProp, [fileId]);
+      } else {
+        detailForm.setFieldValue(formItem.prop, '111');
+        detailForm.setFieldValue(formItem.putProp, fileId); //thumb
+      }
+
       setFormData((d: any) => {
         return {
           ...d,
-          [formItem.putProp]: fileId,
+          [formItem.putProp]:
+            formItem.uploadProps?.maxCount > 1 ? [fileId] : fileId,
         };
       });
     };

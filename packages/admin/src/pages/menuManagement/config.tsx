@@ -16,6 +16,12 @@ const tableColumns = [
     dataIndex: 'name',
   },
   {
+    title: '缩略图',
+    key: 'image',
+    dataIndex: 'image',
+    slot: 'thumb',
+  },
+  {
     title: '套餐内容',
     key: 'description',
     dataIndex: 'description',
@@ -93,6 +99,19 @@ const formConfig = {
       },
     },
     {
+      label: '缩略图',
+      prop: 'image',
+      putProp: 'imageIds',
+      type: 'upload',
+      span: 24,
+      uploadProps: {
+        listType: 'picture-card',
+        accept: 'image/*',
+        multiple: false,
+        maxCount: 2,
+      },
+    },
+    {
       label: '是否需要仪式',
       prop: 'isRite',
       type: 'radio',
@@ -100,7 +119,7 @@ const formConfig = {
       // rules: [{ required: true, message: '请输入产品名称' }],
       labelCol: 6,
       wrapperCol: 18,
-      options: RITE_TYPE
+      options: RITE_TYPE,
     },
     {
       label: '是否寄送',
@@ -109,7 +128,7 @@ const formConfig = {
       // rules: [{ required: true, message: '请输入产品名称' }],
       labelCol: 6,
       wrapperCol: 18,
-      options: DELIVERY_TYPE
+      options: DELIVERY_TYPE,
     },
     {
       label: '价格(¥)',
@@ -139,7 +158,7 @@ const formConfig = {
   ],
   formModel: {
     isRite: 1,
-    isHandleWay: 1
+    isHandleWay: 1,
   },
   rules: [],
 };
