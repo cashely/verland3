@@ -10,10 +10,12 @@ const router = new Router({
 router.post('/', validate(z => (
     z.object({
         body: z.object({
-            province: z.string().min(1),
-            city: z.string().min(1),
-            area: z.string().min(1),
-            detail: z.string().min(1),
+            province: z.string().optional(),
+            city: z.string().optional(),
+            area: z.string().optional(),
+            detail: z.string().optional(),
+            isSelfExpress: z.union([z.literal(1), z.literal(2)]).default(2),
+            petStoreId: z.string().optional(),
             petname: z.string().min(1),
             type: z.string().min(1),
             subType: z.string().min(1),
@@ -33,17 +35,22 @@ router.post('/', validate(z => (
     })
 )), async (req, res) => {
     transaction(async (prisma) => {
-        const { province, city, area, detail } = req.body;
         const { id } = req.user;
-        const address = await prisma.address.create({
-            data: {
-                userId: id,
-                province,
-                city,
-                area,
-                detail
-            }
-        });
+        let address = {};
+        const { isSelfExpress, petStoreId } = req.body;
+
+        if (isSelfExpress !== 1) {
+            const { province, city, area, detail } = req.body;
+            address = await prisma.address.create({
+                data: {
+                    userId: id,
+                    province,
+                    city,
+                    area,
+                    detail
+                }
+            });
+        }
 
         const { petname, weight, age, type, subType } = req.body;
         const pet = await prisma.pet.create({
@@ -81,7 +88,23 @@ router.post('/', validate(z => (
         // 计算价格  总价格 = 附加服务价格 + 套餐价格 + (体重范围 - 1) * 1分
         // const totalAmount = bookGoodsAmount + menuAmount + (weight - 1) * 1;
 
-        const totalAmount = bookGoodsAmount + menuAmount;
+        let totalAmount = bookGoodsAmount + menuAmount;
+
+        if (isSelfExpress === 1) {
+            // 查询选择宠物门店信息
+            const petStore = await prisma.petStore.findUnique({
+                where: {
+                    id: petStoreId
+                }
+            });
+
+            if (!petStore) {
+                throw new Error('宠物门店不存在');
+            }
+
+            totalAmount += petStore.price;
+
+        }
 
 
         
@@ -102,6 +125,7 @@ router.post('/', validate(z => (
                 mark,
                 phone,
                 username,
+                isSelfExpress,
                 menu: {
                     connect: { id: menuId } 
                 },
@@ -113,6 +137,9 @@ router.post('/', validate(z => (
                 },
                 user: {
                     connect: { id }
+                },
+                petStore: {
+                    connect: { id: petStoreId }
                 }
             }
         });
@@ -156,7 +183,8 @@ router.get('/', validate(z => (
                 },
                 menu: true,
                 evaluate: true,
-                ticket: true
+                ticket: true,
+                petStore: true
             },
             orderBy: {
                 createdAt: 'desc'
@@ -193,7 +221,8 @@ router.get('/:id', validate(z => (
                 },
                 menu: true,
                 evaluate: true,
-                ticket: true
+                ticket: true,
+                petStore: true
             }
         });
         res.response.success(book);

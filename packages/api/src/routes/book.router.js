@@ -29,7 +29,8 @@ router.get('/', validate(z => (
                        bookGood: true 
                     }
                 },
-                menu: true
+                menu: true,
+                petStore: true
             },
             orderBy: {
                 createdAt: 'desc'
@@ -67,7 +68,8 @@ router.get('/:id', validate(z => (
                        bookGood: true 
                     }
                 },
-                menu: true
+                menu: true,
+                petStore: true
             }
         });
         res.response.success(book);

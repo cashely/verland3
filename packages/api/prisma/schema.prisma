@@ -109,7 +109,7 @@ model Book {
   handleWay       Int        @default(1) // 处理方式 1-邮寄 2-自行提取 3-放弃处理
   handleDateTime  DateTime?   // 邮寄时间/提取时间
   // expressDateTime DateTime? // 快递时间
-  addressId       String
+  addressId       String?
   address         Address?   @relation(fields: [addressId], references: [id])
   isRite          Int        @default(2) // 是否需要仪式
   riteDateTime    DateTime? // 仪式时间
@@ -137,6 +137,9 @@ model Book {
   expressNo       String? // 寄送的快递单号
   expressName     String? // 寄送的快递名称
   updatedAt       DateTime?  @updatedAt
+  isSelfExpress   Int        @default(2) // 是否自送  1-是   2-否
+  petStoreId      String?
+  petStore        PetStore?  @relation(fields: [petStoreId], references: [id])
 
 }
 
@@ -239,6 +242,7 @@ model PetStore {
   price Int?  // 门店收费价格
   tel String? // 门店联系方式
   contact String? // 门店对接人
+  books Book[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
