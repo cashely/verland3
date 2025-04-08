@@ -89,8 +89,9 @@ const tableColumns = [
     width: 220,
     showTitle: true,
     render(_: any) {
-      return `${_.province || ''}${_.city || ''}${_.area || ''}${_.detail || ''
-        }`;
+      return `${_?.province || ''}${_?.city || ''}${_?.area || ''}${
+        _?.detail || ''
+      }`;
     },
   },
   {
@@ -199,8 +200,8 @@ const tableColumns = [
           <p>评分：{_?.score}</p>
           <p>评价内容：{_?.content || '-'}</p>
         </div>
-      )
-    }
+      );
+    },
   },
   {
     title: '创建时间',
@@ -250,8 +251,9 @@ const detailItems = [
     prop: 'address',
     render(_) {
       if (!_) return;
-      return `${_.province || ''}${_.city || ''}${_.area || ''}${_.detail || ''
-        }`;
+      return `${_?.province || ''}${_?.city || ''}${_?.area || ''}${
+        _?.detail || ''
+      }`;
     },
   },
   {
