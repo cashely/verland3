@@ -165,7 +165,7 @@ const tableColumns = [
         case 1:
           return '已预约';
         case 2:
-          return '待寄送';
+          return '待处理';
         case 3:
           return '已完成';
         case 4:
@@ -302,7 +302,7 @@ const detailItems = [
         case 1:
           return '已预约';
         case 2:
-          return '待寄送';
+          return '待处理';
         case 3:
           return '已完成';
         case 4:

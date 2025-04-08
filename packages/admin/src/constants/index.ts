@@ -10,7 +10,7 @@ const APPOINTMENT_STATUS = [
     value: 1,
   },
   {
-    label: '待寄送',
+    label: '待处理',
     value: 2,
   },
   ,
