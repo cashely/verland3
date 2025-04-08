@@ -153,7 +153,7 @@ const tableColumns = [
     render: (_: number) => getLabelByValue(ORDER_CHANNEL, _),
   },
   {
-    title: '付款状态',
+    title: '预约单状态',
     key: 'statu',
     dataIndex: 'statu',
     width: 120,
