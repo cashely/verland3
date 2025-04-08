@@ -45,14 +45,15 @@ router.get('/',validate(z => (
         }
         const menus = await prisma.menu.findMany({
             where: whereCondition,
-            include: {
-                images: true
-            },
             orderBy: {
                 createdAt: 'desc'
             },
             include: {
-                images: true
+                images: {
+                    include: {
+                        image: true 
+                    }
+                } 
             },
             skip: (pageNo - 1) * pageSize,
             take: Number(pageSize),
@@ -85,7 +86,11 @@ router.get('/:id', validate((z) => (
                 id
             },
             include: {
-                images: true 
+                images: {
+                    include: {
+                        image: true 
+                    }
+                } 
             }
         });
         res.response.success(menu);
