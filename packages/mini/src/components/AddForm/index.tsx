@@ -210,6 +210,16 @@ export default forwardRef((props, ref) => {
                 area: district,
               });
             }
+            props.onFormChange &&
+              props.onFormChange(formItem.prop, {
+                [formItem.prop]: `${province}-${city}${
+                  district ? '-' + district : ''
+                }`,
+                detail,
+                province,
+                city,
+                area: district,
+              });
             console.log(formatAddress(res.address), 'address');
           }
         },
@@ -639,13 +649,13 @@ export default forwardRef((props, ref) => {
                       {formItem.label}
                     </Text>
                   </View>
-                  {formItem.tabsOptions?.length && (
+                  {formItem.tabsOptions?.length ? (
                     <AtSegmentedControl
                       values={formItem.tabsTitle}
                       current={tabIndex}
                       onClick={(e) => handleChange(e, formItem)}
                     ></AtSegmentedControl>
-                  )}
+                  ) : null}
                 </View>
                 {formItem.tabsOptions[tabIndex]?.content && (
                   <View className="tab-content">

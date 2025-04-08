@@ -22,7 +22,7 @@ export default function AdditionalService() {
   const [isOpened, setIsOpened] = useState(false);
   const [selectedItem, setSelectedItem] = useState<IDataItem>();
   const [data, setData] = useState<IDataItem[]>([]);
-
+  const [showEmpty, setShowEmpty] = useState(false);
   // 已选中的附加服务的价格
   useEffect(() => {
     // const bookInfo = JSON.parse(getStorageSync('bookInfo') || '{}');
@@ -83,6 +83,7 @@ export default function AdditionalService() {
     await list().then((res) => {
       const { data = [] } = res;
       console.log('data', data);
+      data.length === 0 && setShowEmpty(true);
       setData(
         data.map((item) => ({
           ...item,
@@ -112,43 +113,40 @@ export default function AdditionalService() {
       <View className="page-additionalService">
         <View className="content">
           <View className="inner">
-            {data?.length ? (
-              data.map((item, index) => (
-                <View
-                  className={`as-item ${
-                    selectedIndex.includes(index) ? 'selected' : ''
-                  }`}
-                  key={index}
-                  onClick={() => handleSelectItem(index)}
-                >
-                  <View className="as-item__image">
-                    <Image
-                      className="image"
-                      mode="widthFix"
-                      style={{ width: '80px', height: '80px' }}
-                      src={fileUrl + '/' + item.imageUrl}
-                    ></Image>
-                  </View>
-                  <View className="as-item__content">
-                    <View className="as-item__content-name">{item.title}</View>
-                    <View>
-                      <View
-                        onClick={(e) => handleShowDetail(e, item.id)}
-                        className="goDetail"
-                      >
-                        查看详情
-                      </View>
+            {data.map((item, index) => (
+              <View
+                className={`as-item ${
+                  selectedIndex.includes(index) ? 'selected' : ''
+                }`}
+                key={index}
+                onClick={() => handleSelectItem(index)}
+              >
+                <View className="as-item__image">
+                  <Image
+                    className="image"
+                    mode="widthFix"
+                    style={{ width: '80px', height: '80px' }}
+                    src={fileUrl + '/' + item.imageUrl}
+                  ></Image>
+                </View>
+                <View className="as-item__content">
+                  <View className="as-item__content-name">{item.title}</View>
+                  <View>
+                    <View
+                      onClick={(e) => handleShowDetail(e, item.id)}
+                      className="goDetail"
+                    >
+                      查看详情
+                    </View>
 
-                      <View className="as-item__content-price">
-                        ¥{formatPrice(item.price)}
-                      </View>
+                    <View className="as-item__content-price">
+                      ¥{formatPrice(item.price)}
                     </View>
                   </View>
                 </View>
-              ))
-            ) : (
-              <View>暂无附加服务数据</View>
-            )}
+              </View>
+            ))}
+            {showEmpty ? <View className="empty">暂无附加服务数据</View> : null}
           </View>
         </View>
 

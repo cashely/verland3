@@ -27,7 +27,7 @@ const tabList = [
   { title: '全部' },
   { title: '待付款' },
   { title: '已预约' },
-  { title: '待寄送' },
+  { title: '待处理' },
   { title: '已完成' },
   { title: '已取消' },
   { title: '异常' },
@@ -44,19 +44,22 @@ export default function Index() {
   const [context, setContext] = useState('');
   const [rateValue, setRate] = useState(5);
   const [bookId, setBookId] = useState('');
+  const [showEmpty, setShowEmpty] = useState(false);
   const getlist = async (current = 0) => {
     const res = await list();
     if (res.code === 200) {
       const result = res.data.map((item) => ({
         ...item,
-        bookDateTime: dayjs(item.bookDateTime).format('YYYY-MM-DD HH:mm:ss'),
+        bookDateTime: item.bookDateTime
+          ? dayjs(item.bookDateTime).format('YYYY-MM-DD HH:mm:ss')
+          : '-',
       }));
-
-      setData(
+      const _showData =
         current !== 0
           ? result.filter((item) => item.statu === current - 1)
-          : result
-      );
+          : result;
+      setData(_showData);
+      setShowEmpty(_showData?.length == 0);
       setCurrent(+current);
     }
   };
@@ -263,7 +266,7 @@ export default function Index() {
                   </View>
                 </View>
               ))}
-              {!data?.length && <View className="text-center">暂无数据</View>}
+              {showEmpty ? <View className="text-center">暂无数据</View> : null}
             </View>
           </AtTabsPane>
         ))}

@@ -1,6 +1,12 @@
 import { useState, useRef, useEffect, Suspense } from 'react';
 import { View, Label, Checkbox, Text, CheckboxGroup } from '@tarojs/components';
-import { useLoad, showToast, navigateTo, setStorageSync } from '@tarojs/taro';
+import {
+  useLoad,
+  showToast,
+  navigateTo,
+  useUnload,
+  setStorageSync,
+} from '@tarojs/taro';
 import { AtButton, AtToast } from 'taro-ui';
 import { otherFormList, baseInfoFormList } from './model';
 import AddForm from '@/components/AddForm';
@@ -22,10 +28,10 @@ export default () => {
     isRite: '1',
     handleWay: '2',
     isSelfExpress: '1',
-    phone: '18334496112',
   });
   useLoad(() => {
     console.log('Page loaded.');
+    _setOtherFormList(otherFormList);
   });
   const [_otherFormList, _setOtherFormList] = useState(otherFormList);
   const [_baseInfoFormList, _setBaseInfoFormList] = useState(baseInfoFormList);
@@ -75,6 +81,11 @@ export default () => {
     }
     if (isMenuA) {
       //A套餐
+      // if (otherInfo.isSelfExpress === '1') {
+      //   if (!otherInfo.petStoreId) {
+      //     return toast('请选择宠物门店');
+      //   }
+      // }
     } else {
       if (!otherInfo?.bookDateTime) {
         return toast('上门服务时间不为空');
@@ -85,13 +96,15 @@ export default () => {
         !otherInfo?.handleDateTime
       ) {
         return toast('纪念物获取时间不为空');
-      } else if (otherInfo.isSelfExpress === '1') {
-        if (!otherInfo.petStoreId) {
-          return toast('请选择宠物门店');
-        }
-        if (!otherInfo?.postAddress || !otherInfo?.detail) {
-          return toast('接收地址不完整（包含门牌号）');
-        }
+      }
+    }
+    if (otherInfo.isSelfExpress === '1') {
+      if (!otherInfo.petStoreId) {
+        return toast('请选择宠物门店');
+      }
+    } else {
+      if (!otherInfo?.postAddress || !otherInfo?.detail) {
+        return toast('接收地址不完整（包含门牌号）');
       }
     }
 
@@ -152,23 +165,31 @@ export default () => {
         } else {
           item.hidden = checkProps.includes(item.prop) && isMenuA;
         }
+        // if (!isMenuA) {
+        //B套餐
+        if (val?.isSelfExpress === '1') {
+          if (item.prop === 'petStoreId') {
+            item.hidden = false;
+          }
+          if (item.prop === 'postAddress' || item.prop === 'detail') {
+            item.hidden = true;
+          }
+        } else {
+          if (item.prop === 'petStoreId') {
+            item.hidden = true;
+          }
+          if (item.prop === 'postAddress' || item.prop === 'detail') {
+            item.hidden = false;
+          }
+        }
+        // }
       });
       if (isMenuA) {
-        setformModel((d) => {
-          return {
-            ...d,
-            ...val,
-            menuId,
-            petname,
-            type,
-            subType,
-            handleDateTime: '',
-            bookDateTime: '',
-            riteDateTime: '',
-            handleWay: '',
-            isRite: '',
-            mark: '',
-          };
+        setformModel({
+          ...val,
+          isRite: undefined,
+          handleWay: undefined,
+          isSelfExpress: '1',
         });
       } else {
         setformModel((d) => {
@@ -181,6 +202,7 @@ export default () => {
             subType,
             handleWay: '2',
             isRite: '1',
+            isSelfExpress: '1',
           };
         });
       }
@@ -204,9 +226,26 @@ export default () => {
             item.hidden = true;
           }
         }
-        if (item.prop === 'petStoreId') {
-          item.hidden = val.isSelfExpress === '2';
+        //B套餐
+        if (val?.isSelfExpress === '1') {
+          if (item.prop === 'petStoreId') {
+            item.hidden = false;
+          }
+          if (item.prop === 'postAddress' || item.prop === 'detail') {
+            item.hidden = true;
+          }
+        } else {
+          if (item.prop === 'petStoreId') {
+            item.hidden = true;
+          }
+          if (item.prop === 'postAddress' || item.prop === 'detail') {
+            item.hidden = false;
+          }
         }
+
+        // if (item.prop === 'petStoreId') {
+        //   item.hidden = val.isSelfExpress === '2';
+        // }
       });
 
       setformModel((d) => {
@@ -218,6 +257,7 @@ export default () => {
           city: '',
           area: '',
           detail: '',
+          petStoreId: '',
         };
       });
     } else {
@@ -252,23 +292,48 @@ export default () => {
 
   useEffect(() => {
     console.log('menuList变更46');
-    _setOtherFormList((d: any) => {
-      console.log('setOtherFormList', d, menuList);
-      return d.map((item: any) => {
-        if (item.prop === 'menuId') {
-          return {
-            ...item,
-            tabsOptions: menuList.map((item: any) => ({
-              id: item.id,
-              label: item.name,
-              content: item.description,
-            })),
-            tabsTitle: menuList.map((iten: any) => iten.name),
-          };
-        }
-        return item;
-      });
+    const showProps = [
+      'handleWay',
+      'handleDateTime',
+      'bookDateTime',
+      'isRite',
+      'riteDateTime',
+    ];
+    _otherFormList.forEach((item: any) => {
+      if (item.prop === 'postAddress' || item.prop === 'detail') {
+        item.hidden = formModel.isSelfExpress === '1';
+      }
+      if (item.prop === 'menuId') {
+        item.tabsOptions = menuList.map((item: any) => ({
+          id: item.id,
+          label: item.name,
+          content: item.description,
+        }));
+        item.tabsTitle = menuList.map((iten: any) => iten.name);
+      }
+      //重置
+      if (showProps.includes(item.prop)) {
+        item.hidden = false;
+      }
     });
+    // _setOtherFormList((d: any) => {
+    //   console.log('setOtherFormList', d, menuList);
+    //   return d.map((item: any) => {
+    //     if (item.prop === 'menuId') {
+    //       return {
+    //         ...item,
+    //         tabsOptions: menuList.map((item: any) => ({
+    //           id: item.id,
+    //           label: item.name,
+    //           content: item.description,
+    //         })),
+    //         tabsTitle: menuList.map((iten: any) => iten.name),
+    //       };
+    //     }
+    //     return item;
+    //   });
+    // });
+
     // setformModel((d: any) => {
     //   return {
     //     ...d,
@@ -277,6 +342,14 @@ export default () => {
     //   };
     // });
   }, [menuList]);
+
+  // useUnload(() => {
+  //   console.log('卸载====');
+  //   setformModel({
+  //     ...formModel,
+  //     menuId: '', // 处理方式
+  //   });
+  // });
 
   const handleFilterTimes = (propName: string, val: any, formData: any) => {
     if (propName === 'bookDateTime') {

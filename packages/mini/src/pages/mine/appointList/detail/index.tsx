@@ -63,7 +63,9 @@ export default function Index() {
           if (!result) return;
           setInfo({
             ...result,
-            local: `${result.address.province} ${result?.address?.city} ${result?.address.area}`,
+            local: result?.address
+              ? `${result?.address?.province} ${result?.address?.city} ${result?.address?.area}`
+              : '',
             petname: result.pet?.petname,
             bookDateTime: dayjs(result.bookDateTime).format(
               'YYYY-MM-DD HH:mm:ss'
@@ -71,7 +73,7 @@ export default function Index() {
             handleDateTime: dayjs(result.handleDateTime).format(
               'YYYY-MM-DD HH:mm:ss'
             ),
-            detail: result.address.detail,
+            detail: result?.address?.detail || '',
             pet: undefined,
             address: undefined,
             bookGoods:

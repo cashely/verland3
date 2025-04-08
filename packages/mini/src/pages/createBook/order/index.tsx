@@ -207,15 +207,25 @@ export default () => {
           title="爱宠名字"
           extraText={<>{order?.pet?.petname || '-'}</>}
         />
-        <AtListItem
-          title="预约时间"
-          extraText={<>{formatDate(order.bookDateTime) || '-'}</>}
-        />
-        <AtListItem title="接收地址" extraText={getAddress(order.address)} />
-        <AtListItem
-          title="门牌号"
-          extraText={<>{order?.address?.detail || '-'}</>}
-        />
+        {formatDate(order.bookDateTime) ? (
+          <AtListItem
+            title="预约时间"
+            extraText={<>{formatDate(order.bookDateTime) || '-'}</>}
+          />
+        ) : null}
+
+        {order?.address ? (
+          <>
+            <AtListItem
+              title="接收地址"
+              extraText={getAddress(order.address)}
+            />
+            <AtListItem
+              title="门牌号"
+              extraText={<>{order?.address?.detail || '-'}</>}
+            />
+          </>
+        ) : null}
 
         {order?.bookGoods?.length > 0 && (
           <>
@@ -228,7 +238,7 @@ export default () => {
           </>
         )}
 
-        <AtListItem title="备注" extraText={order.mark} />
+        <AtListItem title="备注" extraText={order.mark || '暂无'} />
         {/* <View className="subInfo">
           <View className="sub-item">1</View>
           <View className="sub-item">2</View>

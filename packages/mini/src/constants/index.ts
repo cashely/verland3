@@ -1,7 +1,7 @@
 //预约单状态
 const ORDER_STATUS = {
   1: '已预约',
-  2: '待寄送',
+  2: '待处理',
   3: '已完成',
   4: '已取消',
 };
@@ -99,7 +99,7 @@ const APPOINTMENT_TYPES = {
     bgClass: 'yy',
   },
   2: {
-    label: '待寄送',
+    label: '待处理',
     bgClass: 'js',
   },
   3: {
