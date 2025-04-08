@@ -116,8 +116,8 @@ const formConfig = {
       uploadProps: {
         listType: 'picture-card',
         accept: 'image/*',
-        multiple: true,
-        maxCount: 2,
+        multiple: false,
+        maxCount: 1,
       },
     },
     {

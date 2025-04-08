@@ -172,7 +172,7 @@ const UploadButton: React.FC<UniversalUploadProps> = ({
 
   return (
     <>
-      {JSON.stringify(combinUplodProps)}
+      {/* {JSON.stringify(combinUplodProps)} */}
       <Upload
         action={`${FILE_URL}file`}
         name="file"
