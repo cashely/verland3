@@ -10,8 +10,6 @@ const bookGoodRouter = new Router({
     z.object({
         query: z.object({
             title: z.string().optional(),
-            pageSize: z.number().min(1).default(20),
-            pageNo: z.number().min(1).default(1)
         })
     })
 )), (req, res) => {

@@ -8,11 +8,6 @@ const router = new Router({
 
 router.get('/', validate(z => (
     z.object({
-        query: z.object({
-            pageSize: z.number().min(1).default(20),
-            pageNo: z.number().min(1).default(1),
-            type: z.optional(z.union([z.literal(1), z.literal(2)]))
-        })
     })
 )), async (req, res) => {
     try {

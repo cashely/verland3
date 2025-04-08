@@ -79,7 +79,9 @@ router.post('/', validate(z => (
         const menuAmount = menu.price;
 
         // 计算价格  总价格 = 附加服务价格 + 套餐价格 + (体重范围 - 1) * 1分
-        const totalAmount = bookGoodsAmount + menuAmount + (weight - 1) * 1;
+        // const totalAmount = bookGoodsAmount + menuAmount + (weight - 1) * 1;
+
+        const totalAmount = bookGoodsAmount + menuAmount;
 
 
         
@@ -131,11 +133,6 @@ router.post('/', validate(z => (
 
 router.get('/', validate(z => (
     z.object({
-        query: z.object({
-            statu: z.number().int().optional(),
-            pageSize: z.number().min(1).default(20),
-            pageNo: z.number().min(1).default(1),
-        })
     })
 )), async (req, res) => {
     try {

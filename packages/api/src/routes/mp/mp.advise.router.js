@@ -32,10 +32,6 @@ router.post('/', validate(z => (
 
 router.get('/', validate(z => (
     z.object({
-        query: z.object({
-            pageSize: z.number().min(1).default(20),
-            pageNo: z.number().min(1).default(1),
-        })
     })
 )), async (req, res) => {
     try {

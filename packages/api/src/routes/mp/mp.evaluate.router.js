@@ -45,9 +45,7 @@ router.post('/', validate(z => (
 router.get('/', validate(z => (
     z.object({
         query: z.object({
-            bookIds: z.string().min(1),
-            pageSize: z.number().min(1).default(20),
-            pageNo: z.number().min(1).default(1),
+            bookIds: z.string().array().optional(),
         })
     })
 )), async (req, res) => {
