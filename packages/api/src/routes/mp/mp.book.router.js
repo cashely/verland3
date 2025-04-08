@@ -134,13 +134,13 @@ router.post('/', validate(z => (
                 },
                 address: addressId ? {
                     connect: { id: addressId }
-                } : null,
+                } : undefined,
                 user: {
                     connect: { id }
                 },
                 petStore: petStoreId ? {
                     connect: { id: petStoreId }
-                }: null
+                }: undefined
             }
         });
 
