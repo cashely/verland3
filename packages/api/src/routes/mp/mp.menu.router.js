@@ -51,6 +51,9 @@ router.get('/', validate(z => (
             orderBy: {
                 createdAt: 'desc'
             },
+            include: {
+                images: true
+            },
             skip: (pageNo - 1) * pageSize,
             take: Number(pageSize),
         });
@@ -80,7 +83,10 @@ router.get('/:id', validate(z => (
         const menu = await prisma.menu.findUnique({
             where: {
                 id
-            }
+            },
+            include: {
+                images: true
+            },
         });
         res.response.success(menu);
     } catch (error) {

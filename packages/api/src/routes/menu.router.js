@@ -51,6 +51,9 @@ router.get('/',validate(z => (
             orderBy: {
                 createdAt: 'desc'
             },
+            include: {
+                images: true
+            },
             skip: (pageNo - 1) * pageSize,
             take: Number(pageSize),
         });
