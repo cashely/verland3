@@ -207,7 +207,7 @@ router.post('/wxpay/notify_url', async (req, res) => {
                     },
                     // 退款金额
                     amount4: {
-                        value: book.payAmount
+                        value: book.payAmount / 100
                     }
                 }
             })
