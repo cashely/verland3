@@ -139,7 +139,7 @@ model Book {
   isSelfExpress   Int?        @default(2) // 是否自送  1-是   2-否
   petStoreId      String?    // 自送宠物门店，如果expressWay选择的是2的话这个字段需要传递过来
   petStore        PetStore?  @relation(fields: [petStoreId], references: [id])
-  expressWay      Int        // 宠物接收方式  1-自送 2-门店接受 3-上门收取
+  expressWay      Int?       // 宠物接收方式 0-未知  1-自送 2-门店接受 3-上门收取
   expressDateTime DateTime?  // 上门收取的时间, 如果expessWay为3的时候这个字段需要传递过来
 }
 
@@ -223,7 +223,7 @@ model Menu {
   book    Book[]
   isRite  Int @default(2) // 是否需要仪式 1 是 2否
   isHandleWay Int @default(2) // 是否需要寄送回收 1 是 2 否
-  expressWays  String  // 宠物寄送方式，可多选，用顿号分割开
+  expressWays  String?  // 宠物寄送方式，可多选，用顿号分割开
 }
 
 // 套餐图片关联表
