@@ -108,7 +108,6 @@ model Book {
   bookDateTime    DateTime? // 预约上门时间
   handleWay       Int        @default(1) // 处理方式 1-无需处理 2-自行提取 3-放弃处理
   handleDateTime  DateTime?   // 邮寄时间/提取时间
-  // expressDateTime DateTime? // 快递时间
   addressId       String?
   address         Address?   @relation(fields: [addressId], references: [id])
   isRite          Int        @default(2) // 是否需要仪式
@@ -137,10 +136,11 @@ model Book {
   expressNo       String? // 寄送的快递单号
   expressName     String? // 寄送的快递名称
   updatedAt       DateTime?  @updatedAt
-  isSelfExpress   Int        @default(2) // 是否自送  1-是   2-否
-  petStoreId      String?
+  isSelfExpress   Int?        @default(2) // 是否自送  1-是   2-否
+  petStoreId      String?    // 自送宠物门店，如果expressWay选择的是2的话这个字段需要传递过来
   petStore        PetStore?  @relation(fields: [petStoreId], references: [id])
-
+  expressWay      Int        // 宠物接收方式  1-自送 2-门店接受 3-上门收取
+  expressDateTime DateTime?  // 上门收取的时间, 如果expessWay为3的时候这个字段需要传递过来
 }
 
 // 订单关联的附加服务 多对多中间表
@@ -223,6 +223,7 @@ model Menu {
   book    Book[]
   isRite  Int @default(2) // 是否需要仪式 1 是 2否
   isHandleWay Int @default(2) // 是否需要寄送回收 1 是 2 否
+  expressWays  String  // 宠物寄送方式，可多选，用顿号分割开
 }
 
 // 套餐图片关联表

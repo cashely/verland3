@@ -30,16 +30,18 @@ router.post('/', validate(z => (
             payChannel: z.number().int().default(1),
             channel: z.number().int().default(1),
             phone: z.string().length(11),
-            username: z.string().min(1)
+            username: z.string().min(1),
+            expressWay: z.number().int(),
+            expressDateTime: z.string().optional(),
         })
     })
 )), async (req, res) => {
     transaction(async (prisma) => {
         const { id } = req.user;
         let address = {};
-        const { isSelfExpress, petStoreId } = req.body;
+        const { expressWay, petStoreId } = req.body;
 
-        if (isSelfExpress !== 1) {
+        if (expressWay === 3) {
             const { province, city, area, detail } = req.body;
             address = await prisma.address.create({
                 data: {
@@ -90,7 +92,7 @@ router.post('/', validate(z => (
 
         let totalAmount = bookGoodsAmount + menuAmount;
 
-        if (isSelfExpress === 1 && petStoreId) {
+        if (expressWay === 2 && petStoreId) {
             // 查询选择宠物门店信息
             const petStore = await prisma.petStore.findUnique({
                 where: {
@@ -111,7 +113,7 @@ router.post('/', validate(z => (
 
         const { id: addressId } = address;
         const { id: petId } = pet;
-        const { bookDateTime, handleWay, handleDateTime, isRite, riteDateTime, payChannel = 1, mark, phone, username } = req.body;
+        const { bookDateTime, handleWay, handleDateTime, isRite, riteDateTime, payChannel = 1, mark, phone, username, expressDateTime } = req.body;
 
         const book = await prisma.book.create({
             data: {
@@ -125,7 +127,8 @@ router.post('/', validate(z => (
                 mark,
                 phone,
                 username,
-                isSelfExpress,
+                expressWay,
+                expressDateTime,
                 menu: {
                     connect: { id: menuId } 
                 },
@@ -263,6 +266,9 @@ router.get('/hasBookDate', validate(z => (
                 bookDateTime: {
                     gte: startDate,
                     lte: endDate
+                },
+                statu: {
+                    not: 1
                 }
             }
         });

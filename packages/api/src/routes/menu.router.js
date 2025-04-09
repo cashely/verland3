@@ -113,6 +113,7 @@ router.get('/:id', validate((z) => (
 router.post('/', validate((z) => (
     z.object({
         body: z.object({
+            expressWays: z.string().optional(),
             name: z.string().min(1),
             price: z.number().min(1),
             description: z.string().min(1),
@@ -123,7 +124,7 @@ router.post('/', validate((z) => (
     })
 )), async (req, res) => {
     try {
-        const { name, price, description, imageIds = [], isRite, isHandleWay } = req.body;
+        const { name, price, description, imageIds = [], isRite, isHandleWay, expressWays } = req.body;
         const menu = await prisma.menu.create({
             data: {
                 name,
@@ -131,6 +132,7 @@ router.post('/', validate((z) => (
                 description,
                 isHandleWay,
                 isRite,
+                expressWays,
                 images: {
                     createMany: {
                         data: imageIds.map((imageId) => ({
@@ -164,6 +166,7 @@ router.put('/:id', validate((z) => (
             id: z.string().min(1)
         }),
         body: z.object({
+            expressWays: z.string().optional(),
             name: z.string().min(1),
             price: z.number().min(1),
             description: z.string().min(1),
@@ -175,7 +178,7 @@ router.put('/:id', validate((z) => (
 )), async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, price, description, imageIds = [], isRite, isHandleWay } = req.body;
+        const { name, price, description, imageIds = [], isRite, isHandleWay, expressWays } = req.body;
         const menu = await prisma.menu.update({
             where: {
                 id
@@ -186,6 +189,7 @@ router.put('/:id', validate((z) => (
                 description,
                 isRite,
                 isHandleWay,
+                expressWays,
                 images: {
                     deleteMany: {},
                     createMany: {
