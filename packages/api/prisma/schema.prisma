@@ -59,7 +59,7 @@ model Pet {
   id        String   @id @default(uuid(7))
   petname  String?
   weight    Int?    // 0~5->1  5~10->2  求值公式Math.ceil(n / 5)
-  age       String?
+  age       Int?
   images    Image[]
   userId    String
   user      User     @relation(fields: [userId], references: [id])
