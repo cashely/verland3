@@ -682,6 +682,7 @@ export default () => {
     // dateInfo.timeRange = formItem.timeRange;
     // selectedTime?.split(' ')[1] ||
     //设置可选时间范围
+    /*
     if (formItem.prop === 'bookDateTime') {
       setDefaultDate((d) => {
         d.timeRange = filterAvailableRanges(formItem.timeRange);
@@ -725,25 +726,11 @@ export default () => {
           dayjs(formData.bookDateTime).date(),
           parseInt()
         );
-*/
-        return d;
-      });
-    }
-    if (formItem.prop === 'bookDate') {
-      setDefaultDate((d) => {
-        d.timeRange = formItem.timeRange;
-        d.startDate = new Date(
-          dayjs(formData.bookDate).year(),
-          dayjs(formData.bookDate).month()
-        );
-        return d;
-      });
-      // setTimeRange(filterAvailableRanges(formItem.timeRange));
-    } else {
-      console.log('410', formItem.timeRange);
 
-      // setTimeRange(filterAvailableRanges(formItem.timeRange));
+        return d;
+      });
     }
+  */
     setShowDatePicker(true);
   };
 
