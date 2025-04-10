@@ -27,7 +27,6 @@ router.get('/', validate(z => (
             avatar: z.string().optional(),
             nickname: z.string().optional(),
             phone: z.string().optional(),
-            addressId: z.string().optional(),
             username: z.string().optional(),
             gender: z.number().optional()
         })
