@@ -26,6 +26,9 @@
       "@/*": [
         "./src/*"
       ],
+      "@vant/weapp/*": [
+        "path/to/node_modules/@vant/weapp/dist/*"
+      ],
       "components/*": [
         "./src/components/*"
       ], // 将 components/ 映射到 src/components/ 目录

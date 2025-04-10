@@ -126,6 +126,58 @@ const TICKET_STATUS_TYPE = {
   3: '用户催票',
 };
 
+const IS_RITE = [
+  {
+    label: '是',
+    value: '1',
+    checked: true,
+  },
+  {
+    label: '否',
+    value: '2',
+  },
+];
+
+const IS_SELF_EXPRESS = [
+  {
+    label: '是',
+    value: '1',
+    checked: true,
+  },
+  {
+    label: '否',
+    value: '2',
+  },
+];
+
+const PET_RECEIVE_WAYS = [
+  {
+    label: '自送',
+    value: '1',
+    checked: true,
+  },
+  {
+    label: '门店接收',
+    value: '2',
+  },
+  {
+    label: '上门收取',
+    value: '3',
+  },
+];
+
+const HANDLE_WAYS = [
+  {
+    label: '自行提取',
+    value: '2',
+    checked: true,
+  },
+  {
+    label: '放弃处置',
+    value: '3',
+  },
+];
+
 const DEFAULT_IMAGE =
   'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0';
 
@@ -141,23 +193,23 @@ const WEIGHT_OPTIONS = [
 
 //上门服务时间段
 const SERVICE_TIME_RANGES = [
-  '10:00',
-  '11:00',
-  '12:00',
-  '13:00',
-  '14:00',
-  '15:00',
-  '16:00',
-  '17:00',
-  '18:00',
-  '19:00',
-  '20:00',
-  '21:00',
-  // '22:00',
+  '10',
+  '11',
+  '12',
+  '13',
+  '14',
+  '15',
+  '16',
+  '17',
+  '18',
+  '19',
+  '20',
+  '21',
+  '22',
 ];
 
 //仪式服务时间段
-const RITE_SERVICE_TIME_RANGES = ['10:00', '12:00', '14:00', '16:00'];
+const RITE_SERVICE_TIME_RANGES = ['10', '12', '14', '16', '24'];
 //  '24:00'
 //退款通知
 const REFUND_TMP = 'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY';
@@ -179,4 +231,8 @@ export {
   SERVICE_TIME_RANGES,
   RITE_SERVICE_TIME_RANGES,
   PET_SUBTYPES,
+  IS_RITE,
+  IS_SELF_EXPRESS,
+  HANDLE_WAYS,
+  PET_RECEIVE_WAYS,
 };

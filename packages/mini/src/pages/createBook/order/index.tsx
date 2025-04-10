@@ -13,7 +13,12 @@ import { detail, prepay, pay } from '@/apis/book';
 import { formatPrice } from '@/utils';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash-es';
-import { PAY_TMP } from '@/constants';
+import {
+  PAY_TMP,
+  IS_SELF_EXPRESS,
+  HANDLE_WAYS,
+  PET_RECEIVE_WAYS,
+} from '@/constants';
 import './index.scss';
 
 export default () => {
@@ -214,8 +219,67 @@ export default () => {
           />
         ) : null}
 
-        {order?.address ? (
+        {
+          <AtListItem
+            title="是否需要仪式"
+            extraText={order?.isRite == 1 ? '是' : '否'}
+          />
+        }
+
+        {
+          <AtListItem
+            title="仪式预约时间"
+            extraText={
+              order?.isRite == 1 ? formatDate(order.riteDateTime) : '-'
+            }
+          />
+        }
+
+        {
+          <AtListItem
+            title="纪念物获取方式"
+            extraText={
+              HANDLE_WAYS.find((n) => n.value == order.handleWay)?.label || '-'
+            }
+          />
+        }
+
+        {
+          <AtListItem
+            title="纪念物获取时间"
+            extraText={formatDate(order?.handleDateTime) || '-'}
+          />
+        }
+
+        {
+          <AtListItem
+            title="宠物接收方式"
+            extraText={
+              <>
+                {PET_RECEIVE_WAYS.find((n) => n.value == order.expressWay)
+                  ?.label || '-'}
+              </>
+            }
+          />
+        }
+
+        {order?.expressWay == 2 ? (
+          <AtListItem
+            title="宠物门店"
+            extraText={
+              order?.petStore?.name
+                ? `${order?.petStore?.name}-${order?.petStore?.address}`
+                : '-'
+            }
+          />
+        ) : null}
+
+        {order?.address && order?.expressWay == 3 ? (
           <>
+            <AtListItem
+              title="上门收取时间"
+              extraText={getAddress(order.expressDateTime)}
+            />
             <AtListItem
               title="接收地址"
               extraText={getAddress(order.address)}

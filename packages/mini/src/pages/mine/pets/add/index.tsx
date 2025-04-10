@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { View, Image, Picker } from '@tarojs/components';
+import { View, Image } from '@tarojs/components';
 import { showToast, uploadFile, navigateBack } from '@tarojs/taro';
 import { AtInput, AtButton, AtImagePicker, AtModal } from 'taro-ui';
 import { add } from '@/apis/pet';
 import petBg from '../../../../subpackages/assets/images/bg.png';
 import { baseUrl } from '@/apis';
-import { PET_TYPES } from '@/constants';
 import './index.scss';
+import PetPicker from '@/components/PetPicker';
 
 interface IFileItem {
   url: string;
@@ -27,6 +27,7 @@ export default function Add() {
 
   const [files, setFiles] = useState<IFileItem[]>([]);
   const [isOpened, setIsOpened] = useState(false);
+  const [petPickerShow, setPetPickerShow] = useState(false);
 
   const handleAdd = () => {
     add({
@@ -85,17 +86,6 @@ export default function Add() {
   ];
 
   const handleChange = (value: any, key: string) => {
-    if (key === 'petType') {
-      const type = PET_TYPES[0][value.detail.value[0]];
-      const subType = PET_TYPES[1][value.detail.value[1]];
-      setFormData({
-        ...formData,
-        petType: `${type}/${subType}`,
-        type,
-        subType,
-      });
-      return;
-    }
     setFormData({
       ...formData,
       [key]: value,
@@ -138,6 +128,22 @@ export default function Add() {
     setIsOpened(true);
   };
 
+  const handlePetPickerConfirm = (value: any) => {
+    const { type, subType } = value;
+    setFormData({
+      ...formData,
+      petType: `${type}/${subType}`,
+      type,
+      subType,
+    });
+    setPetPickerShow(false);
+  };
+
+  const handlePetShow = () => {
+    // TODO: 跳转到宠物展示页面
+    setPetPickerShow(true);
+  };
+
   return (
     <View className="page-petAdd">
       <Image
@@ -161,21 +167,31 @@ export default function Add() {
               onClick={() => console.log('click')}
             />
           ) : (
-            <Picker
-              range={PET_TYPES}
-              mode="multiSelector"
-              onChange={(e) => handleChange(e, item.key)}
+            <AtInput
+              name={item.key}
+              title={item.title}
+              type={item.type}
+              placeholder={item.placeholder}
               value={formData[item.key]}
-              key={index}
-            >
-              <AtInput
-                name={item.key}
-                title={item.title}
-                placeholder={item.placeholder}
-                value={formData[item.key]}
-                editable={false}
-              />
-            </Picker>
+              editable={false}
+              onClick={handlePetShow}
+            />
+
+            // <Picker
+            //   range={PET_TYPES}
+            //   mode="multiSelector"
+            //   onChange={(e) => handleChange(e, item.key)}
+            //   value={formData[item.key]}
+            //   key={index}
+            // >
+            //   <AtInput
+            //     name={item.key}
+            //     title={item.title}
+            //     placeholder={item.placeholder}
+            //     value={formData[item.key]}
+            //     editable={false}
+            //   />
+            // </Picker>
           )
         )}
         <View className="label">爱宠照片</View>
@@ -195,6 +211,12 @@ export default function Add() {
           </AtButton>
         </View>
       </View>
+
+      <PetPicker
+        isShow={petPickerShow}
+        onConfirm={handlePetPickerConfirm}
+        onClose={() => setPetPickerShow(false)}
+      ></PetPicker>
 
       <AtModal
         isOpened={isOpened}

@@ -3,8 +3,8 @@ import { View, Text } from '@tarojs/components';
 import { navigateTo, useDidShow } from '@tarojs/taro';
 import { AtAvatar, AtButton } from 'taro-ui';
 import { list } from '@/apis/pet';
-import petImage from '../../../assets/imgs/pet-avatar.png';
 import { DEFAULT_IMAGE } from '@/constants';
+import { fileUrl } from '@/apis';
 import './index.scss';
 
 export default function Pets() {
@@ -24,11 +24,20 @@ export default function Pets() {
   const handleAddPet = () => {
     navigateTo({ url: '/pages/mine/pets/add/index' });
   };
+
+  const showImage = (path: string) => {
+    if (!path) return DEFAULT_IMAGE;
+    return fileUrl + '/' + path;
+  };
   return (
     <View className="page-pets">
       {pets.map((item, index) => (
         <View className="pet-item" key={index}>
-          <AtAvatar className="avatar" image={DEFAULT_IMAGE} circle></AtAvatar>
+          <AtAvatar
+            className="avatar"
+            image={showImage(item?.petImage?.[0]?.image?.path)}
+            circle
+          ></AtAvatar>
           <View className="flex justify-between info">
             <Text className="font-bold name">{item.petname}</Text>
             <View>

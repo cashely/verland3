@@ -12,18 +12,50 @@ export default (props) => {
   const date = new Date();
   const year = date.getFullYear();
   const months: Array<number> = [];
-  const days: Array<number> = [];
+  let days: Array<number> = [];
+
+  const [minDay, setMinDay] = useState(date.getDate());
 
   for (let i = 1; i <= 12; i++) {
-    if (i >= Math.max(date.getMonth() + 1, props.data.minDate.month)) {
+    if (i >= Math.max(date.getMonth() + 1, 0)) {
       months.push(i);
     }
   }
+
   for (let i = 1; i <= 31; i++) {
-    if (i >= Math.max(date.getDate(), props.data.minDate.day)) {
+    if (i >= Math.min(minDay, date.getDate())) {
       days.push(i);
+      // setDays([...days, i]);
     }
   }
+
+  //const [days, setDays] = useState<number[]>([]);
+
+  // const [comData, setComData] = useState({
+  //   date,
+  //   year: date.getFullYear(),
+  //   months: [],
+  //   days: [],
+  // });
+
+  // const setMonths = (condition: any = {}) => {
+  //   const months: Array<number> = [];
+  //   for (let i = 1; i <= 12; i++) {
+  //     if (i >= Math.max(date.getMonth() + 1, props.data.minDate.month)) {
+  //       months.push(i);
+  //     }
+  //   }
+  //   setComData({ ...comData, months });
+  // };
+  // const setDays = (condition: any = {}) => {
+  //   const days: Array<number> = [];
+  //   for (let i = 1; i <= 31; i++) {
+  //     if (i >= Math.max(date.getDate(), props.data.minDate.day)) {
+  //       days.push(i);
+  //     }
+  //   }
+  //   setComData({ ...comData, days });
+  // };
 
   /**
    * 判断当前时间是否在指定时间段内
@@ -52,16 +84,67 @@ export default (props) => {
   // const timeRange = ['10:00', '12:00', '14:00', '16:00'];
 
   const [data, setData] = useState({
+    year,
     month: 0,
     day: 0,
     value: [0, 0, 0, 0],
   });
 
+  useEffect(() => {
+    // setData((d) => {
+    //   console.log(d, '-----');
+    //   d.value[2] = 0;
+    //   d.day = days[0];
+    //   return d;
+    // });
+    days = [];
+    for (let i = 1; i <= 31; i++) {
+      if (i >= Math.min(minDay, date.getDate())) {
+        days.push(i);
+        // setDays([...days, i]);
+      }
+    }
+  }, [minDay]);
+
+  useEffect(() => {
+    console.log('当前最新的日期组价数据', data);
+
+    console.log('minDay', minDay);
+
+    if (data?.value?.[1] > 0) {
+      setMinDay(0);
+    }
+
+    props?.onDatePickerChange &&
+      props.onDatePickerChange(
+        {
+          cvalue: data.value,
+          selectedTime: `${year}-${padZero(data.month)}-${padZero(data.day)}`,
+        },
+        setData
+      );
+  }, [data.month, data.day, data.value]);
+
   const [availableRanges, setAvailableRanges] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log('打开日期组件弹框', data);
-    countData([0, 0, 0, 0], () => {});
+    console.log(
+      '打开日期组件弹框',
+      data,
+      props.invalidTimes,
+      props.data.minDate.day
+    );
+    // setDaysfn(props.data.minDate.day);
+    // setMonths();
+    countData([0, 0, 0, 0], (data) => {
+      // props?.onDatePickerColumn &&
+      //   props.onDatePickerColumn({
+      //     propName: props.data.propName,
+      //     value: data.value,
+      //     setAvailableRanges,
+      //     selectedTime: `${year}-${padZero(data.month)}-${padZero(data.day)}`,
+      //   });
+    });
     // setData({
     //   ...data,
     //   value: [0, 0, 0, 0],
@@ -70,7 +153,7 @@ export default (props) => {
 
   // 筛选未过期的时间段
   const filterAvailableRanges = (times: string[]) => {
-    return times.filter((slot) => {
+    return times?.filter((slot) => {
       // 将时间段转换为今天的日期时间对象
       const slotTime = dayjs()
         .set('hour', parseInt(slot.split(':')[0]))
@@ -89,7 +172,7 @@ export default (props) => {
     } else {
       setAvailableRanges(filterAvailableRanges(timeRanges));
     }
-  }, [props.data.timeRange.length]);
+  }, [props.data.timeRange?.length]);
 
   const countData = (val, callback) => {
     setData((_data) => {
@@ -102,31 +185,38 @@ export default (props) => {
   };
 
   const onChange = (e) => {
-    console.log(e, '+++++');
     if (!props.data.supportAll) {
       const dayIndex = e.detail.value[2];
       const monthIndex = e.detail.value[1];
-      console.log(dayjs().format('M'), '+++++');
+      // console.log(dayjs().format('M'), '+++++');
       if (
         months[monthIndex] > +dayjs().format('M') ||
         days[dayIndex] > +dayjs().format('D')
       ) {
-        console.log(dayjs().format('D'), '+++++');
         setAvailableRanges(props.data.timeRange);
+        setMinDay(0);
       } else {
         setAvailableRanges(filterAvailableRanges(props.data.timeRange));
       }
     }
+    console.log(e.detail.value, dayjs().format('M'), '++日期组件切换列+++');
     const val = e.detail.value;
-    countData(val, (value) => {
-      props?.onDatePickerColumn &&
-        props.onDatePickerColumn({
-          propName: props.data.formProp,
-          value,
-          setAvailableRanges,
-          selectedTime: `${year}-${padZero(data.month)}-${padZero(data.day)}`,
-        });
-    });
+
+    //setAvailableRanges(props.data.timeRange);
+    // if (props.onMonthChange) {
+    //   console.log(val, '+++当前列的数组++++');
+    //   props.onMonthChange(val[1] > 0 ? 0 : new Date().getDate());
+    //   if (val[1] > 0) {
+    //     setData({
+    //       ...data,
+    //       day: 0,
+    //     });
+    //     console.log(props.data.timeRange, availableRanges, '+++++++qqqq');
+    //     setAvailableRanges(props.data.timeRange);
+    //   }
+    // }
+    console.log(val, '++日期组件切换列+++');
+    countData(val, (value) => {});
   };
 
   const closeSheet = () => {
@@ -142,6 +232,13 @@ export default (props) => {
     return num.toString().padStart(2, '0');
   };
 
+  const formatFullDate = (time: string) => {
+    if (!time) return '';
+    const fullTime = `${year}-${data.month}-${data.day} ${time}`;
+    // console.log(dayjs(fullTime).format('YYYY-MM-DD HH:mm'), '+++++');
+    return dayjs(fullTime).format('YYYY-MM-DD HH:mm');
+  };
+
   const handleConfirm = () => {
     const curTime = availableRanges[data.value[3]];
     if (!curTime) {
@@ -149,11 +246,16 @@ export default (props) => {
         title: '请选择具体时间段',
         icon: 'none',
       });
+    } else if (props.invalidTimes.includes(formatFullDate(curTime))) {
+      return showToast({
+        title: '该时间段已被预约',
+        icon: 'none',
+      });
     }
-    console.log(data, props.data, '----46---');
+
     setData((d) => {
       props?.onConfirm?.({
-        formProp: props.data.formProp,
+        formProp: props.data.propName,
         value: `${year}-${padZero(data.month)}-${padZero(data.day)} ${
           availableRanges[data.value[3]]
         }`,
@@ -189,18 +291,29 @@ export default (props) => {
             <View className="column-item">{year}年</View>
           </PickerViewColumn>
           <PickerViewColumn>
-            {months.map((item) => {
+            {months?.map((item) => {
               return <View className="column-item">{item}月</View>;
             })}
           </PickerViewColumn>
           <PickerViewColumn>
-            {days.map((item) => {
+            {days?.map((item) => {
               return <View className="column-item">{item}日</View>;
             })}
           </PickerViewColumn>
           <PickerViewColumn>
-            {availableRanges.map((item) => {
-              return <View className="column-item">{item}</View>;
+            {availableRanges?.map((item) => {
+              return (
+                <View
+                  data-full-time={dayjs().format('YYYY-MM-DD') + ' ' + item}
+                  className={`column-item ${
+                    props.invalidTimes.includes(formatFullDate(item))
+                      ? 'disabled'
+                      : ''
+                  }`}
+                >
+                  {item}
+                </View>
+              );
             })}
           </PickerViewColumn>
         </PickerView>

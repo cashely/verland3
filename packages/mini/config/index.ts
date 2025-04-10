@@ -10,7 +10,14 @@ export default defineConfig<'vite'>(async (merge, { command, mode }) => {
   const baseConfig: UserConfigExport<'vite'> = {
     projectName: 'miniapp',
     date: '2025-2-7',
-    designWidth: 750,
+    designWidth(input) {
+      // 配置 NutUI 375 尺寸
+      if (input?.file?.replace(/\\+/g, '/').indexOf('@nutui') > -1) {
+        return 375;
+      }
+      // 全局使用 Taro 默认的 750 尺寸
+      return 750;
+    },
     deviceRatio: {
       640: 2.34 / 2,
       750: 1,
@@ -50,7 +57,7 @@ export default defineConfig<'vite'>(async (merge, { command, mode }) => {
         }),
       ],
     },
-    plugins: [],
+    plugins: ['@tarojs/plugin-html'],
     alias: {
       '@/apis': path.resolve(__dirname, '..', 'src/apis'),
       '@/components': path.resolve(__dirname, '..', 'src/components'),

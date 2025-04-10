@@ -5,7 +5,13 @@ import { AtAvatar, AtListItem, AtList } from 'taro-ui';
 import { detail } from '@/apis/book';
 import dayjs from 'dayjs';
 import { formatPrice } from '@/utils';
-import { DEFAULT_IMAGE } from '@/constants';
+import {
+  DEFAULT_IMAGE,
+  IS_RITE,
+  IS_SELF_EXPRESS,
+  HANDLE_WAYS,
+  PET_RECEIVE_WAYS,
+} from '@/constants';
 import './index.scss';
 
 const rowsData = [
@@ -32,6 +38,26 @@ const rowsData = [
   {
     label: '预约时间',
     key: 'bookDateTime',
+  },
+  {
+    label: '是否需要仪式',
+    key: 'isRite',
+  },
+  {
+    label: '纪念物获取方式',
+    key: 'handleWay',
+  },
+  {
+    label: '纪念物获取时间',
+    key: 'handleDateTime',
+  },
+  {
+    label: '宠物接收方式',
+    key: 'expressWay',
+  },
+  {
+    label: '门店地址',
+    key: 'petStore',
   },
   {
     label: '接收地址',
@@ -63,17 +89,29 @@ export default function Index() {
           if (!result) return;
           setInfo({
             ...result,
-            local: result?.address
-              ? `${result?.address?.province} ${result?.address?.city} ${result?.address?.area}`
-              : '',
+            local:
+              result?.address && result.handleWay == 3
+                ? `${result?.address?.province} ${result?.address?.city} ${result?.address?.area}`
+                : '',
             petname: result.pet?.petname,
             bookDateTime: dayjs(result.bookDateTime).format(
               'YYYY-MM-DD HH:mm:ss'
             ),
+            isRite: IS_RITE.find((n) => n.value == result.isRite)?.label || '-',
+            expressWay:
+              PET_RECEIVE_WAYS.find((n) => n.value == result.expressWay)
+                ?.label || '-',
+            handleWay:
+              HANDLE_WAYS.find((n) => n.value == result.handleWay)?.label ||
+              '-',
             handleDateTime: dayjs(result.handleDateTime).format(
               'YYYY-MM-DD HH:mm:ss'
             ),
-            detail: result?.address?.detail || '',
+            petStore:
+              result?.petStore?.name && result.handleWay == 2
+                ? `${result?.petStore?.name}-${result?.petStore?.address}`
+                : '',
+            detail: (result.handleWay == 3 && result?.address?.detail) || '',
             pet: undefined,
             address: undefined,
             bookGoods:
@@ -100,7 +138,7 @@ export default function Index() {
                   title={item.label}
                   extraText={info?.[item.key]?.name || '-'}
                 ></AtListItem>
-              ) : (
+              ) : info?.[item.key] ? (
                 <AtListItem
                   className="detail-item"
                   title={item.label}
@@ -113,7 +151,7 @@ export default function Index() {
                     </>
                   }
                 ></AtListItem>
-              )}
+              ) : null}
               {['bookGoods'].indexOf(item.key) > -1 ? (
                 info?.[item.key]?.length ? (
                   <View className="subInfo">

@@ -2,6 +2,7 @@ import {
   RITE_SERVICE_TIME_RANGES,
   SERVICE_TIME_RANGES,
   PET_TYPES,
+  PET_RECEIVE_WAYS,
 } from '@/constants';
 const baseInfoFormList = [
   {
@@ -168,23 +169,26 @@ const otherFormList = [
   },
 
   {
-    label: '是否自送',
-    prop: 'isSelfExpress',
-    itemProps: {
-      placeholder: '请输入接收人姓名',
-    },
+    label: '宠物接收方式',
+    prop: 'expressWay',
     type: 'radio',
-    options: [
-      {
-        label: '是',
-        value: '1',
-        checked: true,
-      },
-      {
-        label: '否',
-        value: '2',
-      },
-    ],
+    options: [],
+  },
+  {
+    label: '门店地址',
+    prop: 'expressAddress',
+    type: 'text',
+    hidden: true,
+  },
+  {
+    label: '上门收取时间',
+    prop: 'expressDateTime',
+    itemProps: {
+      placeholder: '请选择',
+    },
+    type: 'picker-date',
+    timeRange: SERVICE_TIME_RANGES,
+    hidden: true,
   },
   {
     label: '选择宠物门店',
@@ -194,7 +198,7 @@ const otherFormList = [
       placeholder: '请选择',
       rangeKey: 'label',
     },
-    hidden: false, // 控制显示隐藏
+    hidden: true, // 控制显示隐藏
     rules: [],
     options: [],
   },
@@ -203,7 +207,7 @@ const otherFormList = [
     prop: 'postAddress',
     // type: "textarea",
     type: 'location',
-    hidden: false, // 控制显示隐藏
+    hidden: true, // 控制显示隐藏
     itemProps: {
       placeholder: '点击选择位置',
     },
@@ -213,7 +217,7 @@ const otherFormList = [
     label: '门牌号',
     prop: 'detail',
     type: 'input',
-    hidden: false,
+    hidden: true,
     itemProps: {
       placeholder: '详细地址，例1层101室',
     },

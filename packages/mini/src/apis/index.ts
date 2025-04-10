@@ -3,7 +3,11 @@ import { showToast, showLoading, hideLoading } from '@tarojs/taro';
 export const baseUrl = process.env.TARO_APP_API;
 export const fileUrl = process.env.TARO_APP_API;
 let loadingInstance: any = null;
-export default function (url: string, options: any = {}) {
+export default function (
+  url: string,
+  options: any = {},
+  searchParams: any = ''
+) {
   return new Promise<any>((resolve, reject) => {
     if (!loadingInstance) {
       loadingInstance = showLoading();
@@ -11,7 +15,10 @@ export default function (url: string, options: any = {}) {
     const token = getStorageSync('token') || '';
     const userInfo = getStorageSync('userInfo') || {};
     Taro.request({
-      url: baseUrl + url + `${token ? `?token=Bearer ${token}` : ''}`,
+      url:
+        baseUrl +
+        url +
+        `${token ? `?${searchParams}&token=Bearer ${token}` : ''}`,
       method: options.method || 'GET',
       data: options.data || {},
       header: {

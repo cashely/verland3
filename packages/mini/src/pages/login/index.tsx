@@ -82,8 +82,8 @@ export default function Index() {
           });
           setStorageSync('userInfo', data);
           showToast({ title: '登录成功', icon: 'none' });
-          setBtnDisabled(false);
           setTimeout(() => {
+            setBtnDisabled(false);
             pageFlag === '1'
               ? reLaunch({
                   url: '/pages/index/index',

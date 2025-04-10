@@ -8,6 +8,7 @@ const APIS = {
   PAY: '/mp/wx/pay',
   EVALUATE: '/mp/evaluate',
   CANCEL: '/mp/wx/refund',
+  IS_BOOKED: '/mp/book/hasBookDate',
 };
 
 const add = (data) => {
@@ -67,4 +68,28 @@ const cancel = (id) => {
   });
 };
 
-export { add, list, detail, prepay, pay, cancel, evaluate, getEvaluate };
+//判断时间是否被预约
+const isBooked = (params: any) => {
+  const urlSearchParams = new URLSearchParams(params);
+  // start=2023-12-12 00:00:10&end=2025-12-12 00:00:00
+  console.log(params);
+  return request(
+    APIS.LIST,
+    {
+      method: 'get',
+    },
+    urlSearchParams.toString()
+  );
+};
+
+export {
+  add,
+  list,
+  detail,
+  prepay,
+  pay,
+  cancel,
+  evaluate,
+  getEvaluate,
+  isBooked,
+};

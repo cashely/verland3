@@ -19,7 +19,7 @@ import {
   AtSegmentedControl,
   AtMessage,
 } from 'taro-ui';
-import DateTimePicker from '@/components/DateTimePicker';
+
 import QQMapWX from '@/utils/qqmap-wx-jssdk.min.js';
 import locationIcon from '../../assets/imgs/location.png';
 import dateIcon from '../../assets/imgs/date-icon.png';
@@ -29,22 +29,6 @@ import './index.scss';
 
 export default forwardRef((props, ref) => {
   const { formList = [], formModel = {}, handleSubmit } = props;
-
-  const [otherConfig, setOtherConfig] = useState({
-    dtPicker: {
-      isOpened: false,
-      data: {
-        formProp: '',
-        value: '',
-        timeRange: [],
-        supportAll: false,
-        minDate: {
-          month: 0,
-          day: 0,
-        },
-      },
-    },
-  });
 
   const [petPickerShow, setPetPickerShow] = useState(false);
   const [_formList, setFormList] = useState(formList);
@@ -161,25 +145,7 @@ export default forwardRef((props, ref) => {
     console.log('item click46', formItem);
 
     if (formItem.type === 'picker-date') {
-      setOtherConfig((state: any) => {
-        return {
-          ...state,
-          dtPicker: {
-            ...state.dtPicker,
-            isOpened: true,
-            data: {
-              ...state.dtPicker.data,
-              formProp: formItem.prop,
-              timeRange: formItem.timeRange,
-              supportAll: formItem.supportAll,
-              minDate: formItem.minDate ?? {
-                month: 0,
-                day: 0,
-              },
-            },
-          },
-        };
-      });
+      props.onPickerClick && props.onPickerClick(formItem, formData);
     } else if (formItem.type === 'location') {
       // _formList.find(
       //   (formItem) => formItem.type === 'location'
@@ -240,50 +206,8 @@ export default forwardRef((props, ref) => {
       setPetPickerShow(true);
     } else if (formItem.type === 'selector') {
       console.log('点击了selector', formItem);
-      props.onPickerClick && props.onPickerClick(formItem, formData);
+      // props.onPickerClick && props.onPickerClick(formItem, formData);
     }
-  };
-
-  const handleCloseDateTimePicker = () => {
-    setOtherConfig((state) => ({
-      ...state,
-      dtPicker: {
-        ...state.dtPicker,
-        isOpened: false,
-      },
-    }));
-  };
-
-  //时间选择确认回调
-  const handleDateTimeConfirm = ({ formProp, value }) => {
-    setFormData((d) => {
-      d[formProp] = value;
-      //筛选可以预约的时间段
-      props.filterTimes && props.filterTimes(formProp, value, d);
-      return d;
-    });
-  };
-
-  //pickerCloumn更改回调
-  const handleDatePickerColumn = ({
-    propName,
-    value,
-    setAvailableRanges,
-    selectedTime,
-  }) => {
-    console.log('选择日期的值', propName, value);
-    // setFormData({
-    //   ...formData,
-    //   [formProp]: value,
-    // });
-    props.onDatePickColumnChange &&
-      props.onDatePickColumnChange(
-        propName,
-        value,
-        setAvailableRanges,
-        selectedTime,
-        formData
-      );
   };
 
   const validateForm = (): boolean => {
@@ -374,6 +298,16 @@ export default forwardRef((props, ref) => {
       <AtForm className="addForm" onSubmit={onSubmit} onReset={onReset}>
         {_formList.map((formItem, index) => (
           <>
+            {['text'].includes(formItem.type) && !formItem.hidden ? (
+              <View className="formItemView" key={index}>
+                <AtList className="flex items-center justify-between">
+                  <AtListItem
+                    title={formItem.label}
+                    extraText={formData[formItem.prop] || 'xxxx'}
+                  />
+                </AtList>
+              </View>
+            ) : null}
             {['digit', 'input'].includes(formItem.type) && !formItem.hidden ? (
               <AtInput
                 key={index}
@@ -667,16 +601,6 @@ export default forwardRef((props, ref) => {
           </>
         ))}
       </AtForm>
-      {/* 日期时间组件 */}
-      <DateTimePicker
-        isOpened={otherConfig.dtPicker.isOpened}
-        data={otherConfig.dtPicker.data}
-        onConfirm={handleDateTimeConfirm}
-        onClose={handleCloseDateTimePicker}
-        onDatePickerColumn={handleDatePickerColumn}
-      >
-        <Text>slot</Text>
-      </DateTimePicker>
 
       <PetPicker
         isShow={petPickerShow}
