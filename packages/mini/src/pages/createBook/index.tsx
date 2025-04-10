@@ -908,6 +908,14 @@ export default () => {
         endDate={defaultDate.endDate}
         visible={showDatePicker}
         type="datehour"
+        formatter={(type, option) => {
+          console.log('410formatter', type, option);
+          return {
+            label: <View>12okk</View>,
+            value: '12'
+          }
+          return option;
+        }}
         defaultValue={defaultDate.startDate}
         filter={(type, option) => handleFilter(type, option)}
         // value={
