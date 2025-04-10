@@ -1,9 +1,19 @@
 import { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
-import { Col, Form, Input, Row, Select, InputNumber, Radio } from 'antd';
+import {
+  Col,
+  Form,
+  Input,
+  Row,
+  Select,
+  InputNumber,
+  Checkbox,
+  Radio,
+} from 'antd';
 import type { FormProps, FormInstance } from 'antd';
 import UploadButton from '@/components/UploadButton';
 import { FILE_URL } from '@/apis/request';
 import { produce } from 'immer';
+import { getuid } from 'process';
 const { Option } = Select;
 const formItemClasses = `rounded-[4px]`;
 
@@ -111,15 +121,24 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
 
     // _fileList={formatFileList(formData, item.prop)}
     const formatFileList = (item: any) => {
-      console.log('43+++formData+++', formData, '+++43');
+      console.log('43+++formData+++', formData, formData[item.prop], '+++43');
       const fileList = [] as any;
-      if (formData[item.prop]) {
+      if (formData[item.prop] && Array.isArray(formData[item.prop])) {
+        formData[item.prop].map((n: any) => {
+          fileList.push({
+            url: FILE_URL + '/' + n?.image?.path,
+            name: formData.title || '缩略图',
+            uid: n.image.id,
+          });
+        });
+      } else {
         fileList.push({
           url: FILE_URL + '/' + formData[item.prop],
           name: formData.title || '缩略图',
           uid: formData?.id,
         });
       }
+
       return fileList;
     };
 
@@ -163,7 +182,11 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
               <Form.Item
                 name={item.prop}
                 label={item.label}
-                layout={item.type === 'radio' ? 'horizontal' : 'vertical'}
+                layout={
+                  ['radio', 'checkbox'].includes(item.type)
+                    ? 'horizontal'
+                    : 'vertical'
+                }
                 labelCol={{ span: item.labelCol || 24 }}
                 wrapperCol={{ span: item.wrapperCol || 24 }}
                 rules={item.rules ?? []}
@@ -192,6 +215,11 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
                 ) : null}
                 {item.type === 'radio' ? (
                   <Radio.Group options={item.options || []} />
+                ) : null}
+                {item.type === 'checkbox' ? (
+                  <>
+                    <Checkbox.Group options={item.options || []} />
+                  </>
                 ) : null}
                 {item.type === 'select' ? (
                   <Select

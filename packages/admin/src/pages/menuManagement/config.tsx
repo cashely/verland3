@@ -1,4 +1,9 @@
-import { RITE_TYPE, DELIVERY_TYPE } from '@/constants';
+import {
+  RITE_TYPE,
+  DELIVERY_TYPE,
+  PET_RECEIVE_WAYS,
+  getLabelByValue,
+} from '@/constants';
 import { formatPrice } from '@/utils';
 import { Image } from 'antd';
 import { FILE_URL } from '@/apis/request';
@@ -37,6 +42,29 @@ const tableColumns = [
     },
   },
   {
+    title: '是否需要仪式',
+    key: 'isRite',
+    dataIndex: 'isRite',
+    render: (_: number) => (_ === 1 ? '需要' : '不需要'),
+  },
+  {
+    title: '宠物寄送方式',
+    key: 'expressWays',
+    dataIndex: 'expressWays',
+    width: 180,
+    render: (_: string) => {
+      if (!_) return;
+      const con = _.split(',').map((n) => getLabelByValue(PET_RECEIVE_WAYS, n));
+      return con?.join('、');
+    },
+  },
+  {
+    title: '是否需要回收',
+    key: 'isHandleWay',
+    dataIndex: 'isHandleWay',
+    render: (_: number) => (_ === 1 ? '需要' : '不需要'),
+  },
+  {
     title: '套餐内容',
     key: 'description',
     dataIndex: 'description',
@@ -48,18 +76,7 @@ const tableColumns = [
     dataIndex: 'price',
     slot: 'price',
   },
-  {
-    title: '是否需要仪式',
-    key: 'isRite',
-    dataIndex: 'isRite',
-    render: (_: number) => (_ === 1 ? '需要' : '不需要'),
-  },
-  {
-    title: '是否需要回收',
-    key: 'isHandleWay',
-    dataIndex: 'isHandleWay',
-    render: (_: number) => (_ === 1 ? '需要' : '不需要'),
-  },
+
   {
     title: '创建时间',
     key: 'createdAt',
@@ -115,7 +132,7 @@ const formConfig = {
     },
     {
       label: '缩略图',
-      prop: 'image',
+      prop: 'images',
       putProp: 'imageIds',
       type: 'upload',
       span: 24,
@@ -130,7 +147,6 @@ const formConfig = {
       label: '是否需要仪式',
       prop: 'isRite',
       type: 'radio',
-
       // rules: [{ required: true, message: '请输入产品名称' }],
       labelCol: 6,
       wrapperCol: 18,
@@ -144,6 +160,15 @@ const formConfig = {
       labelCol: 6,
       wrapperCol: 18,
       options: DELIVERY_TYPE,
+    },
+    {
+      label: '宠物寄送方式',
+      prop: 'expressWays',
+      type: 'checkbox',
+      // rules: [{ required: true, message: '请输入产品名称' }],
+      labelCol: 6,
+      wrapperCol: 16,
+      options: PET_RECEIVE_WAYS,
     },
     {
       label: '价格(¥)',

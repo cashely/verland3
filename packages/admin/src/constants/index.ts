@@ -159,6 +159,23 @@ const DELIVERY_TYPE = [
   },
 ];
 
+//宠物寄送方式
+const PET_RECEIVE_WAYS = [
+  {
+    label: '自送',
+    value: '1',
+    checked: true,
+  },
+  {
+    label: '门店接收',
+    value: '2',
+  },
+  {
+    label: '上门收取',
+    value: '3',
+  },
+];
+
 //性别
 const GENDER_TYPE = [
   {
@@ -201,6 +218,7 @@ export {
   APPOINTMENT_STATUS,
   GENDER_TYPE,
   DELIVERY_TYPE,
+  PET_RECEIVE_WAYS,
   getLabelByValue,
   tagColorMap,
 };

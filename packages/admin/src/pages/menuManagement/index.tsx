@@ -40,6 +40,7 @@ export default function TickManagement() {
       if (id) {
         await menuUpdate(id, {
           ...values,
+          expressWays: values.expressWays?.join(','),
           createdAt: undefined,
           updatedAt: undefined,
           key: undefined,
@@ -71,6 +72,7 @@ export default function TickManagement() {
         if (record?.id) {
           formConfig.formModel = {
             ...record,
+            expressWays: record?.expressWays?.split(','),
             price: record?.price / 100,
           };
         }
