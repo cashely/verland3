@@ -476,20 +476,6 @@ export default () => {
     // setRenderKey(+new Date());
   }, [currentDate]);
 
-  useEffect(() => {
-    console.log('validTimesRange', validTimesRange);
-    if (validTimesRange?.length) {
-      setCurrentDate(
-        new Date(
-          dayjs().year(),
-          dayjs().month(),
-          dayjs().date(),
-          validTimesRange[0]
-        )
-      );
-    }
-  }, [validTimesRange.length]);
-
   const handleConfirm = (values, options) => {
     console.log(
       '411handleConfirm',
@@ -529,13 +515,6 @@ export default () => {
   };
 
   const handleDateChange = (options, value, index) => {
-    console.log(
-      '410handleDateChangecwl',
-      options,
-      value,
-      index,
-      defaultDate.propName
-    );
     const getSelectTime = `${value[0]}-${value[1]}-${value[2]}`;
     const month = dayjs().month() + 1;
     const day = dayjs().date();
@@ -561,10 +540,11 @@ export default () => {
         setValidTimesRange(() => obj[defaultDate.propName]);
       }
     }
-    // setCurrentDate(
-    //  new Date(value[0], value[1], value[2], obj[defaultDate.propName][0])
-    //);
-    setSelectedTime(getSelectTime);
+    setSelectedTime(() => getSelectTime);
+    setCurrentDate(
+     () => new Date(`${value[0]}/${value[1]}/${value[2]} ${obj[defaultDate.propName][0]}:00:00`)
+    );
+    
   };
 
   const handleFilter = (type, option) => {
@@ -635,12 +615,6 @@ export default () => {
             selectedTime?.split(' ')[0] ||
             dayjs(currentDate).format('YYYY-MM-DD');
           const selectMonth = dayjs(ymd).month();
-          // console.log(
-          //   'ymd',
-          //   dayjs(ymd).year(),
-          //   dayjs(ymd).month(),
-          //   dayjs(ymd).date()
-          // );
           if (type == 'month') {
             const isDisabled = option.value < dayjs().month() + 1;
             return {
@@ -675,17 +649,6 @@ export default () => {
             };
           }
           if (type === 'hour') {
-            // console.log(
-            //   '410hour',
-            //   selectedTime,
-            //   '22',
-            //   invalidTimes,
-            //   validTimesRange,
-            //   '410handleDateChange111'
-            // );
-            // const ymd =
-            //   selectedTime?.split(' ')[0] ||
-            //   dayjs(defaultDate.currentDate).format('YYYY-MM-DD');
             const filteredTimes = invalidTimes.filter((i) => i.includes(ymd));
             return {
               label: (
@@ -711,14 +674,6 @@ export default () => {
         // defaultValue={defaultDate.startDate}
         filter={(type, option) => handleFilter(type, option)}
         value={currentDate}
-        // value={
-        //   new Date(
-        //     defaultDate.year,
-        //     defaultDate.month,
-        //     defaultDate.day,
-        //     defaultDate.hour
-        //   )
-        // }
         onChange={handleDateChange}
         onCancel={() => setShowDatePicker(false)}
         onConfirm={(options, values) => handleConfirm(values, options)}
