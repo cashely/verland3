@@ -2,10 +2,27 @@
 // https://docs.taro.zone/docs/next/babel-config
 module.exports = {
   presets: [
-    ['taro', {
-      framework: 'react',
-      ts: true,
-      compiler: 'vite',
-    }]
-  ]
-}
+    [
+      'taro',
+      {
+        framework: 'react',
+        ts: true,
+        compiler: 'vite',
+      },
+    ],
+  ],
+  plugins: [
+    [
+      'import',
+      {
+        libraryName: '@nutui/nutui-react-taro',
+        style: 'css',
+        camel2DashComponentName: false,
+        customName: (name, file) => {
+          return `@nutui/nutui-react-taro/dist/es/packages/${name.toLowerCase()}`;
+        },
+      },
+      'nutui-react-taro',
+    ],
+  ],
+};

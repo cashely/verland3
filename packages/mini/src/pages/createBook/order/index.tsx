@@ -278,7 +278,7 @@ export default () => {
           <>
             <AtListItem
               title="上门收取时间"
-              extraText={getAddress(order.expressDateTime)}
+              extraText={formatDate(order.expressDateTime || '-')}
             />
             <AtListItem
               title="接收地址"

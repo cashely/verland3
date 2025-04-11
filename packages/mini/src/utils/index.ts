@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-
+import { getLocation } from '@tarojs/taro';
 const formatDateTime = (date: string | Date) => {
   if (!date) return '-';
   return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
@@ -27,4 +27,41 @@ const formatAddress = (address: string) => {
   }
   return result;
 };
-export { formatDateTime, formatPrice, formatAddress };
+
+const getlocal = (formItem: Record<string, any>) => {
+  const QQMapSDK = new QQMapWX({
+    key: 'S32BZ-TYNL4-JDVUZ-XMLOV-DIIHS-WBF4J',
+    mapStyleId: 'style1', // 个性化地图
+  });
+  getLocation({
+    type: 'gcj02',
+    altitude: true,
+    success: function (res) {
+      console.log(res.longitude);
+      QQMapSDK.reverseGeocoder({
+        location: {
+          latitude: res.latitude,
+          longitude: res.longitude,
+        },
+        success: function (res) {
+          console.log(res);
+          const {
+            result: {
+              // address,
+              address_component: { city, district, province, street },
+            },
+          } = res;
+          //TODO: 修改为formItem
+        },
+      });
+      // chooseLocation({
+      //   latitude: res.latitude,
+      //   longitude: res.longitude,
+      //   success: function (res) {
+      //     console.log(res, "success");
+      //   },
+      // });
+    },
+  });
+};
+export { formatDateTime, formatPrice, formatAddress, getlocal };

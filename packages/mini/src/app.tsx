@@ -4,7 +4,7 @@ import AppContext from '@/hooks/useContext';
 import 'virtual:windi.css';
 import './assets/css/_taro.scss';
 import 'taro-ui/dist/style/index.scss'; // 全局引入一次即可
-import '@nutui/nutui-react-taro/dist/style.css';
+import '@nutui/nutui-react-taro/dist/styles/themes/default.css';
 import './app.scss';
 // import "windi.css";
 

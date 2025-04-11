@@ -35,12 +35,11 @@ export default forwardRef((props, ref) => {
   const [formData, setFormData] = useState(formModel);
   const [tabIndex, setTabIndex] = useState(0);
   const handleChange = (e, formItem: Record<string, any>) => {
-    console.log(e, formItem, 'handleChange46');
-    const Obj = { ...formData };
+    // console.log(e, formItem, 'handleChange46');
     if (formItem?.type === 'tabs') {
       setTabIndex(e);
       console.log(formItem.tabsOptions[e]?.id, 'handleChange488');
-      Obj[formItem.prop] = formItem.tabsOptions[e]?.id;
+      formData[formItem.prop] = formItem.tabsOptions[e]?.id;
     } else if (formItem?.type === 'radio') {
       const curObj = _formList.find((item) => item.prop === formItem.prop);
 
@@ -48,22 +47,14 @@ export default forwardRef((props, ref) => {
         item.checked = item.value === e.detail.value;
       });
       // children?.handleRiteChange?.(e.detail.value);
-      if (formItem.prop === 'isRite') {
-        _formList.find((item) => item.prop === 'riteDateTime').hidden =
-          e.detail.value === '2';
-      }
-      if (formItem.prop === 'isSelfExpress') {
-        _formList.find((item) => item.prop === 'postAddress').hidden =
-          e.detail.value === '2';
-        _formList.find((item) => item.prop === 'detail').hidden =
-          e.detail.value === '2';
-      }
-      Obj[formItem.prop] = e.detail.value;
-
-      // setFormList([..._formList]);
+      // if (formItem.prop === 'isRite') {
+      //   _formList.find((item) => item.prop === 'riteDateTime').hidden =
+      //     e.detail.value === '2';
+      // }
+      formData[formItem.prop] = e.detail.value;
     } else if (formItem?.type === 'checkbox') {
       if (formItem.prop === 'handleWayCheck') {
-        Obj[formItem.prop] = e.detail.value;
+        formData[formItem.prop] = e.detail.value;
       }
     } else if (formItem?.type === 'multiSelector') {
       const selectValues = e.detail.value;
@@ -71,86 +62,33 @@ export default forwardRef((props, ref) => {
         formItem.options[0][selectValues[0]] +
         '/' +
         formItem.options[1][selectValues[1]];
-      Obj[formItem.prop] = getLabel;
+      formData[formItem.prop] = getLabel;
     } else if (formItem?.type === 'selector') {
       if (formItem.itemProps?.rangeKey) {
         console.log('++++++++++', e.detail.value);
-        Obj[formItem.prop] = formItem.options[e.detail.value]?.value;
+        formData[formItem.prop] = formItem.options[e.detail.value]?.value;
       } else {
         const getLabel = formItem.options[e.detail.value];
-        Obj[formItem.prop] = getLabel;
+        formData[formItem.prop] = getLabel;
       }
     } else {
-      Obj[formItem.prop] = e;
+      // console.log('++++++++++411', formItem.prop, e, formData);
+      formData[formItem.prop] = e;
     }
-
-    props.onFormChange &&
-      props?.onFormChange?.(formItem.prop, {
-        ...Obj,
-      });
-    setFormData((f) => {
-      return {
-        ...f,
-        ...Obj,
-      };
-    });
+    props.onFormChange && props?.onFormChange?.(formItem.prop, formData);
   };
 
-  const getlocal = (formItem: Record<string, any>) => {
-    const QQMapSDK = new QQMapWX({
-      key: 'S32BZ-TYNL4-JDVUZ-XMLOV-DIIHS-WBF4J',
-      mapStyleId: 'style1', // 个性化地图
-    });
-    getLocation({
-      type: 'gcj02',
-      altitude: true,
-      success: function (res) {
-        console.log(res.longitude);
-        QQMapSDK.reverseGeocoder({
-          location: {
-            latitude: res.latitude,
-            longitude: res.longitude,
-          },
-          success: function (res) {
-            console.log(res);
-            const {
-              result: {
-                // address,
-                address_component: { city, district, province, street },
-              },
-            } = res;
-            setFormData({
-              ...formData,
-              [formItem.prop]: `${province}-${city}${
-                district ? '-' + district : ''
-              }`,
-              detail: street,
-              province,
-              city,
-              area: district,
-            });
-          },
-        });
-        // chooseLocation({
-        //   latitude: res.latitude,
-        //   longitude: res.longitude,
-        //   success: function (res) {
-        //     console.log(res, "success");
-        //   },
-        // });
-      },
-    });
-  };
+  useEffect(() => {
+    console.log('formData41111', formData);
+  }, [formData]);
+
   const handleListClick = (formItem) => {
     console.log('item click46', formItem);
 
     if (formItem.type === 'picker-date') {
       props.onPickerClick && props.onPickerClick(formItem, formData);
     } else if (formItem.type === 'location') {
-      // _formList.find(
-      //   (formItem) => formItem.type === 'location'
-      // ).itemProps.placeholder = '正在获取位置...';
-      setFormList([..._formList]);
+      // setFormList([..._formList]);
       // getlocal(formItem);
       chooseLocation({
         success: function (res) {
@@ -160,22 +98,23 @@ export default forwardRef((props, ref) => {
               res.address
             );
             if (!formatAddress(res.address).province) {
-              setFormData({
-                ...formData,
-                [formItem.prop]: res?.address,
-              });
+              // setFormData({
+              //   ...formData,
+              //   [formItem.prop]: res?.address,
+              // });
             } else {
-              setFormData({
-                ...formData,
-                [formItem.prop]: `${province}-${city}${
-                  district ? '-' + district : ''
-                }`,
-                detail,
-                province,
-                city,
-                area: district,
-              });
+              // setFormData({
+              //   ...formData,
+              //   [formItem.prop]: `${province}-${city}${
+              //     district ? '-' + district : ''
+              //   }`,
+              //   detail,
+              //   province,
+              //   city,
+              //   area: district,
+              // });
             }
+            console.log('formData411在location', formData);
             props.onFormChange &&
               props.onFormChange(formItem.prop, {
                 [formItem.prop]: `${province}-${city}${
@@ -192,21 +131,7 @@ export default forwardRef((props, ref) => {
       });
     } else if (formItem.type === 'petPicker') {
       console.log('点击了multiSelector', formItem);
-      // props.onPickerColumnChange && props.onPickerColumnChange();
-      // setFormList((d) => {
-      //   const newList = [...d].map((item) => {
-      //     if (item.prop === formItem.prop) {
-      //       item.options[1] = PET_SUBTYPES[0];
-      //     }
-      //     return item;
-      //   });
-      //   console.log(newList, 'newList');
-      //   return newList;
-      // });
       setPetPickerShow(true);
-    } else if (formItem.type === 'selector') {
-      console.log('点击了selector', formItem);
-      // props.onPickerClick && props.onPickerClick(formItem, formData);
     }
   };
 
@@ -246,15 +171,6 @@ export default forwardRef((props, ref) => {
     return isValid;
   };
 
-  const handleColumnChange = (e: any, formItem: any) => {
-    console.log('handleColumnChange', e, formItem);
-    props.onPickerColumnChange && props.onPickerColumnChange(e.detail);
-  };
-
-  // const handlePickerColumnChange = (formProp, formItem) => {
-  //   console.log('handlePickerColumnChange', formProp, formItem);
-  //   props.onPickerColumnChange && props.onPickerColumnChange(propName, value);
-  // };
   //提交表单
   const onSubmit = () => {
     console.log('提交表单', formData);
@@ -268,13 +184,8 @@ export default forwardRef((props, ref) => {
     console.log(formValues);
     handleSubmit?.(formValues);
   };
-  const onReset = (value) => {
-    console.log(value);
-    setFormData(formModel);
-  };
 
   useImperativeHandle(ref, () => ({
-    onReset,
     onSubmit,
     getFormValues: () => {
       return formData;
@@ -287,6 +198,7 @@ export default forwardRef((props, ref) => {
 
   useEffect(() => {
     // console.log('首次加载FormModel46', formModel);
+    console.log('宠物选择', formModel);
     setFormData(formModel);
   }, [formModel]);
 
@@ -295,7 +207,7 @@ export default forwardRef((props, ref) => {
       {/* qqqqq-{JSON.stringify(otherConfig.dtPicker.isOpened)}
       <View>--------</View>
       formData-{JSON.stringify(formData)} */}
-      <AtForm className="addForm" onSubmit={onSubmit} onReset={onReset}>
+      <AtForm className="addForm" onSubmit={onSubmit}>
         {_formList.map((formItem, index) => (
           <>
             {['text'].includes(formItem.type) && !formItem.hidden ? (
@@ -315,7 +227,6 @@ export default forwardRef((props, ref) => {
                 type={formItem.type}
                 error={formItem?.error || false}
                 cursor={1000}
-                clear
                 maxLength={formItem.itemProps?.maxLength || 100}
                 title={formItem.label}
                 placeholder={formItem.itemProps.placeholder}
@@ -330,7 +241,6 @@ export default forwardRef((props, ref) => {
                 name={formItem.prop}
                 type="phone"
                 title={formItem.label}
-                clear
                 maxlength={11}
                 cursor={1000}
                 error={formItem?.error || false}
@@ -605,17 +515,17 @@ export default forwardRef((props, ref) => {
       <PetPicker
         isShow={petPickerShow}
         onConfirm={(info) => {
-          console.log(info, '宠物选择器的值');
+          console.log('宠物选择', info);
           props.onFormChange &&
             props?.onFormChange?.('petPicker', {
               ...info,
             });
-          setFormData((prev) => {
-            return {
-              ...prev,
-              ...info,
-            };
-          });
+          // setFormData((prev) => {
+          //   return {
+          //     ...prev,
+          //     ...info,
+          //   };
+          // });
         }}
         onClose={() => setPetPickerShow(false)}
       ></PetPicker>

@@ -29,12 +29,12 @@ export default (props) => {
 
   const handleChange = (e) => {
     console.log(e.detail.value, '----44---');
-    const [firstColumnIndex] = e.detail.value;
+    const [firstColumnIndex, secondColumnIndex] = e.detail.value;
     setSubTypes(PET_SUBTYPES[firstColumnIndex]);
     setData({
       ...data,
       type: PET_TYPES[firstColumnIndex],
-      subType: PET_SUBTYPES[firstColumnIndex][0],
+      subType: PET_SUBTYPES[firstColumnIndex][secondColumnIndex],
     });
   };
   const handleConfirm = () => {

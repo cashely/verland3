@@ -193,6 +193,13 @@ const WEIGHT_OPTIONS = [
 
 //上门服务时间段
 const SERVICE_TIME_RANGES = [
+  '00',
+  '01',
+  '02',
+  '03',
+  '04',
+  '05',
+  '06',
   '10',
   '11',
   '12',
@@ -209,7 +216,16 @@ const SERVICE_TIME_RANGES = [
 ];
 
 //仪式服务时间段
-const RITE_SERVICE_TIME_RANGES = ['10', '12', '14', '16', '24'];
+const RITE_SERVICE_TIME_RANGES = [
+  '00',
+  '10',
+  '12',
+  '14',
+  '16',
+  '20',
+  '22',
+  '23',
+];
 //  '24:00'
 //退款通知
 const REFUND_TMP = 'XKQpCEj93wAHPxWaQoET5UwYHkHHnCDP_K4YtOeRpkY';

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, Suspense } from 'react';
 import { View, Label, Checkbox, Text, CheckboxGroup } from '@tarojs/components';
 import { useLoad, showToast, navigateTo, setStorageSync } from '@tarojs/taro';
-import { AtButton, AtToast, AtActionSheet } from 'taro-ui';
+import { AtButton, AtToast } from 'taro-ui';
 import { otherFormList, baseInfoFormList } from './model';
 import AddForm from '@/components/AddForm';
 import {
@@ -15,7 +15,7 @@ import { storeList } from '@/apis/pet';
 import { isBooked } from '@/apis/book';
 import { menu } from '@/apis/common';
 import dayjs from 'dayjs';
-import { DatePicker } from '@nutui/nutui-react-taro';
+import { DatePicker, PickerOption } from '@nutui/nutui-react-taro';
 
 import './index.scss';
 
@@ -44,7 +44,7 @@ export default () => {
   });
   const [_otherFormList, _setOtherFormList] = useState(otherFormList);
   const [_baseInfoFormList, _setBaseInfoFormList] = useState(baseInfoFormList);
-  const [invalidTimes, setInvalidTimes] = useState([]);
+  const [invalidTimes, setInvalidTimes] = useState<string[]>([]);
   const toast = (text: string) => {
     showToast({
       title: text,
@@ -200,7 +200,7 @@ export default () => {
   };
 
   const handleFormDataChange = (propName: string, val: any) => {
-    console.log('handleFormDataChange+46', val, propName);
+    console.log('handleFormDataChange+411', val, propName);
     const checkProps = [
       'handleWay',
       'handleDateTime',
@@ -279,57 +279,22 @@ export default () => {
       }
 
       getExpressOptions(val.menuId);
+    } else if (propName === 'isRite') {
+      _otherFormList.find((item) => item.prop === 'riteDateTime').hidden =
+        val.isRite === '2';
+      setformModel({
+        ...val,
+        riteDateTime: val.isRite === '2' ? undefined : val.riteDateTime,
+      });
     } else if (propName === 'handleWay') {
-      _otherFormList.forEach((item: any) => {
-        if (item.prop === 'handleWayCheck') {
-          item.hidden = val.handleWay !== '3';
-        } else if (item.prop === 'handleDateTime') {
-          item.hidden = val.handleWay === '1' || val.handleWay === '3';
-        }
-      });
-
-      _setOtherFormList(_otherFormList);
-    } else if (propName === 'isSelfExpress') {
-      //清空
-      _otherFormList.forEach((item: any) => {
-        if (isMenuA) {
-          if (item.prop === 'postAddress' || item.prop === 'detail') {
-            item.hidden = true;
-          }
-        }
-        //B套餐
-        if (val?.isSelfExpress === '1') {
-          if (item.prop === 'petStoreId') {
-            item.hidden = false;
-          }
-          if (item.prop === 'postAddress' || item.prop === 'detail') {
-            item.hidden = true;
-          }
-        } else {
-          if (item.prop === 'petStoreId') {
-            item.hidden = true;
-          }
-          if (item.prop === 'postAddress' || item.prop === 'detail') {
-            item.hidden = false;
-          }
-        }
-
-        // if (item.prop === 'petStoreId') {
-        //   item.hidden = val.isSelfExpress === '2';
-        // }
-      });
-
-      setformModel((d) => {
-        return {
-          ...d,
-          ...val,
-          postAddress: '',
-          province: '',
-          city: '',
-          area: '',
-          detail: '',
-          petStoreId: '',
-        };
+      console.log('handlWay411', val.handleWay);
+      _otherFormList.find((item) => item.prop === 'handleDateTime').hidden =
+        val.handleWay === '1' || val.handleWay === '3';
+      _otherFormList.find((item) => item.prop === 'handleWayCheck').hidden =
+        val.handleWay !== '3';
+      setformModel({
+        ...val,
+        handleDateTime: val.handleWay === '3' ? undefined : val.handleDateTime,
       });
     } else if (propName === 'expressWay') {
       const model = {};
@@ -387,38 +352,30 @@ export default () => {
           ...model,
         };
       });
-    } else {
-      setformModel((d) => {
-        return {
-          ...d,
-          ...val,
-        };
+    } else if (propName === 'location') {
+      console.log('formData411在location', formModel);
+      setformModel({
+        ...formModel,
+        ...val,
       });
+    } else if (propName === 'mark' || propName === 'petStoreId') {
+      setformModel({
+        ...val,
+      });
+    } else if (propName === 'petPicker') {
+      console.log(val, formModel, '宠物选择');
+      setformModel({
+        ...formModel,
+        ...val,
+      });
+    } else {
+      // console.log('handleFormDataChange41111++', val);
+      setformModel(val);
     }
-    // else if (propName === 'isSelfExpress') {
-    //   setformModel((d) => {
-    //     return {
-    //       ...d,
-    //       ...val,
-    //     };
-    //   });
-    // }
-    // else {
-    //   console.log('handleFormDataChange++', val);
-    //   setformModel((d) => {
-    //     return {
-    //       ...d,
-    //       menuId,
-    //       petname,
-    //       type,
-    //       subType,
-    //     };
-    //   });
-    // }
   };
 
   useEffect(() => {
-    console.log('menuList变更46');
+    console.log('menuList变更411');
     const showProps = [
       'handleWay',
       'handleDateTime',
@@ -444,210 +401,23 @@ export default () => {
       }
     });
     getExpressOptions(menuList[0]?.id);
-    // _setOtherFormList((d: any) => {
-    //   console.log('setOtherFormList', d, menuList);
-    //   return d.map((item: any) => {
-    //     if (item.prop === 'menuId') {
-    //       return {
-    //         ...item,
-    //         tabsOptions: menuList.map((item: any) => ({
-    //           id: item.id,
-    //           label: item.name,
-    //           content: item.description,
-    //         })),
-    //         tabsTitle: menuList.map((iten: any) => iten.name),
-    //       };
-    //     }
-    //     return item;
-    //   });
-    // });
-
-    // setformModel((d: any) => {
-    //   return {
-    //     ...d,
-    //     isRite: '1',
-    //     handleWay: '2',
-    //   };
-    // });
   }, [menuList]);
 
-  // useUnload(() => {
-  //   console.log('卸载====');
-  //   setformModel({
-  //     ...formModel,
-  //     menuId: '', // 处理方式
-  //   });
-  // });
-
-  const handleFilterTimes = (propName: string, val: any, formData: any) => {
-    if (propName === 'bookDateTime') {
-      console.log(
-        'formDatabookDateTime47',
-        val,
-        dayjs(formData.bookDateTime).date(),
-        dayjs().date()
-      );
-      const bookDateHour = val.split(' ')[1].split(':')[0];
-      _otherFormList.forEach((item: any) => {
-        if (item.prop === 'riteDateTime') {
-          // item.minDate = {
-          //   month: dayjs(formData.bookDateTime).month(),
-          //   day: dayjs(formData.bookDateTime).date(),
-          // };
-          console.log('item.formDatabookDateTime47', item.minDate);
-          // if (item.minDate.day === dayjs().date()) {
-          item.timeRange = RITE_SERVICE_TIME_RANGES.filter((iten: any) => {
-            return iten.split(':')[0] > bookDateHour;
-          });
-          // } else {
-          //   item.timeRange = RITE_SERVICE_TIME_RANGES;
-          // }
-        }
-        if (item.prop === 'handleDateTime') {
-          console.log('当前被打开的表单项', item);
-          // item.minDate = {
-          //   month: dayjs(formData.bookDateTime).month(),
-          //   day: dayjs(formData.bookDateTime).date(),
-          // };
-          item.timeRange = SERVICE_TIME_RANGES.filter((iten: any) => {
-            return iten.split(':')[0] > bookDateHour;
-          });
-        }
-        formData.riteDateTime = '';
-        formData.handleDateTime = '';
-      });
-      console.log('_otherFormList', _otherFormList);
-      _setOtherFormList(_otherFormList);
-    }
-  };
-
-  const handleDatePickerColumnChange = (
-    propName: string,
-    val: any,
-    setAvailableRanges: any,
-    selectedTime: string,
-    formData: any
-  ) => {
-    console.log('handleDatePickerColumnChange49', propName, val, selectedTime);
-    if (propName === 'riteDateTime') {
-      console.log(
-        'handleDatePickerColumnChange47',
-        val,
-        selectedTime,
-        dayjs().format('YYYY-MM-DD'),
-        formData.bookDateTime
-      );
-      const curTimeForHour = formData.bookDateTime.split(' ')[1].split(':')[0];
-      if (selectedTime === dayjs(formData.bookDateTime)?.format('YYYY-MM-DD')) {
-        setAvailableRanges(
-          RITE_SERVICE_TIME_RANGES.filter(
-            (n) => n.split(':')[0] > curTimeForHour && n !== curTimeForHour
-          )
-        );
-      } else {
-        setAvailableRanges(
-          RITE_SERVICE_TIME_RANGES.filter((n) => n !== curTimeForHour)
-        );
-      }
-    } else if (propName === 'handleDateTime') {
-      const curTimeForHour = formData.bookDateTime.split(' ')[1].split(':')[0];
-      console.log(
-        'curTimeForHour',
-        curTimeForHour,
-        'selectedTime',
-        selectedTime
-      );
-
-      if (selectedTime === dayjs(formData.bookDateTime)?.format('YYYY-MM-DD')) {
-        setAvailableRanges(
-          SERVICE_TIME_RANGES.filter(
-            (n) => n.split(':')[0] > curTimeForHour && n !== curTimeForHour
-          )
-        );
-      } else {
-        setAvailableRanges(
-          SERVICE_TIME_RANGES.filter((n) => n !== curTimeForHour)
-        );
-      }
-    }
-  };
-
-  // const [dateInfo, setDateInfo] = useState({
-  //   supportAll: false,
-  //   propName: '',
-  //   timeRange: [],
-  //   minDate: {
-  //     day: new Date().getDate(),
-  //   },
-  // });
-
-  //pickerCloumn更改回调
-  // const handleDatePickerColumn = ({
-  //   propName,
-  //   value,
-  //   setAvailableRanges,
-  //   selectedTime,
-  // }) => {
-  //   console.log('选择日期的值', propName, value);
-  //   // setFormData({
-  //   //   ...formData,
-  //   //   [formProp]: value,
-  //   // });
-  //   // props.onDatePickColumnChange &&
-  //   //   props.onDatePickColumnChange(
-  //   //     propName,
-  //   //     value,
-  //   //     setAvailableRanges,
-  //   //     selectedTime,
-  //   //     formData
-  //   //   );
-  // };
   const endDate = new Date(dayjs().endOf('year').format('YYYY-MM-DD'));
   const [renderKey, setRenderKey] = useState(0);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  // const [timeRange, setTimeRange] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState('');
   const [defaultDate, setDefaultDate] = useState({
-    // year: dayjs().year(),
-    // month: dayjs().month(),
-    // day: dayjs().date(),
     startDate: new Date(dayjs().year(), dayjs().month(), dayjs().date()),
     bookDateTime: '',
     endDate: endDate,
     timeRange: [],
     propName: '',
-    hour: '0',
-    currentDate: new Date(),
+    pickerTitle: '日期选择',
+    //currentDate: new Date(),
   });
-  const handleFilter = (type: string, option: PickerOptions) => {
-    console.log('410filter', type, option);
-
-    if (type === 'hour') {
-      console.log('410hour', defaultDate.timeRange);
-      return defaultDate.timeRange.map((item) => ({
-        label: item,
-        value: item,
-      }));
-    }
-    // if (type === 'month') {
-    //   return option.filter((item) => item.value >= dayjs().month() + 1);
-    // }
-    if (type === 'day') {
-      console.log('day', option, selectedTime);
-      // const selectedMonth = dayjs(selectedTime).month() + 1;
-      // const curMonth = dayjs().month() + 1;
-      //  option.filter((item) => {
-      //   if (selectedMonth === curMonth) {
-      //     return item.value >= dayjs().date();
-      //   } else {
-      //     return item;
-      //   }
-      // });
-      return option;
-    }
-
-    return option;
-  };
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [validTimesRange, setValidTimesRange] = useState<string[]>([]);
 
   const filterAvailableRanges = (times: string[]) => {
     return times?.filter((slot) => {
@@ -658,23 +428,6 @@ export default () => {
     });
   };
 
-  useEffect(() => {
-    console.log('410timeRange', defaultDate.timeRange);
-    // const hour = +timeRange[0];
-    // setDefaultDate({
-    //   ...defaultDate,
-    //   startDate: new Date(
-    //     dayjs().year(),
-    //     dayjs().month(),
-    //     dayjs().date(),
-    //     hour
-    //   ),
-    // });
-    //
-    // setRenderKey(+new Date());
-    // setDefaultDate(defaultDate);
-  }, [defaultDate.timeRange, defaultDate.propName]);
-
   const handlePickerClick = (formItem, formData) => {
     console.log('pickerClick410', formItem, formData);
 
@@ -682,163 +435,146 @@ export default () => {
     // dateInfo.timeRange = formItem.timeRange;
     // selectedTime?.split(' ')[1] ||
     //设置可选时间范围
-    /*
+    let bookDateTimeHour = 0;
     if (formItem.prop === 'bookDateTime') {
-      setDefaultDate((d) => {
-        d.timeRange = filterAvailableRanges(formItem.timeRange);
-        d.bookDateTime = formData.bookDateTime;
-        d.startDate = new Date(
-          dayjs(formData.bookDateTime).year(),
-          dayjs(formData.bookDateTime).month(),
-          dayjs(formData.bookDateTime).date(),
-          parseInt(d.timeRange[0])
-        );
-        return d;
-      });
-    }
-    if (formItem.prop === 'riteDateTime') {
-      //筛选掉不可用日期
-      console.log(
-        '410riteDateTime----------------------------',
-        formItem,
-        filterAvailableRanges(formItem.timeRange),
-        formData.bookDateTime?.split(' ')[1]?.split(':')[0]
-      );
-      setDefaultDate((d) => {
-        d.timeRange = filterAvailableRanges(formItem.timeRange) as [];
-        const hour = parseInt(
-          formData.bookDateTime?.split(' ')[1]?.split(':')[0]
-        );
-        console.log(
-          '410sadfasfklsjaklfjaklsjfkjsakdfjklsajdfklasd',
-          d.timeRange.includes(hour) ? hour : d.timeRange[0]
-        );
-        d.startDate = new Date(
-          dayjs().year(),
-          dayjs().month(),
-          dayjs().date(),
-          parseInt(d.timeRange.includes(hour) ? hour : d.timeRange[0])
-        );
-        /*
-        d.currentDate = new Date(
-          dayjs(formData.bookDateTime).year(),
-          dayjs(formData.bookDateTime).month(),
-          dayjs(formData.bookDateTime).date(),
-          parseInt()
-        );
+      console.log('410handleDateChange', validTimesRange);
 
-        return d;
-      });
+      defaultDate.pickerTitle = '请选择上门服务时间';
+    } else {
+      const titleObj = {
+        riteDateTime: '请选择预约仪式时间',
+        handleDateTime: '请选择纪念物收取时间',
+        expressDateTime: '请选择上门收取时间',
+      };
+
+      defaultDate.pickerTitle = titleObj[formItem.prop];
+      bookDateTimeHour = dayjs(formData.bookDateTime).hour();
+      console.log('410handleDateChangexxx', formData, bookDateTimeHour);
     }
-  */
-    setShowDatePicker(true);
+
+    //筛选掉不可用日期
+    // .filter(
+    //   (n: string) =>
+    //     !invalidTimes.includes(n) && n > bookDateTimeHour.toString()
+    // )
+    console.log(
+      '410handleDateChangexxx',
+      formItem.timeRange,
+      formItem.timeRange.filter((n) => n > (bookDateTimeHour || 0))
+    );
+    setValidTimesRange(() =>
+      filterAvailableRanges(
+        formItem.timeRange.filter((n) => n > (bookDateTimeHour || 0))
+      )
+    );
+    setTimeout(() => {
+      setShowDatePicker(true);
+    }, 100);
   };
 
   useEffect(() => {
-    if (showDatePicker) {
-      console.log('410-timeRange', defaultDate.timeRange);
-      setDefaultDate(defaultDate);
-    }
-  }, [showDatePicker, defaultDate]);
+    // setRenderKey(+new Date());
+  }, [currentDate]);
 
-  // function getDaysInMonth(year, month) {
-  //   console.log(dayjs(`${year}-${month}-01`).endOf('month').date());
-  //   return dayjs(`${year}-${month}-01`).endOf('month').date();
-  // }
+  useEffect(() => {
+    console.log('validTimesRange', validTimesRange);
+    if (validTimesRange?.length) {
+      setCurrentDate(
+        new Date(
+          dayjs().year(),
+          dayjs().month(),
+          dayjs().date(),
+          validTimesRange[0]
+        )
+      );
+    }
+  }, [validTimesRange.length]);
 
   const handleConfirm = (values, options) => {
-    const selectTime = `${values[0]}-${values[1]}-${values[2]} ${values[3]}`;
     console.log(
-      '410handleConfirm',
+      '411handleConfirm',
       invalidTimes,
       values,
       options,
-      defaultDate.propName,
-      selectTime
+      defaultDate.propName
     );
-    setSelectedTime(selectTime);
-    if (invalidTimes.includes(selectTime)) {
-      showToast({
-        title: '该时间段已被预约',
-        icon: 'none',
-      });
-      return;
-    }
-    //判断时间是否已经被预约
 
+    const selectTime = `${values[0]}-${values[1]}-${values[2]} ${values[3]}`;
+    const lastItem = options[options.length - 1];
+    if (options?.some((o) => o.disabled)) {
+      if (lastItem?.isDisabled) {
+        return showToast({
+          title: '该时间段不可选!',
+          icon: 'none',
+        });
+      } else {
+        return showToast({
+          title: '置灰时间段不可选!',
+          icon: 'none',
+        });
+      }
+    }
     setformModel({
       ...formModel,
+      ...(defaultDate.propName === 'bookDateTime'
+        ? {
+            riteDateTime: '',
+            handleDateTime: '',
+            expressDateTime: '',
+          }
+        : {}),
       [defaultDate.propName]: selectTime + ':00',
     });
+    setShowDatePicker(false);
   };
-
-  // useEffect(() => {
-  //   if (dayjs(selectedTime).isBefore(dayjs(), 'day')) {
-  //     showToast({
-  //       title: '请选择今天及以后的日期',
-  //       icon: 'none',
-  //     });
-  //     return;
-  //   }
-  // }, [selectedTime]);
 
   const handleDateChange = (options, value, index) => {
     console.log(
-      '410handleDateChange+++++++++++++++++++++++++++',
+      '410handleDateChangecwl',
       options,
       value,
       index,
       defaultDate.propName
     );
-
     const getSelectTime = `${value[0]}-${value[1]}-${value[2]}`;
     const month = dayjs().month() + 1;
     const day = dayjs().date();
-    setSelectedTime(getSelectTime);
     //判断change后的时间不是当前时间
-    /*
     if (index !== 3 && index !== 0) {
-      console.log(
-        day,
-        month,
-        value[1],
-        value[2],
-        '410qqqqqqqqqqqqqqqqqqqqqq',
-        filterAvailableRanges(obj[defaultDate.propName])
-      );
-      if (month != value[1] || day != value[2]) {
-        defaultDate.timeRange = obj[defaultDate.propName];
-      } else if (day == value[2]) {
-        console.log(
-          filterAvailableRanges(obj[defaultDate.propName]),
-          '410_____________________________________________'
+      //  const cloneTimeRange = [...validTimesRange];
+      // console.log('410cloneTimeRange', cloneTimeRange);
+      console.log('410handleDateChangecwl', month, day, value[2], value[1]);
+
+      if (value[1] < month || value[2] < day) {
+        setValidTimesRange(() => []);
+        // obj[defaultDate.propName]
+      } else if (value[1] == month && value[2] == day) {
+        console.log(obj['bookDateTime'], '410handleDateChangecwlxxxx');
+        setValidTimesRange(() =>
+          filterAvailableRanges(obj[defaultDate.propName])
         );
-        defaultDate.timeRange = filterAvailableRanges(
-          obj[defaultDate.propName]
-        );
+      } else {
+        // 还原
+        const bookDateTime = dayjs(formModel['bookDateTime']).hour();
+        console.log(obj[defaultDate.propName], '410handleDateChangecwlxxxx');
+
+        setValidTimesRange(() => obj[defaultDate.propName]);
       }
-    }*/
-    // if (dayjs(getSelectTime).isBefore(dayjs(), 'day')) {
-    //   showToast({
-    //     title: '请选择今天及以后的日期',
-    //     icon: 'none',
-    //   });
-    //   return;
+    }
+    // setCurrentDate(
+    //  new Date(value[0], value[1], value[2], obj[defaultDate.propName][0])
+    //);
+    setSelectedTime(getSelectTime);
+  };
 
-    // defaultDate.startDate = new Date(
-    //   value[0],
-    //   month,
-    //   day,
-    //   parseInt(defaultDate.timeRange[0])
-    // );
-    // }
-    // setformModel
-    // setTimeRange(filterAvailableRanges(dateInfo.timeRange));
-
-    // setformModel({
-    //   ...formModel,
-    //   [dateInfo.propName]: value,
-    // });
+  const handleFilter = (type, option) => {
+    if (type === 'hour') {
+      return option.filter((n) => n.isShow);
+    }
+    if (type === 'year') {
+      return option.filter((n) => n.isShow);
+    }
+    return option;
   };
 
   return (
@@ -857,9 +593,6 @@ export default () => {
             ref={otherInfoRef}
             formList={_otherFormList}
             formModel={formModel}
-            invalidTimes={invalidTimes}
-            filterTimes={handleFilterTimes}
-            onDatePickColumnChange={handleDatePickerColumnChange}
             onFormChange={handleFormDataChange}
             onPickerClick={handlePickerClick}
           >
@@ -889,35 +622,95 @@ export default () => {
         </View>
       </View>
 
-      {/* 日期时间组件 */}
-      {/* <DateTimePicker
-        isOpened={showDatePicker}
-        invalidTimes={invalidTimes}
-        data={dateInfo}
-        onConfirm={handleDateTimeConfirm}
-        onClose={handleCloseDateTimePicker}
-        onDatePickerChange={handleDatePickChange}
-        // onMonthChange={handleMonthChange}
-      >
-        <Text>slot</Text>
-      </DateTimePicker> */}
-
       <DatePicker
-        title="日期时间选择"
-        startDate={defaultDate.startDate}
+        title={defaultDate.pickerTitle}
+        // startDate={defaultDate.startDate}
         endDate={defaultDate.endDate}
         visible={showDatePicker}
         type="datehour"
-        formatter={(type, option) => {
-          console.log('410formatter', type, option);
-          return {
-            label: <View>12okk</View>,
-            value: '12'
+        // key={renderKey}
+        formatter={(type: string, option: PickerOption) => {
+          // console.log('410handleDateChange', type, option);
+          const ymd =
+            selectedTime?.split(' ')[0] ||
+            dayjs(currentDate).format('YYYY-MM-DD');
+          const selectMonth = dayjs(ymd).month();
+          // console.log(
+          //   'ymd',
+          //   dayjs(ymd).year(),
+          //   dayjs(ymd).month(),
+          //   dayjs(ymd).date()
+          // );
+          if (type == 'month') {
+            const isDisabled = option.value < dayjs().month() + 1;
+            return {
+              label: (
+                <View className={`${isDisabled ? 'disabled' : ''}`}>
+                  {option.label}
+                </View>
+              ),
+              value: option.value,
+              disabled: isDisabled,
+            };
           }
-          return option;
+          // console.log('year', dayjs().year(), option.value);
+          if (type == 'year') {
+            return {
+              label: <View>{option.label}</View>,
+              value: option.value,
+              isShow: option.value == dayjs().year(),
+            };
+          }
+          if (type == 'day') {
+            const isDisabled =
+              selectMonth == dayjs().month() && option.value < dayjs().date();
+            return {
+              label: (
+                <View className={`${isDisabled ? 'disabled' : ''}`}>
+                  {option.label}
+                </View>
+              ),
+              value: option.value,
+              disabled: isDisabled,
+            };
+          }
+          if (type === 'hour') {
+            // console.log(
+            //   '410hour',
+            //   selectedTime,
+            //   '22',
+            //   invalidTimes,
+            //   validTimesRange,
+            //   '410handleDateChange111'
+            // );
+            // const ymd =
+            //   selectedTime?.split(' ')[0] ||
+            //   dayjs(defaultDate.currentDate).format('YYYY-MM-DD');
+            const filteredTimes = invalidTimes.filter((i) => i.includes(ymd));
+            return {
+              label: (
+                <View
+                  className={`${
+                    filteredTimes?.includes(option.value as string)
+                      ? 'disabled'
+                      : ''
+                  }`}
+                  style={{
+                    fontSize: '20px',
+                  }}
+                >
+                  {option.label}:00
+                </View>
+              ),
+              value: `${option.value}`,
+              isShow: validTimesRange?.includes(option.value as string),
+              disabled: filteredTimes.includes(option.value as string),
+            };
+          }
         }}
-        defaultValue={defaultDate.startDate}
+        // defaultValue={defaultDate.startDate}
         filter={(type, option) => handleFilter(type, option)}
+        value={currentDate}
         // value={
         //   new Date(
         //     defaultDate.year,
@@ -928,8 +721,6 @@ export default () => {
         // }
         onChange={handleDateChange}
         onCancel={() => setShowDatePicker(false)}
-        onClose={() => setShowDatePicker(false)}
-        // filter={filter}
         onConfirm={(options, values) => handleConfirm(values, options)}
       />
     </Suspense>
