@@ -98,7 +98,7 @@ export default () => {
           ...new Set([
             ...res?.data
               ?.filter((n) => n.bookDateTime)
-              .map((n) => dayjs(n.bookDateTime).format('YYYY-MM-DD HH:mm:00')),
+              .map((n) => dayjs(n.bookDateTime).format('YYYY/MM/DD HH:mm:00')),
           ]),
         ];
         console.log(result, 'result');

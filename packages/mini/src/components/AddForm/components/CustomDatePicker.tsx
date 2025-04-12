@@ -22,7 +22,7 @@ function CustomDatePicker(props: any) {
     // 获取formItem里面prop的值
     const currentHour = dayjs().hour() + 1;
     if (!FILTERTIMES[formItem.prop]) {
-      return new Date();
+      return new Date(dayjs().set('hour', currentHour).format('YYYY/MM/DD HH:mm:00'));
     }
     let maxHour = Math.max(currentHour, FILTERTIMES[formItem.prop][0]);
     // 如果maxHour不在FILTERTIMES里面，就取FILTERTIMES的第一个值
@@ -48,11 +48,6 @@ function CustomDatePicker(props: any) {
   // 确定
   const onConfirm = (latestValue: any) => {
     // 判断latestRightDateRef.current的时间跟value是否一致，如果不一致，就不允许选择
-    console.log(
-      dayjs(latestRightDateRef.current).format('YYYY-MM-DD HH:mm:00'),
-      'latestRightDateRef.current',
-      dayjs(value).format('YYYY-MM-DD HH:mm:00')
-    );
     if (
       latestRightDateRef.current &&
       dayjs(latestRightDateRef.current).format('YYYY-MM-DD HH:mm:00') !==
@@ -85,10 +80,16 @@ function CustomDatePicker(props: any) {
     const [{ value: year }, { value: month }, { value: day }, { value: hour }] =
       afterValue;
 
-    const selectedValue = `${year}/${month}/${day} ${hour}:00`;
+    const selectedValue = `${year}/${month}/${day} ${hour}:00:00`;
     console.log(selectedValue, '最后格式化赋值的时间');
     // 如果选择的时间小于当前时间，就不允许选择
-    if (dayjs(selectedValue).isBefore(dayjs())) {
+    if (
+        dayjs(selectedValue).isBefore(dayjs())
+        ||
+        (invalidTimes.includes(selectedValue) && !!FILTERTIMES[formItem.prop])
+        // 如果是riteDateTime，如果是小于bookDateTime之后的一个小时，就不允许选择
+        || (formItem.prop === 'riteDateTime' && dayjs(selectedValue).unix() <= dayjs(formData.bookDateTime).unix())
+    ) {
       console.error('选择的时间小于当前时间, 不赋值', selectedValue);
       showToast({
         title: '当前时间不可选',
@@ -146,10 +147,8 @@ function CustomDatePicker(props: any) {
           }}
         ></Image>
       </AtList>
-      {dayjs(value).format('YYYY-MM-DD HH:mm:00')}
-      {JSON.stringify(invalidTimes)}
       <DatePicker
-        title="上门服务时间"
+        title={formItem.label}
         // startDate={defaultDate.startDate}
         visible={visible}
         type="datehour"
@@ -200,10 +199,12 @@ function CustomDatePicker(props: any) {
             };
           }
           if (type === 'hour') {
-            const isDisabled = invalidTimes.includes(dayjs(value)
-            .set('hour', (option.value as number)).format('YYYY-MM-DD HH:mm:00')) || dayjs(value)
-            .set('hour', (option.value as number))
-            .isBefore(dayjs());
+            const isDisabled = (invalidTimes.includes(dayjs(value)
+            .set('hour', (option.value as number)).format('YYYY/MM/DD HH:mm:00'))
+            && !!FILTERTIMES[formItem.prop])
+            || dayjs(value).set('hour', (option.value as number)).isBefore(dayjs())
+            // 如果是riteDateTime，如果是小于bookDateTime之后的一个小时，就不允许选择
+            || (formItem.prop === 'riteDateTime' && dayjs(value).set('hour', (option.value as number)).unix() <= dayjs(formData.bookDateTime).unix())
             return {
               label: <View style={{ color: isDisabled ? 'red' : undefined }}>{option.label}:00</View>,
               value: `${option.value}`,
