@@ -50,9 +50,9 @@ function CustomDatePicker(props: any) {
     }
 
     // 确定
-    const onConfirm = (value: any) => {
+    const onConfirm = (latestValue: any) => {
         // 判断latestRightDateRef.current的时间跟value是否一致，如果不一致，就不允许选择
-        console.log(latestRightDateRef.current, 'latestRightDateRef.current')
+        console.log(dayjs(latestRightDateRef.current).format('YYYY-MM-DD HH:mm:00'), 'latestRightDateRef.current', dayjs(value).format('YYYY-MM-DD HH:mm:00'))
         if (latestRightDateRef.current && dayjs(latestRightDateRef.current).format('YYYY-MM-DD HH:mm:00') !== dayjs(value).format('YYYY-MM-DD HH:mm:00')) {
             showToast({
                 title: '当前时间不可选',
@@ -61,7 +61,7 @@ function CustomDatePicker(props: any) {
             return; 
         }
         // 修改外部的值
-        const [{value: year}, {value:month}, {value: day}, {value: hour}] = value;
+        const [{value: year}, {value:month}, {value: day}, {value: hour}] = latestValue;
         const selectedValue = `${year}-${month}-${day} ${hour}:00`;
         props.onChange(selectedValue, formItem);
         onCancel();
