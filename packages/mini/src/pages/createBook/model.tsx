@@ -2,11 +2,8 @@ import {
   RITE_SERVICE_TIME_RANGES,
   SERVICE_TIME_RANGES,
   PET_TYPES,
-  PET_RECEIVE_WAYS,
 } from '@/constants';
-import { View } from '@tarojs/components';
-import { DatePicker, PickerOption } from '@nutui/nutui-react-taro';
-import dayjs from 'dayjs';
+
 const baseInfoFormList = [
   {
     label: '联系人',
@@ -80,26 +77,9 @@ const otherFormList = [
       placeholder: '请选择',
     },
     rules: [],
-    timeRange: SERVICE_TIME_RANGES
+    timeRange: SERVICE_TIME_RANGES,
+    invalidTimes: [],
   },
-  // {
-  //   label: "收取地址",
-  //   prop: "getAddress",
-  //   type: "location",
-  //   itemProps: {
-  //     placeholder: "点击获取地址",
-  //   },
-  //   rules: [],
-  // },
-  // {
-  //   label: "详细地址",
-  //   prop: "address",
-  //   type: "textarea",
-  //   itemProps: {
-  //     placeholder: "请输入用户名",
-  //   },
-  //   rules: [],
-  // },
   {
     label: '是否需要仪式',
     prop: 'isRite',

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { message, Modal, Typography, Space } from 'antd';
 import { searchItems, tableColumns, formConfig } from './config.tsx';
@@ -11,6 +11,7 @@ import {
 import MyPage from '@/components/BasicPage';
 import { produce } from 'immer';
 import ModalForm from '@/components/ModalForm';
+import dayjs from 'dayjs';
 
 //发票
 export default function TickManagement() {
@@ -22,6 +23,19 @@ export default function TickManagement() {
     confirmLoading: false,
   });
   const navigate = useNavigate();
+
+  function compareMonths(date1, date2) {
+    if (date1.isAfter(date2, 'month')) return 1;
+    if (date1.isBefore(date2, 'month')) return -1;
+    return 0;
+  }
+  useEffect(() => {
+    console.log(dayjs('2025-04-12 16:47').isSame(dayjs(), 'month'));
+    console.log(
+      dayjs('2025-04-13 17:00').isBefore(dayjs('2025-04-12'), 'month')
+    );
+    console.log(dayjs('2025-04-14').isSame('2025-04-14', 'date'));
+  }, []);
 
   const handleOk = async (values: any) => {
     console.log(values, '+++form的值');

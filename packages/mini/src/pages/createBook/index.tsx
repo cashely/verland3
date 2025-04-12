@@ -102,6 +102,8 @@ export default () => {
           ]),
         ];
         console.log(result);
+        _otherFormList.find((n) => n.prop === 'bookDateTime').invalidTimes =
+          result;
         setInvalidTimes(result || []);
       }
     });
@@ -181,7 +183,7 @@ export default () => {
       handleDateTime: otherInfo.handleDateTime
         ? new Date(otherInfo.handleDateTime)
         : undefined,
-      // isSelfExpress: +otherInfo.isSelfExpress,
+      isSelfExpress: +otherInfo.expressWay,
       expressWay: +otherInfo.expressWay,
       expressDateTime: otherInfo.expressDateTime
         ? new Date(otherInfo.expressDateTime)
@@ -404,9 +406,7 @@ export default () => {
   }, [menuList]);
 
   const endDate = new Date(dayjs().endOf('year').format('YYYY-MM-DD'));
-  const [renderKey, setRenderKey] = useState(0);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedTime, setSelectedTime] = useState('');
+
   const [defaultDate, setDefaultDate] = useState({
     startDate: new Date(dayjs().year(), dayjs().month(), dayjs().date()),
     bookDateTime: '',
@@ -467,95 +467,11 @@ export default () => {
         formItem.timeRange.filter((n) => n > (bookDateTimeHour || 0))
       )
     );
-    setTimeout(() => {
-      setShowDatePicker(true);
-    }, 100);
   };
 
   useEffect(() => {
     // setRenderKey(+new Date());
   }, [currentDate]);
-
-  const handleConfirm = (values, options) => {
-    console.log(
-      '411handleConfirm',
-      invalidTimes,
-      values,
-      options,
-      defaultDate.propName
-    );
-
-    const selectTime = `${values[0]}-${values[1]}-${values[2]} ${values[3]}`;
-    const lastItem = options[options.length - 1];
-    if (options?.some((o) => o.disabled)) {
-      if (lastItem?.isDisabled) {
-        return showToast({
-          title: '该时间段不可选!',
-          icon: 'none',
-        });
-      } else {
-        return showToast({
-          title: '置灰时间段不可选!',
-          icon: 'none',
-        });
-      }
-    }
-    setformModel({
-      ...formModel,
-      ...(defaultDate.propName === 'bookDateTime'
-        ? {
-            riteDateTime: '',
-            handleDateTime: '',
-            expressDateTime: '',
-          }
-        : {}),
-      [defaultDate.propName]: selectTime + ':00',
-    });
-    setShowDatePicker(false);
-  };
-
-  const handleDateChange = (options, value, index) => {
-    const getSelectTime = `${value[0]}-${value[1]}-${value[2]}`;
-    const month = dayjs().month() + 1;
-    const day = dayjs().date();
-    //判断change后的时间不是当前时间
-    if (index !== 3 && index !== 0) {
-      //  const cloneTimeRange = [...validTimesRange];
-      // console.log('410cloneTimeRange', cloneTimeRange);
-      console.log('410handleDateChangecwl', month, day, value[2], value[1]);
-
-      if (value[1] < month || value[2] < day) {
-        setValidTimesRange(() => []);
-        // obj[defaultDate.propName]
-      } else if (value[1] == month && value[2] == day) {
-        console.log(obj['bookDateTime'], '410handleDateChangecwlxxxx');
-        setValidTimesRange(() =>
-          filterAvailableRanges(obj[defaultDate.propName])
-        );
-      } else {
-        // 还原
-        const bookDateTime = dayjs(formModel['bookDateTime']).hour();
-        console.log(obj[defaultDate.propName], '410handleDateChangecwlxxxx');
-
-        setValidTimesRange(() => obj[defaultDate.propName]);
-      }
-    }
-    setSelectedTime(() => getSelectTime);
-    setCurrentDate(
-     () => new Date(`${value[0]}/${value[1]}/${value[2]} ${obj[defaultDate.propName][0]}:00:00`)
-    );
-    
-  };
-
-  const handleFilter = (type, option) => {
-    if (type === 'hour') {
-      return option.filter((n) => n.isShow);
-    }
-    if (type === 'year') {
-      return option.filter((n) => n.isShow);
-    }
-    return option;
-  };
 
   return (
     <Suspense fallback={<AtToast isOpened text="loading"></AtToast>}>

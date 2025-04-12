@@ -182,9 +182,11 @@ export default function Index() {
               {data.map((item, indey) => (
                 <View className="relative bg-red-700 item" key={indey}>
                   <View className="items-center item-head">
-                    <View className="text-888">
-                      预约日期：{item.bookDateTime}
-                    </View>
+                    {item?.bookDateTime ? (
+                      <View className="text-888">
+                        预约日期：{item.bookDateTime}
+                      </View>
+                    ) : null}
                     {getStatusBg(item.statu)}
                   </View>
                   <View className="item-body">

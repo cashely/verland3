@@ -97,34 +97,24 @@ export default forwardRef((props, ref) => {
             const { province, city, district, detail } = formatAddress(
               res.address
             );
-            if (!formatAddress(res.address).province) {
+            if (formatAddress(res.address).province) {
               // setFormData({
               //   ...formData,
               //   [formItem.prop]: res?.address,
               // });
-            } else {
-              // setFormData({
-              //   ...formData,
-              //   [formItem.prop]: `${province}-${city}${
-              //     district ? '-' + district : ''
-              //   }`,
-              //   detail,
-              //   province,
-              //   city,
-              //   area: district,
-              // });
+              props.onFormChange &&
+                props.onFormChange(formItem.prop, {
+                  ...formData,
+                  [formItem.prop]: `${province}-${city}${
+                    district ? '-' + district : ''
+                  }`,
+                  detail,
+                  province,
+                  city,
+                  area: district,
+                });
             }
             console.log('formData411在location', formData);
-            props.onFormChange &&
-              props.onFormChange(formItem.prop, {
-                [formItem.prop]: `${province}-${city}${
-                  district ? '-' + district : ''
-                }`,
-                detail,
-                province,
-                city,
-                area: district,
-              });
             console.log(formatAddress(res.address), 'address');
           }
         },
@@ -322,7 +312,11 @@ export default forwardRef((props, ref) => {
             ) : null}
             {formItem.type === 'picker-date' && !formItem.hidden ? (
               <View className="relative formItemView" key={index}>
-                <CustomDatePicker formItem={formItem} formData={formData} onChange={handleChange} />
+                <CustomDatePicker
+                  formItem={formItem}
+                  formData={formData}
+                  onChange={handleChange}
+                />
               </View>
             ) : null}
             {formItem.type === 'location' && !formItem.hidden ? (

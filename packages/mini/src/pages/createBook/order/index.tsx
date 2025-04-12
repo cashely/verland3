@@ -62,7 +62,7 @@ export default () => {
   });
 
   const formatDate = (date) => {
-    if (!date) return '-';
+    if (!date) return null;
     return dayjs(date).format('YYYY-MM-DD HH:mm');
   };
 
@@ -214,7 +214,7 @@ export default () => {
         />
         {formatDate(order.bookDateTime) ? (
           <AtListItem
-            title="预约时间"
+            title="上门服务时间"
             extraText={<>{formatDate(order.bookDateTime) || '-'}</>}
           />
         ) : null}
@@ -226,30 +226,30 @@ export default () => {
           />
         }
 
-        {
+        {order?.riteDateTime ? (
           <AtListItem
             title="仪式预约时间"
             extraText={
               order?.isRite == 1 ? formatDate(order.riteDateTime) : '-'
             }
           />
-        }
+        ) : null}
 
-        {
+        {order?.handleWay && order?.handleWay != 1 ? (
           <AtListItem
             title="纪念物获取方式"
             extraText={
               HANDLE_WAYS.find((n) => n.value == order.handleWay)?.label || '-'
             }
           />
-        }
+        ) : null}
 
-        {
+        {order?.handleDateTime ? (
           <AtListItem
             title="纪念物获取时间"
             extraText={formatDate(order?.handleDateTime) || '-'}
           />
-        }
+        ) : null}
 
         {
           <AtListItem
