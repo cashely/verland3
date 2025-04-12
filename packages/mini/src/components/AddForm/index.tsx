@@ -25,6 +25,7 @@ import locationIcon from '../../assets/imgs/location.png';
 import dateIcon from '../../assets/imgs/date-icon.png';
 import { formatAddress } from '@/utils';
 import PetPicker from '@/components/PetPicker';
+import CustomDatePicker from './components/CustomDatePicker';
 import './index.scss';
 
 export default forwardRef((props, ref) => {
@@ -35,7 +36,6 @@ export default forwardRef((props, ref) => {
   const [formData, setFormData] = useState(formModel);
   const [tabIndex, setTabIndex] = useState(0);
   const handleChange = (e, formItem: Record<string, any>) => {
-    // console.log(e, formItem, 'handleChange46');
     if (formItem?.type === 'tabs') {
       setTabIndex(e);
       console.log(formItem.tabsOptions[e]?.id, 'handleChange488');
@@ -322,50 +322,7 @@ export default forwardRef((props, ref) => {
             ) : null}
             {formItem.type === 'picker-date' && !formItem.hidden ? (
               <View className="relative formItemView" key={index}>
-                {/* <Picker
-                mode={formItem.type.split("-")[1]}
-                onChange={(e) => handleChange(e, formItem)}
-                value={formData[formItem.prop]}
-              >
-                <AtList>
-                  <AtListItem
-                    title={formItem.label}
-                    arrow="right"
-                    extraText={formItem.itemProps.placeholder}
-                  />
-                </AtList>
-              </Picker> */}
-                <AtList className="flex items-center justify-between">
-                  <AtListItem
-                    onClick={() => handleListClick(formItem)}
-                    title={
-                      <View>
-                        {formItem.itemProps?.required ? (
-                          <Text className="error-dot text-color-red">* </Text>
-                        ) : null}
-                        <Text
-                          className={`${
-                            formItem.error ? 'text-color-red' : ''
-                          }`}
-                        >
-                          {formItem.label}
-                        </Text>
-                      </View>
-                    }
-                    extraText={
-                      formData[formItem.prop] || formItem.itemProps.placeholder
-                    }
-                  />
-                  <Image
-                    src={dateIcon}
-                    mode="widthFix"
-                    style={{
-                      width: 20,
-                      height: 20,
-                      marginRight: 10,
-                    }}
-                  ></Image>
-                </AtList>
+                <CustomDatePicker formItem={formItem} formData={formData} onChange={handleChange} />
               </View>
             ) : null}
             {formItem.type === 'location' && !formItem.hidden ? (

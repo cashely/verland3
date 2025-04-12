@@ -4,6 +4,9 @@ import {
   PET_TYPES,
   PET_RECEIVE_WAYS,
 } from '@/constants';
+import { View } from '@tarojs/components';
+import { DatePicker, PickerOption } from '@nutui/nutui-react-taro';
+import dayjs from 'dayjs';
 const baseInfoFormList = [
   {
     label: '联系人',
@@ -77,7 +80,7 @@ const otherFormList = [
       placeholder: '请选择',
     },
     rules: [],
-    timeRange: SERVICE_TIME_RANGES,
+    timeRange: SERVICE_TIME_RANGES
   },
   // {
   //   label: "收取地址",
