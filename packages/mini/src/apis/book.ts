@@ -2,7 +2,7 @@ import request from './index';
 
 const APIS = {
   ADD: '/mp/book', // 新增图书
-  LIST: '/mp/book',
+  LIST: '/mp/book/hasBookDate',
   DETAIL: '/mp/book', // 获取图书列表
   PREPAY: '/mp/wx/prepay',
   PAY: '/mp/wx/pay',

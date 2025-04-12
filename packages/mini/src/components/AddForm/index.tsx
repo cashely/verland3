@@ -29,7 +29,7 @@ import CustomDatePicker from './components/CustomDatePicker';
 import './index.scss';
 
 export default forwardRef((props, ref) => {
-  const { formList = [], formModel = {}, handleSubmit } = props;
+  const { formList = [], formModel = {}, handleSubmit, invalidTimes = [] } = props;
 
   const [petPickerShow, setPetPickerShow] = useState(false);
   const [_formList, setFormList] = useState(formList);
@@ -316,6 +316,7 @@ export default forwardRef((props, ref) => {
                   formItem={formItem}
                   formData={formData}
                   onChange={handleChange}
+                  invalidTimes={invalidTimes}
                 />
               </View>
             ) : null}

@@ -98,13 +98,13 @@ export default () => {
           ...new Set([
             ...res?.data
               ?.filter((n) => n.bookDateTime)
-              .map((n) => dayjs(n.bookDateTime).format('YYYY-MM-DD HH')),
+              .map((n) => dayjs(n.bookDateTime).format('YYYY-MM-DD HH:mm:00')),
           ]),
         ];
-        console.log(result);
+        console.log(result, 'result');
         _otherFormList.find((n) => n.prop === 'bookDateTime').invalidTimes =
           result;
-        setInvalidTimes(result || []);
+        setInvalidTimes(result);
       }
     });
     _otherFormList.forEach(async (item) => {
@@ -491,6 +491,7 @@ export default () => {
             formModel={formModel}
             onFormChange={handleFormDataChange}
             onPickerClick={handlePickerClick}
+            invalidTimes={invalidTimes}
           >
             {{
               handleRiteChange,

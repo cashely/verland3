@@ -13,7 +13,7 @@ const FILTERTIMES = {
 };
 
 function CustomDatePicker(props: any) {
-  const { formItem, formData } = props;
+  const { formItem, formData, invalidTimes = [] } = props;
 
   const latestRightDateRef = useRef<any>(null);
 
@@ -147,6 +147,7 @@ function CustomDatePicker(props: any) {
         ></Image>
       </AtList>
       {dayjs(value).format('YYYY-MM-DD HH:mm:00')}
+      {JSON.stringify(invalidTimes)}
       <DatePicker
         title="上门服务时间"
         // startDate={defaultDate.startDate}
@@ -199,8 +200,12 @@ function CustomDatePicker(props: any) {
             };
           }
           if (type === 'hour') {
+            const isDisabled = invalidTimes.includes(dayjs(value)
+            .set('hour', (option.value as number)).format('YYYY-MM-DD HH:mm:00')) || dayjs(value)
+            .set('hour', (option.value as number))
+            .isBefore(dayjs());
             return {
-              label: <View>{option.label}:00</View>,
+              label: <View style={{ color: isDisabled ? 'red' : undefined }}>{option.label}:00</View>,
               value: `${option.value}`,
               isShow: false,
             };

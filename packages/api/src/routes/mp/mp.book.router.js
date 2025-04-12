@@ -209,6 +209,35 @@ router.get('/', validate(z => (
     }
 })
 
+router.get('/hasBookDate', validate(z => (
+    z.object({
+        query: z.object({
+            start: z.string().min(1),
+            end: z.string().min(1)
+        }) 
+    })
+)), async (req, res) => {
+    try {
+        const { start, end } = req.query;
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        const books = await prisma.book.findMany({
+            where: {
+                bookDateTime: {
+                    gte: startDate,
+                    lte: endDate
+                },
+                statu: {
+                    not: 1
+                }
+            }
+        });
+        res.response.success(books);
+    } catch (error) {
+        res.response.error(error); 
+    }
+})
+
 router.get('/:id', validate(z => (
     z.object({
         params: z.object({
@@ -249,34 +278,7 @@ router.get('/:id', validate(z => (
         res.response.error(error);
     }
 })
-router.get('/hasBookDate', validate(z => (
-    z.object({
-        query: z.object({
-            start: z.string().min(1),
-            end: z.string().min(1)
-        }) 
-    })
-)), async (req, res) => {
-    try {
-        const { start, end } = req.query;
-        const startDate = new Date(start);
-        const endDate = new Date(end);
-        const books = await prisma.book.findMany({
-            where: {
-                bookDateTime: {
-                    gte: startDate,
-                    lte: endDate
-                },
-                statu: {
-                    not: 1
-                }
-            }
-        });
-        res.response.success(books);
-    } catch (error) {
-        res.response.error(error); 
-    }
-})
+
 
 
 
