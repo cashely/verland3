@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import dayjs from 'dayjs';
 import { View, Image, Text } from '@tarojs/components';
 import { AtList, AtListItem } from 'taro-ui';
@@ -15,6 +15,8 @@ const FILTERTIMES = {
 
 function CustomDatePicker(props: any) {
     const { formItem, formData } = props;
+
+    const latestRightDateRef = useRef<any>(null);
 
     const [value, setValue] = useState(() => {
         // 获取时间的最大值
@@ -49,6 +51,15 @@ function CustomDatePicker(props: any) {
 
     // 确定
     const onConfirm = (value: any) => {
+        // 判断latestRightDateRef.current的时间跟value是否一致，如果不一致，就不允许选择
+        console.log(latestRightDateRef.current, 'latestRightDateRef.current')
+        if (latestRightDateRef.current && dayjs(latestRightDateRef.current).format('YYYY-MM-DD HH:mm:00') !== dayjs(value).format('YYYY-MM-DD HH:mm:00')) {
+            showToast({
+                title: '当前时间不可选',
+                icon: 'none', 
+            })
+            return; 
+        }
         // 修改外部的值
         const [{value: year}, {value:month}, {value: day}, {value: hour}] = value;
         const selectedValue = `${year}-${month}-${day} ${hour}:00`;
@@ -76,11 +87,15 @@ function CustomDatePicker(props: any) {
         if (dayjs(selectedValue).isBefore(dayjs())) {
             console.error('选择的时间小于当前时间, 不赋值', selectedValue);
             showToast({
-                title: '当前时间不允许选择',
+                title: '当前时间不可选',
                 icon: 'none', 
             })
-            return false;
+            // return false;
+            latestRightDateRef.current = new Date(value);
+        } else {
+            latestRightDateRef.current = new Date(selectedValue);
         }
+        
         setValue(new Date(selectedValue));
     }
 
@@ -139,9 +154,9 @@ function CustomDatePicker(props: any) {
                 type="datehour"
                 // key={renderKey}
                 formatter={(type: string, option: PickerOption): any => {
-                    const formatCurrentValue = dayjs();
+                    
                     if (type == 'month') {
-                        const isDisabled = option.value as number < formatCurrentValue.month() + 1;
+                        const isDisabled = dayjs(value).set('month', option.value as number - 1).isBefore(dayjs());
                         return {
                             label: (
                                 <View style={{ color: isDisabled ? 'red': undefined }}>
@@ -154,6 +169,7 @@ function CustomDatePicker(props: any) {
                     }
                     // console.log('year', dayjs().year(), option.value);
                     if (type == 'year') {
+                        const formatCurrentValue = dayjs();
                         const isDisabled = option.value as number < formatCurrentValue.year();
                         return {
                             label: <View style={{ color: isDisabled ? 'red': undefined }}>{option.label}</View>,
@@ -162,7 +178,8 @@ function CustomDatePicker(props: any) {
                         };
                     }
                     if (type == 'day') {
-                        const isDisabled = option.value as number < formatCurrentValue.date();
+                        // const formatCurrentValue = dayjs(value);
+                        const isDisabled = dayjs(value).set('date', option.value as number).isBefore(dayjs());
                         return {
                             label: (
                                 <View style={{ color: isDisabled ? 'red': undefined }}>
