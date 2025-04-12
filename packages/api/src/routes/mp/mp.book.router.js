@@ -227,9 +227,7 @@ router.get('/hasBookDate', validate(z => (
                     gte: startDate,
                     lte: endDate
                 },
-                statu: {
-                    not: 1
-                }
+                statu: 1
             }
         });
         res.response.success(books);
