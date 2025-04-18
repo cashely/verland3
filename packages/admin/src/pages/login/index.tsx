@@ -1,25 +1,25 @@
-import { App, Form, Input, Button } from "antd";
-import { useNavigate } from "react-router-dom";
-import { z } from "zod";
-import Logo from "../../layout/components/sidebar/logo";
+import { App, Form, Input, Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
+import Logo from '../../layout/components/sidebar/logo';
 // import LocaleButton from "../../components/common/LocaleButton";
 import {
   setTokenToLocalStorage,
   formFieldValidator,
   getTokenFromLocalStorage,
-} from "../../utils";
-import { loginApi } from "@/apis/modules/common";
-import useStore from '@/store'
+} from '../../utils';
+import { loginApi } from '@/apis/modules/common';
+import useStore from '@/store';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 function Login() {
   const closeLoading = useStore((state) => state.closeLoading);
   const openLoading = useStore((state) => state.openLoading);
   const token = getTokenFromLocalStorage();
   const rules = {
-    username: [formFieldValidator<string>(z.string().min(1), "账号不能为空")],
-    password: [formFieldValidator<string>(z.string().min(1), "密码不能为空")],
+    username: [formFieldValidator<string>(z.string().min(1), '账号不能为空')],
+    password: [formFieldValidator<string>(z.string().min(1), '密码不能为空')],
   };
 
   const [form] = Form.useForm();
@@ -28,7 +28,7 @@ function Login() {
 
   useEffect(() => {
     if (token) {
-      navigate("/dashboard");
+      navigate('/dashboard');
     }
   }, []);
 
@@ -44,8 +44,8 @@ function Login() {
       const res = await loginApi<string | undefined>(values);
       if (res.code === 200) {
         setTokenToLocalStorage(res.data);
-        message.success("登录成功");
-        navigate("/", {
+        message.success('登录成功');
+        navigate('/', {
           replace: true,
         });
       } else {
@@ -69,8 +69,8 @@ function Login() {
           form={form}
           requiredMark={false}
           initialValues={{
-            username: "admin",
-            password: "admin",
+            username: '',
+            password: '',
           }}
           className="border rounded-md shadow-md py-8 px-4 w-[350px]"
         >
