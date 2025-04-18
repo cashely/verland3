@@ -209,6 +209,28 @@ router.get('/', validate(z => (
     }
 })
 
+router.get('/count', validate(z => (
+    z.object({
+    })
+)), async (req, res) => {
+    try {
+        const { id } = req.user;
+        const { statu } = req.query;
+        const whereCondition = {
+            userId: id
+        }
+        if (Number.isInteger(statu)) {
+            whereCondition.statu = statu;
+        }
+        const count = await prisma.book.count({
+            where: whereCondition,
+        });
+        res.response.success(count);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
 router.get('/hasBookDate', validate(z => (
     z.object({
         query: z.object({

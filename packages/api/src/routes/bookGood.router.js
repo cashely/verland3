@@ -35,6 +35,26 @@ const bookGoodRouter = new Router({
         res.response.success(bookGood);
     }, res);
 })
+.get('/', validate(z => (
+    z.object({
+        query: z.object({
+            title: z.string().optional(),
+        })
+    })
+)), (req, res) => {
+    transaction(async (prisma) => {
+        const { title } = req.query;
+        const count = await prisma.bookGood.count({
+            where: {
+                title: {
+                    contains: title
+                }
+            }
+            
+        });
+        res.response.success(count);
+    }, res);
+})
 .get('/:id', validate(z => (
     z.object({
         params: z.object({

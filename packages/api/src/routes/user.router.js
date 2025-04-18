@@ -41,6 +41,32 @@ router.get('/', validate(z => (
     }
 })
 
+router.get('/count', validate(z => (
+    z.object({
+        query: z.object({
+            nickname: z.string().optional(),
+            username: z.string().optional(),
+        })
+    })
+)), async (req, res) => {
+    try {
+        const { nickname, username } = req.query;
+        const whereConditions = {};
+        if (nickname) {
+            whereConditions.nickname = { contains: nickname };
+        }
+        if (username) {
+            whereConditions.username = { contains: username };
+        }
+        const count = await prisma.user.count({
+            where: whereConditions,
+        });
+        res.response.success(count);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
 router.get('/:id', validate(z => (
     z.object({
         params: z.object({

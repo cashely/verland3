@@ -67,6 +67,31 @@ router.get('/', validate(z => (
     }
 })
 
+router.get('/count', validate(z => (
+    z.object({
+        query: z.object({
+            name: z.string().optional()
+        })
+    })
+)), async (req, res) => {
+    try {
+        const { name } = req.query;
+        const whereCondition = {};
+
+        if (!!name) {
+            whereCondition.name = {
+                contains: name
+            }
+        }
+        const count = await prisma.menu.count({
+            where: whereCondition,
+        });
+        res.response.success(count);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
 /**
  * 获取指定 ID 的菜单详情
  * @route GET /api/menus/:id

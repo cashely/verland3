@@ -36,6 +36,28 @@ router.get('/', validate(z => (
     }
 })
 
+router.get('/count', validate(z => (
+    z.object({
+    })
+)), async (req, res) => {
+    try {
+        const { type } = req.query;
+        const whereCondition = {
+            
+        }
+
+        if (type) {
+            whereCondition.type = type;
+        }
+        const count = await prisma.advise.count({
+            where: whereCondition
+        });
+        res.response.success(count);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
 router.get('/:id', validate(z => (
     z.object({
         params: z.object({
