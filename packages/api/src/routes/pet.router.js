@@ -55,6 +55,38 @@ router.get('/', validate(z => (
         res.response.error(error);
     }
 })
+router.get('/', validate(z => (
+    z.object({
+        query: z.object({
+            username: z.string().optional()
+        })
+    })
+)), async (req, res) => {
+    try {
+
+        const { userIds = [], username } = req.query;
+        const whereConditions = {};
+        if (userIds.length > 0) {
+            whereConditions.userId = { in: userIds };
+        }
+        if (username) {
+            const users = await prisma.user.findMany({
+                where: {
+                    username: { contains: username }
+                },
+            });
+            if (users.length > 0) {
+                whereConditions.userId = { in: users.map(user => user.id) };
+            }
+        }
+        const count = await prisma.pet.count({
+            where: whereConditions
+        });
+        res.response.success(count);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
 
 /**
  * @name 根据id获取单只宠物详情

@@ -29,6 +29,20 @@ router.get('/', validate(z => (
     }
 });
 
+router.get('/count', validate(z => (
+    z.object({
+    })
+)), async (req, res) => {
+    try {
+        const { } = req.query;
+        const count = await prisma.bookGood.count({
+        });
+        res.response.success(count);
+    } catch (error) {
+        res.response.error(error);
+    }
+});
+
 router.get('/:id', validate(z => (
     z.object({
         params: z.object({

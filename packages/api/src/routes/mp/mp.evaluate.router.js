@@ -75,6 +75,30 @@ router.get('/', validate(z => (
     }
 })
 
+router.get('/count', validate(z => (
+    z.object({
+        query: z.object({
+            bookIds: z.string().array().optional(),
+        })
+    })
+)), async (req, res) => {
+    try {
+        const { bookIds = [] } = req.query;
+        const { id } = req.user;
+        const count = await prisma.evaluate.count({
+            where: {
+                userId: id,
+                bookId: {
+                    in: bookIds 
+                }
+            },
+        });
+        res.response.success(count);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
 router.get('/:id', validate(z => (
     z.object({
         params: z.object({

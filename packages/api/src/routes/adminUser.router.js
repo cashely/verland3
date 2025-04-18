@@ -22,5 +22,16 @@ const adminUserRouter = new Router({
         res.response.success(user);
     }, res);
 })
+.get('/count', validate(z => (
+    z.object({})
+)), async (req, res) => {
+    transaction(async (prisma) => {
+        const { id } = req.user;
+        const count = await prisma.adminUser.count({
+            where: { id }
+        });
+        res.response.success(count);
+    })
+})
 
 export default adminUserRouter;

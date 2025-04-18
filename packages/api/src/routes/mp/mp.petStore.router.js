@@ -39,5 +39,30 @@ router.get('/', validate(z => (
     }
 })
 
+router.get('/count', validate(z => (
+    z.object({
+        query: z.object({
+            name: z.string().optional()
+        })
+    })
+)), async (req, res) => {
+    try {
+        const { name } = req.query;
+        const whereCondition = {};
+
+        if (!!name) {
+            whereCondition.name = {
+                contains: name
+            }
+        }
+        const count = await prisma.petStore.count({
+            where: whereCondition,
+        });
+        res.response.success(count);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
 
 export default router;

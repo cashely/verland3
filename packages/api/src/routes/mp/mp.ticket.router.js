@@ -32,6 +32,24 @@ router.get('/', validate(z => (
     }
 })
 
+router.get('/count', validate(z => (
+    z.object({
+    })
+)), async (req, res) => {
+    try {
+        const { id } = req.user;
+        const { } = req.query;
+        const count = await prisma.ticket.count({
+            where: {
+                userId: id
+            },
+        });
+        res.response.success(count);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
 router.get('/:id', validate(z => (
     z.object({
         params: z.object({

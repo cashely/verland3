@@ -8,13 +8,31 @@ const router = new Router({
 
 router.get('/', validate(z => (
     z.object({
+        query: z.object({
+            start: z.string().optional().nullable(),
+            end: z.string().optional().nullable(),
+            menuId: z.array(z.string()).optional(),
+        })
     })
 )), async (req, res) => {
     try {
-        const { pageSize = 20, pageNo = 1, statu } = req.query;
-        const whereCondition = {}
+        const { pageSize = 20, pageNo = 1, statu, start, end, menuIds = [] } = req.query;
+        const whereCondition = {
+            createdAt: {}
+        }
         if (statu ?? false) {
             whereCondition.statu = Number(statu);
+        }
+        if (start) {
+            whereCondition.createdAt.gte = new Date(start)
+        }
+        if (end) {
+            whereCondition.createdAt.lte = new Date(end)
+        }
+        if (menuIds) {
+            whereCondition.menuId = {
+                in: menuIds
+            }
         }
         const books = await prisma.book.findMany({
             where: whereCondition,
@@ -47,6 +65,25 @@ router.get('/', validate(z => (
             take: Number(pageSize),
         });
         res.response.success(books);
+    } catch (error) {
+        res.response.error(error);
+    }
+})
+
+router.get('/count', validate(z => (
+    z.object({
+    })
+)), async (req, res) => {
+    try {
+        const { statu } = req.query;
+        const whereCondition = {}
+        if (statu ?? false) {
+            whereCondition.statu = Number(statu);
+        }
+        const count = await prisma.book.count({
+            where: whereCondition,
+        });
+        res.response.success(count);
     } catch (error) {
         res.response.error(error);
     }
