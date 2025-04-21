@@ -1,20 +1,20 @@
-import { Col, Form, Input, Row, Select, InputNumber } from 'antd';
+import { Col, Form, Input, Row, Select, InputNumber, DatePicker } from 'antd';
 import SearchTools from './FormTools';
 import './index.scss';
 import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 const { Option } = Select;
 const formItemClasses = `rounded-[4px]`;
-export default function SearchForm({ items = [], onSearch = () => { } }: any) {
-
+export default function SearchForm({ items = [], onSearch = () => {} }: any) {
   const initData = items.reduce((acc, cur) => {
     acc[cur.prop] = cur.initValue || '';
     return acc;
-  }, {})
+  }, {});
   const [searchForm] = Form.useForm();
   const [formData, setFormData] = useState(initData);
   //提交
   const onFinish = (values: any) => {
-    console.log(values, formData, '43onFinish')
+    console.log(values, formData, '43onFinish');
     // const values = searchForm.validateFields()
     onSearch && onSearch(formData);
   };
@@ -22,14 +22,23 @@ export default function SearchForm({ items = [], onSearch = () => { } }: any) {
   //重置
   const handleResetForm = () => {
     searchForm.resetFields();
-    setFormData(initData)
+    setFormData(initData);
     onSearch && onSearch(initData);
   };
 
-
   const handleChange = (prop: string, value: any) => {
-    console.log(prop, value, '43handleChange')
-    setFormData(prev => ({ ...prev, [prop]: value ?? '' }));
+    console.log(prop, value, '43handleChange');
+    if (prop === 'dateRange') {
+      const [start, end] = value;
+      setFormData((prev) => ({
+        ...prev,
+        start: dayjs(start).format('YYYY-MM-DD'),
+        end: dayjs(end).format('YYYY-MM-DD'),
+        [prop]: undefined,
+      }));
+      return;
+    }
+    setFormData((prev) => ({ ...prev, [prop]: value ?? '' }));
   };
 
   return (
@@ -79,6 +88,14 @@ export default function SearchForm({ items = [], onSearch = () => { } }: any) {
                       </Option>
                     ))}
                   </Select>
+                ) : null}
+                {field.type === 'month' ? (
+                  <DatePicker.RangePicker
+                    value={formData[field.prop]}
+                    onChange={(value) => handleChange(field.prop, value)}
+                    allowClear={field.clearable ?? false}
+                    className={formItemClasses}
+                  ></DatePicker.RangePicker>
                 ) : null}
               </Form.Item>
             </Col>

@@ -12,12 +12,28 @@ import { refundDetail } from '@/apis/modules/book';
 import { message } from 'antd';
 const searchItems = [
   {
+    label: '套餐类型',
+    prop: 'type',
+    type: 'select',
+    clearable: true,
+    placeholder: '请选择',
+    options: [],
+    initValue: '',
+  },
+  {
     label: '状态',
     prop: 'statu',
     type: 'select',
     clearable: true,
-    placeholder: '请选择状态',
+    placeholder: '请选择',
     options: APPOINTMENT_STATUS,
+    initValue: '',
+  },
+  {
+    label: '日期',
+    prop: 'dateRange',
+    type: 'month',
+    clearable: true,
     initValue: '',
   },
 ];

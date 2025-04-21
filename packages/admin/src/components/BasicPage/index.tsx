@@ -14,14 +14,13 @@ import { PageData } from '@/types';
 import './index.scss';
 
 export type MyPageTableOptions<S> = ColumnsType<S>;
-type ParseDataType<S> = S extends (
-  params?: any
-) => Response<PageData<infer T>>
+type ParseDataType<S> = S extends (params?: any) => Response<PageData<infer T>>
   ? T
   : S;
 export interface PageProps<S> {
   ref?: React.Ref<RefPageProps>;
   pageApi?: S;
+  pageCountApi?: S;
   pageParams?: object;
   searchItems?: SearchForm.searchItems;
   tableOptions?: MyPageTableOptions<ParseDataType<S>>;
@@ -34,7 +33,14 @@ export interface RefPageProps {
 }
 
 const BasicPage = (
-  { pageApi, pageParams, searchItems, tableOptions, children }: PageProps<S>,
+  {
+    pageApi,
+    pageCountApi,
+    pageParams,
+    searchItems,
+    tableOptions,
+    children,
+  }: PageProps<S>,
   ref: { ref?: React.Ref<RefPageProps> }
 ) => {
   const [pageData, setPageData] = useState<PageData<ParseDataType<S>>>({
@@ -58,11 +64,19 @@ const BasicPage = (
           pageNo: pageData.pageNo,
         };
         const { code, data } = await pageApi(obj);
+        //获取总条数
+        let total = 0;
+        if (pageCountApi) {
+          const { code, data } = await pageCountApi(obj);
+          if (code === 200) {
+            total = data;
+          }
+        }
         setTableLoading(false);
         if (code === 200) {
           setPageData({
             ...pageData,
-            total: data?.length || 0,
+            total,
             data: data.map((item) => ({
               ...item,
               key: item.id,

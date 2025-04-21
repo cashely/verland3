@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Flex } from 'antd';
 import { searchItems, tableColumns } from './config.ts';
 import MyPage from '@/components/BasicPage';
-import { list } from '@/apis/modules/user';
+import { list, listCount } from '@/apis/modules/user';
 
 //用户
 export default function accountManagement() {
@@ -11,6 +11,7 @@ export default function accountManagement() {
   return (
     <MyPage
       pageApi={list}
+      pageCountApi={listCount}
       tableOptions={tableColumns}
       searchItems={searchItems}
     >

@@ -7,6 +7,7 @@ import {
   menuUpdate,
   menuCreate,
   menuDelete,
+  menuListCount,
 } from '@/apis/modules/common.ts';
 import MyPage from '@/components/BasicPage';
 import { produce } from 'immer';
@@ -114,6 +115,7 @@ export default function TickManagement() {
       <MyPage
         pageApi={menuList}
         tableOptions={tableColumns}
+        pageCountApi={menuListCount}
         ref={pageRef}
         searchItems={searchItems}
       >

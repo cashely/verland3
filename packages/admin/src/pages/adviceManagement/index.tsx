@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Flex, message } from 'antd';
 import ModalForm from '@/components/ModalForm';
 import { searchItems, tableColums, formConfig } from './config.tsx';
-import { list, edit } from '@/apis/modules/advise';
+import { list, edit, listCount } from '@/apis/modules/advise';
 import MyPage from '@/components/BasicPage';
 import { produce } from 'immer';
 
@@ -57,6 +57,7 @@ export default function Index() {
       <MyPage
         ref={pageRef}
         pageApi={list}
+        pageCountApi={listCount}
         tableOptions={tableColums}
         searchItems={searchItems}
       >
@@ -74,8 +75,7 @@ export default function Index() {
                 >
                   详情
                 </Button>
-                {
-                  !record?.replayContent &&
+                {!record?.replayContent && (
                   <Button
                     onClick={() => handleReplay(record)}
                     size="small"
@@ -83,7 +83,8 @@ export default function Index() {
                     variant="link"
                   >
                     回复
-                  </Button>}
+                  </Button>
+                )}
               </Flex>
             );
           },

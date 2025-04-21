@@ -44,6 +44,12 @@ export function menuList<T>(params = {} as any): Promise<RequestResult<T>> {
   return request.get(`/menu?${new URLSearchParams(params).toString()}`);
 }
 
+export function menuListCount<T>(
+  params = {} as any
+): Promise<RequestResult<T>> {
+  return request.get(`/menu/count?${new URLSearchParams(params).toString()}`);
+}
+
 //获取menu
 /**
  * @name 获取菜单详情

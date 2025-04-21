@@ -5,11 +5,7 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { message, Typography, Space } from 'antd';
 import { searchItems, tableColumns, formConfig } from './config';
-import {
-  list,
-  add,
-  edit,
-} from '@/apis/modules/store.ts';
+import { list, add, edit, listCount } from '@/apis/modules/store.ts';
 import MyPage from '@/components/BasicPage';
 import { produce } from 'immer';
 import ModalForm from '@/components/ModalForm';
@@ -71,7 +67,7 @@ export default function TickManagement() {
         //先清空
         formConfig.formModel = {};
         if (record?.id) {
-          formConfig.formModel = record
+          formConfig.formModel = record;
         }
       })
     );
@@ -81,6 +77,7 @@ export default function TickManagement() {
     <>
       <MyPage
         pageApi={list}
+        pageCountApi={listCount}
         tableOptions={tableColumns}
         ref={pageRef}
         searchItems={searchItems}

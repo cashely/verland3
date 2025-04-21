@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Flex } from 'antd';
 import { searchItems, tableColumns } from './config.tsx';
-import { list } from '@/apis/modules/pet.ts';
+import { list, listCount } from '@/apis/modules/pet.ts';
 import MyPage from '@/components/BasicPage';
 
 //发票
@@ -12,6 +12,7 @@ export default function TickManagement() {
   return (
     <MyPage
       pageApi={list}
+      pageCountApi={listCount}
       tableOptions={tableColumns}
       ref={pageRef}
       searchItems={searchItems}

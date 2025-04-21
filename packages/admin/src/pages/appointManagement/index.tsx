@@ -1,8 +1,9 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, message } from 'antd';
 import { searchItems, tableColumns } from './config.tsx';
-import { list, edit } from '@/apis/modules/book';
+import { list, edit, listCount } from '@/apis/modules/book';
+import { menuList } from '@/apis/modules/common.ts';
 import MyPage from '@/components/BasicPage';
 
 //发票
@@ -10,6 +11,28 @@ export default function TickManagement() {
   const navigate = useNavigate();
 
   const pageRef = useRef<null>();
+  const [items, setItems] = useState([...searchItems]);
+
+  useEffect(() => {
+    menuList({
+      pageSize: 20,
+      pageNo: 1,
+    }).then((res) => {
+      if (res?.code === 200) {
+        searchItems.find((item) => {
+          if (item.prop === 'type') {
+            item.options = res?.data.map((iten) => {
+              return {
+                label: iten.name,
+                value: iten.id,
+              };
+            });
+          }
+        });
+        setItems(searchItems);
+      }
+    });
+  }, []);
 
   const handleChangeStatu = (id: string, data = {}) => {
     edit(id, data).then((res) => {
@@ -75,8 +98,9 @@ export default function TickManagement() {
       <MyPage
         ref={pageRef}
         pageApi={list}
+        pageCountApi={listCount}
         tableOptions={tableColumns}
-        searchItems={searchItems}
+        searchItems={items}
       >
         {{
           showColumnActions: (_, record: any) => {
