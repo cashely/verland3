@@ -17,12 +17,15 @@ router.get('/', validate(z => (
 )), async (req, res) => {
     try {
         const { pageSize = 20, pageNo = 1, statu, start, end, menuIds = [] } = req.query;
-        const whereCondition = {
-            createdAt: {}
-        }
+        const whereCondition = {}
         if (statu ?? false) {
             whereCondition.statu = Number(statu);
         }
+
+        if (start || end) {
+          whereCondition.createdAt = {}
+        }
+      
         if (start) {
             whereCondition.createdAt.gte = new Date(start)
         }
@@ -75,11 +78,28 @@ router.get('/count', validate(z => (
     })
 )), async (req, res) => {
     try {
-        const { statu } = req.query;
+        const { statu, start, end } = req.query;
         const whereCondition = {}
         if (statu ?? false) {
             whereCondition.statu = Number(statu);
         }
+
+        if (start || end) {
+          whereCondition.createdAt = {}
+        }
+      
+        if (start) {
+            whereCondition.createdAt.gte = new Date(start)
+        }
+        if (end) {
+            whereCondition.createdAt.lte = new Date(end)
+        }
+        if (menuIds) {
+            whereCondition.menuId = {
+                in: menuIds
+            }
+        }
+      
         const count = await prisma.book.count({
             where: whereCondition,
         });
