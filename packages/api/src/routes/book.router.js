@@ -78,7 +78,7 @@ router.get('/count', validate(z => (
     })
 )), async (req, res) => {
     try {
-        const { statu, start, end } = req.query;
+        const { statu, start, end, menuIds = [] } = req.query;
         const whereCondition = {}
         if (statu ?? false) {
             whereCondition.statu = Number(statu);
