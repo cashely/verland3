@@ -7,7 +7,6 @@ import './index.scss';
 export default function OtherBookService() {
   const [id, setId] = useState('');
   useLoad((option) => {
-    console.log('Page loaded.');
     if (option?.id) {
       setId(option.id);
     }
@@ -32,7 +31,9 @@ export default function OtherBookService() {
           }}
         />
         <View className="text-center con">
-          <View className="title">支付成功</View>
+          <View className="title">
+            感谢您选择我们的服务。我们将及时跟进您的订单，请留意接听客服电话：19120038398(企业微信同号)
+          </View>
           <View className="desc" onClick={goView}>
             查看我的预约
           </View>

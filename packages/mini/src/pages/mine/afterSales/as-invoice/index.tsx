@@ -10,6 +10,7 @@ import './index.scss';
 export default function Index() {
   const [data, setData] = useState([]);
   const [pageType, setPageType] = useState('');
+  const [showEmpty, setShowEmpty] = useState(false);
   useLoad((option) => {
     const { type } = option;
     setPageType(type);
@@ -18,6 +19,7 @@ export default function Index() {
         if (res.code === 200) {
           if (!res.data) return;
           const result = res.data?.filter((item) => item.statu === 0);
+          setShowEmpty(!result.length);
           setData(result);
         }
       });
@@ -25,13 +27,13 @@ export default function Index() {
       list({}).then((res) => {
         if (res.code === 200) {
           setData(res.data);
+          setShowEmpty(!res.data?.length);
         }
       });
     }
   });
   const handleClick = (item) => {
     //跳转发票详情
-    console.log(item);
     if (pageType === 'wdsq') {
       navigateTo({
         url: `./detail/index?id=${item.id}&totalAmount=${item?.book?.totalAmount}`,
@@ -71,7 +73,7 @@ export default function Index() {
           )}
         </View>
       ))}
-      {data.length === 0 && (
+      {showEmpty && (
         <View className="empty">
           <Text>暂无数据</Text>
         </View>

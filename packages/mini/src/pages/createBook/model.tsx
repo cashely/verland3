@@ -126,18 +126,18 @@ const otherFormList = [
     ],
     rules: [],
   },
-  {
-    label: '',
-    prop: 'handleWayCheck',
-    type: 'checkbox',
-    options: [
-      {
-        label: '放弃处置无害化处理后遗留申明',
-        value: '1',
-      },
-    ],
-    hidden: true,
-  },
+  // {
+  //   label: '',
+  //   prop: 'handleWayCheck',
+  //   type: 'checkbox',
+  //   options: [
+  //     {
+  //       label: '放弃处置无害化处理后遗留申明',
+  //       value: '1',
+  //     },
+  //   ],
+  //   hidden: true,
+  // },
   {
     label: '纪念物获取时间',
     prop: 'handleDateTime',
@@ -163,16 +163,16 @@ const otherFormList = [
     type: 'text',
     hidden: true,
   },
-  {
-    label: '上门收取时间',
-    prop: 'expressDateTime',
-    itemProps: {
-      placeholder: '请选择',
-    },
-    type: 'picker-date',
-    timeRange: SERVICE_TIME_RANGES,
-    hidden: true,
-  },
+  // {
+  //   label: '上门收取时间',
+  //   prop: 'expressDateTime',
+  //   itemProps: {
+  //     placeholder: '请选择',
+  //   },
+  //   type: 'picker-date',
+  //   timeRange: SERVICE_TIME_RANGES,
+  //   hidden: true,
+  // },
   {
     label: '选择宠物门店',
     prop: 'petStoreId',

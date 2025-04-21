@@ -29,7 +29,12 @@ import CustomDatePicker from './components/CustomDatePicker';
 import './index.scss';
 
 export default forwardRef((props, ref) => {
-  const { formList = [], formModel = {}, handleSubmit, invalidTimes = [] } = props;
+  const {
+    formList = [],
+    formModel = {},
+    handleSubmit,
+    invalidTimes = [],
+  } = props;
 
   const [petPickerShow, setPetPickerShow] = useState(false);
   const [_formList, setFormList] = useState(formList);
@@ -52,10 +57,6 @@ export default forwardRef((props, ref) => {
       //     e.detail.value === '2';
       // }
       formData[formItem.prop] = e.detail.value;
-    } else if (formItem?.type === 'checkbox') {
-      if (formItem.prop === 'handleWayCheck') {
-        formData[formItem.prop] = e.detail.value;
-      }
     } else if (formItem?.type === 'multiSelector') {
       const selectValues = e.detail.value;
       const getLabel =
@@ -105,10 +106,12 @@ export default forwardRef((props, ref) => {
               props.onFormChange &&
                 props.onFormChange(formItem.prop, {
                   ...formData,
-                  [formItem.prop]: `${province}-${city}${
-                    district ? '-' + district : ''
-                  }`,
-                  detail,
+                  [formItem.prop]: res.name,
+
+                  //`${province}-${city}${
+                  //district ? '-' + district : ''
+                  //}`,
+                  detail: res.address,
                   province,
                   city,
                   area: district,

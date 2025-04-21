@@ -1,43 +1,30 @@
 import { useState, useRef, useEffect, Suspense } from 'react';
-import { View, Label, Checkbox, Text, CheckboxGroup } from '@tarojs/components';
+import { View } from '@tarojs/components';
 import { useLoad, showToast, navigateTo, setStorageSync } from '@tarojs/taro';
 import { AtButton, AtToast } from 'taro-ui';
 import { otherFormList, baseInfoFormList } from './model';
 import AddForm from '@/components/AddForm';
-import {
-  SERVICE_TIME_RANGES,
-  RITE_SERVICE_TIME_RANGES,
-  PET_RECEIVE_WAYS,
-} from '@/constants';
+import { PET_RECEIVE_WAYS } from '@/constants';
 import regexObj from '@/utils/regexObj';
 //import AppContext from '@/hooks/useContext';
 import { storeList } from '@/apis/pet';
 import { isBooked } from '@/apis/book';
 import { menu } from '@/apis/common';
 import dayjs from 'dayjs';
-import { DatePicker, PickerOption } from '@nutui/nutui-react-taro';
 
 import './index.scss';
-
-const obj = {
-  bookDateTime: SERVICE_TIME_RANGES,
-  riteDateTime: RITE_SERVICE_TIME_RANGES,
-  handleDateTime: SERVICE_TIME_RANGES,
-  expressDateTime: SERVICE_TIME_RANGES,
-};
 
 export default () => {
   const baseInfoRef = useRef(null);
   const otherInfoRef = useRef(null);
-  const [agreement, setAggreement] = useState('');
   const [menuList, setMenuList] = useState([]);
   const [isMenuA, setIsMenuA] = useState(false);
   const [formModel, setformModel] = useState({
     isRite: '1',
     handleWay: '2',
-    // isSelfExpress: '1',
     expressWay: '1',
   });
+
   useLoad(() => {
     console.log('Page loaded.');
     _setOtherFormList(otherFormList);
@@ -133,12 +120,6 @@ export default () => {
       return toast('爱宠类型不为空');
     }
     if (isMenuA) {
-      //A套餐
-      // if (otherInfo.isSelfExpress === '1') {
-      //   if (!otherInfo.petStoreId) {
-      //     return toast('请选择宠物门店');
-      //   }
-      // }
     } else {
       if (!otherInfo?.bookDateTime) {
         return toast('上门服务时间不为空');
@@ -164,10 +145,6 @@ export default () => {
       }
     }
 
-    if (!agreement) {
-      return toast('请勾选用户购买套餐协议');
-    }
-
     //添加数据到缓存
     setStorageSync('bookInfo', {
       ...otherInfo,
@@ -183,20 +160,14 @@ export default () => {
       handleDateTime: otherInfo.handleDateTime
         ? new Date(otherInfo.handleDateTime)
         : undefined,
-      isSelfExpress: +otherInfo.expressWay,
+      isSelfExpress: 2,
       expressWay: +otherInfo.expressWay,
-      expressDateTime: otherInfo.expressDateTime
-        ? new Date(otherInfo.expressDateTime)
-        : undefined,
     });
     navigateTo({
       url: './additionalService/index',
     });
   };
 
-  const handleAgreementChange = (e) => {
-    setAggreement(e.detail.value);
-  };
   const handleRiteChange = (val) => {
     console.log('handleRiteChangex--------46', val);
   };
@@ -209,7 +180,6 @@ export default () => {
       'bookDateTime',
       'isRite',
       'riteDateTime',
-      'handleWayCheck',
       'postAddress',
       'detail',
     ];
@@ -220,12 +190,8 @@ export default () => {
       setIsMenuA(isMenuA);
 
       _otherFormList.forEach((item: any) => {
-        if (item.prop === 'handleWayCheck') {
-          console.log('当前handleWay的值', formModel.handleWay);
-          item.hidden = formModel.handleWay !== '3';
-        } else {
-          item.hidden = checkProps.includes(item.prop) && isMenuA;
-        }
+        item.hidden = checkProps.includes(item.prop) && isMenuA;
+
         if (
           [
             'petStoreId',
@@ -235,7 +201,6 @@ export default () => {
             'city',
             'detail',
             'area',
-            'expressDateTime',
           ].includes(item.prop)
         ) {
           item.hidden = true;
@@ -257,8 +222,6 @@ export default () => {
           riteDateTime: undefined,
           isRite: undefined,
           handleWay: undefined,
-          expressDateTime: undefined,
-          isSelfExpress: '1',
           petStoreId: '',
           postAddress: '',
           detail: '',
@@ -292,8 +255,7 @@ export default () => {
       console.log('handlWay411', val.handleWay);
       _otherFormList.find((item) => item.prop === 'handleDateTime').hidden =
         val.handleWay === '1' || val.handleWay === '3';
-      _otherFormList.find((item) => item.prop === 'handleWayCheck').hidden =
-        val.handleWay !== '3';
+
       setformModel({
         ...val,
         handleDateTime: val.handleWay === '3' ? undefined : val.handleDateTime,
@@ -305,40 +267,23 @@ export default () => {
           if (item.prop === 'expressAddress') {
             item.hidden = false;
           }
-          if (
-            ['petStoreId', 'postAddress', 'detail', 'expressDateTime'].includes(
-              item.prop
-            )
-          ) {
+          if (['petStoreId', 'postAddress', 'detail'].includes(item.prop)) {
             item.hidden = true;
             model['petStoreId'] = '';
             model['postAddress'] = '';
             model['detail'] = '';
-            model['expressDateTime'] = '';
           }
         } else if (val?.expressWay === '2') {
           if (item.prop === 'petStoreId') {
             item.hidden = false;
           }
-          if (
-            [
-              'postAddress',
-              'detail',
-              'expressAddress',
-              'expressDateTime',
-            ].includes(item.prop)
-          ) {
+          if (['postAddress', 'detail', 'expressAddress'].includes(item.prop)) {
             item.hidden = true;
             model['postAddress'] = '';
             model['detail'] = '';
-            model['expressDateTime'] = '';
           }
         } else if (val?.expressWay === '3') {
-          if (
-            item.prop === 'postAddress' ||
-            item.prop === 'detail' ||
-            item.prop === 'expressDateTime'
-          ) {
+          if (item.prop === 'postAddress' || item.prop === 'detail') {
             item.hidden = false;
           }
           if (item.prop === 'expressAddress' || item.prop === 'petStoreId') {
@@ -386,9 +331,6 @@ export default () => {
       'riteDateTime',
     ];
     _otherFormList.forEach((item: any) => {
-      if (item.prop === 'postAddress' || item.prop === 'detail') {
-        // item.hidden = formModel.isSelfExpress === '1';
-      }
       if (item.prop === 'menuId') {
         item.tabsOptions = menuList.map((item: any) => ({
           id: item.id,
@@ -444,7 +386,6 @@ export default () => {
       const titleObj = {
         riteDateTime: '请选择预约仪式时间',
         handleDateTime: '请选择纪念物收取时间',
-        expressDateTime: '请选择上门收取时间',
       };
 
       defaultDate.pickerTitle = titleObj[formItem.prop];
@@ -468,10 +409,6 @@ export default () => {
       )
     );
   };
-
-  useEffect(() => {
-    // setRenderKey(+new Date());
-  }, [currentDate]);
 
   return (
     <Suspense fallback={<AtToast isOpened text="loading"></AtToast>}>
@@ -497,15 +434,6 @@ export default () => {
               handleRiteChange,
             }}
           </AddForm>
-        </View>
-        {/* 协议 */}
-        <View className="flex justify-center mb-30">
-          <CheckboxGroup onChange={handleAgreementChange}>
-            <Label className="checkboxLabel">
-              <Checkbox className="checkbox" value="agree" color="#004ebf" />
-              <Text className="txt">用户服务协议</Text>
-            </Label>
-          </CheckboxGroup>
         </View>
 
         <View className="flex btnList">

@@ -7,11 +7,13 @@ import {
   reLaunch,
   useLoad,
   uploadFile,
+  redirectTo,
 } from '@tarojs/taro';
 import { useState } from 'react';
 import { mpLogin, getUser, putUser } from '@/apis/user';
 import regexObj from '@/utils/regexObj';
 import { baseUrl } from '@/apis';
+import relogin from '../../apis/relogin';
 import './index.scss';
 export default function Index() {
   const [userInfo, setUserInfo] = useState({
@@ -23,8 +25,6 @@ export default function Index() {
   const [pageFlag, setPageFlag] = useState('');
   const [btnDisabled, setBtnDisabled] = useState(false);
   useLoad(({ type = '' }) => {
-    console.log(type, 'pageload');
-
     //1是预约页面 2是我的页面
     setPageFlag(type);
   });
@@ -37,11 +37,8 @@ export default function Index() {
         name: 'file',
         filePath,
         success: (res) => {
-          console.log(res, '上传图片成功');
-
           if (res?.statusCode == 200) {
             const { data = {} } = res?.data ? JSON.parse(res.data) : {};
-            console.log(data);
             resolve(baseUrl + '/' + data?.path);
           }
         },
@@ -57,46 +54,23 @@ export default function Index() {
   };
 
   // 获取用户信息
-  const fetchUserInfo = async (code, initUserInfo: any) => {
+  const fetchUserInfo = async (initUserInfo: any) => {
     try {
       setBtnDisabled(true);
-      mpLogin({ code }).then(async (res) => {
-        if (res.code === 200) setStorageSync('token', res.data);
-        console.log(res, '====');
-        //拿到token之后获取用户信息
-        const { data, code } = await getUser();
-        if (code === 200) {
-          //如果当前用户没有头像或者名称那就从微信获取
-          if (!data.avatar || !data.username) {
-            //取微信用户信息
-            data.avatar = initUserInfo.avatar;
-            data.username = initUserInfo.nickname;
-            data.nickname = initUserInfo.nickname;
-            data.gender = initUserInfo.gender || 0;
-            data.phone = initUserInfo.phone; //手机号
-          }
-          //更新用户信息
-          await putUser({
-            ...data,
-            addressId: data.addressId || undefined,
-          });
-          setStorageSync('userInfo', data);
-          showToast({ title: '登录成功', icon: 'none' });
-          setTimeout(() => {
-            setBtnDisabled(false);
-            pageFlag === '1'
-              ? reLaunch({
-                  url: '/pages/index/index',
-                })
-              : reLaunch({
-                  url: '/pages/mine/index',
-                });
-          }, 1000);
-        }
+      relogin(initUserInfo).then((res) => {
+        if (!res) return setBtnDisabled(false);
+        setTimeout(() => {
+          pageFlag === '1'
+            ? redirectTo({
+                url: '/pages/createBook/index',
+              })
+            : reLaunch({
+                url: '/pages/mine/index',
+              });
+        }, 200);
       });
     } catch (error) {
       setBtnDisabled(false);
-      console.log(error);
     }
   };
   const handleLogin = async () => {
@@ -116,16 +90,10 @@ export default function Index() {
       });
       return false;
     }
-    // 登录逻辑
-    const res = await login();
-    console.log(res, '441+++');
-    if (res.errMsg === 'login:ok') {
-      fetchUserInfo(res.code, userInfo);
-    }
+    fetchUserInfo(userInfo);
   };
 
   const handleChoseAvatar = async (e) => {
-    console.log('选择头像', e);
     const { avatarUrl } = e.detail;
     const fileUrl = (await _uploadFile(avatarUrl)) as string;
     setUserInfo({ ...userInfo, avatar: fileUrl });

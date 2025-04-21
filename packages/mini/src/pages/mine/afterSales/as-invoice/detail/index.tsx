@@ -16,7 +16,6 @@ interface IProps {
 export default () => {
   const [formData, setFormData] = useState<IProps>();
   useLoad((option) => {
-    console.log(option, '+++++');
     option?.id && getData(option);
   });
 

@@ -12,6 +12,8 @@
     }
     .item-extra__info {
       padding-right: 0;
+      overflow: auto;
+      text-overflow: unset;
     }
     &::after {
       border: none;
@@ -28,23 +30,29 @@
       font-size: 28px;
     }
   }
+  checkbox-group {
+    font-size: 0;
+  }
   .checkbox {
     zoom: 0.7;
     vertical-align: middle;
+    font-size: 0;
   }
   .txt {
     vertical-align: middle;
     color: #154e7b;
+    font-size: 26px;
     text-decoration: underline;
   }
 
   .footer {
     border-top: 1px solid #ebebeb;
     padding-top: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 24px;
+    .item {
+      display: flex;
+      vertical-align: middle;
+      align-items: center;
+    }
     .right {
       color: #bbb;
     }

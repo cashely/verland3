@@ -39,14 +39,12 @@ export default function AdditionalService() {
 
   const createAppointBill = () => {
     const bookInfo = getStorageSync('bookInfo') || {};
-    console.log('bookInfo', bookInfo);
     add({
       ...bookInfo,
       bookGoodIds: data
         .filter((_, index) => selectedIndex.includes(index))
         .map((item) => item.id),
     }).then((res) => {
-      console.log('res', res);
       if (res.code === 200) {
         const { data } = res;
         showToast({
@@ -71,10 +69,8 @@ export default function AdditionalService() {
       selectedIndex.push(index);
     }
     setSelectedIndex([...selectedIndex]);
-    console.log(index, selectedIndex);
   };
   const handleNextStep = () => {
-    console.log('next step');
     //需要传递附加服务
     createAppointBill();
   };
@@ -82,7 +78,6 @@ export default function AdditionalService() {
   const getData = async () => {
     await list().then((res) => {
       const { data = [] } = res;
-      console.log('data', data);
       data.length === 0 && setShowEmpty(true);
       setData(
         data.map((item) => ({

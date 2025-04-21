@@ -1,5 +1,12 @@
 import Taro, { clearStorageSync, getStorageSync } from '@tarojs/taro';
-import { showToast, showLoading, hideLoading } from '@tarojs/taro';
+import {
+  showToast,
+  showLoading,
+  hideLoading,
+  redirectTo,
+  getCurrentPages,
+} from '@tarojs/taro';
+import { relogin } from '@/apis/relogin';
 export const baseUrl = process.env.TARO_APP_API;
 export const fileUrl = process.env.TARO_APP_API;
 let loadingInstance: any = null;
@@ -36,17 +43,32 @@ export default function (
           });
           return;
         } else if (data?.code === 401) {
-          clearStorageSync();
-          showToast({
-            title: '登录过期',
-            icon: 'none',
-            success: () => {
+          const token = getStorageSync('token') || '';
+          showLoading().then((res) => {
+            console.log(res, 'xxxx');
+            if (token) {
+              clearStorageSync();
+              relogin().then((res) => {
+                if (!res) {
+                  Taro.reLaunch({
+                    url: '/pages/index/index',
+                  });
+                } else {
+                  console.log(getCurrentPages());
+                  const pageLen = getCurrentPages().length;
+                  const currentPage = getCurrentPages()[pageLen - 1];
+                  redirectTo({
+                    url: ('/' + currentPage.route) as string,
+                  });
+                }
+              });
+            } else {
               setTimeout(() => {
                 Taro.reLaunch({
                   url: '/pages/index/index',
                 });
               }, 1000);
-            },
+            }
           });
           return;
         }
