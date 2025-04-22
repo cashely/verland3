@@ -1,1 +1,0 @@
-import{a as e,j as r}from"./index-CQr82glQ.js";const t=()=>{const o=e();return console.log("🚀 ~ error:",o),r.jsxs("div",{children:[r.jsx("h1",{children:"404 - Unauthorized"}),r.jsx("p",{children:"Sorry, not found this page."})]})};export{t as default};
