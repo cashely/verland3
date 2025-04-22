@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { View, Text } from '@tarojs/components';
-import { navigateTo, useLoad, setNavigationBarTitle } from '@tarojs/taro';
+import {
+  navigateTo,
+  useLoad,
+  setNavigationBarTitle,
+  showToast,
+  useDidShow,
+} from '@tarojs/taro';
 import { list as bookList } from '@/apis/book';
 import { list } from '@/apis/ticket';
 import { TICKET_STATUS_TYPE } from '@/constants';
@@ -14,25 +20,33 @@ export default function Index() {
   useLoad((option) => {
     const { type } = option;
     setPageType(type);
-    if (type === 'kpsq') {
-      bookList().then((res) => {
-        if (res.code === 200) {
-          if (!res.data) return;
-          const result = res.data?.filter((item) => item.statu === 0);
-          setShowEmpty(!result.length);
-          setData(result);
-        }
-      });
-    } else if (type === 'wdsq') {
-      setNavigationBarTitle({
-        title: '我的申请',
-      });
-      list({}).then((res) => {
-        if (res.code === 200) {
-          setData(res.data);
-          setShowEmpty(!res.data?.length);
-        }
-      });
+  });
+
+  const getBookList = () => {
+    bookList().then((res) => {
+      if (res.code === 200) {
+        if (!res.data) return;
+        const result = res.data?.filter((item) => item.statu === 0);
+        setShowEmpty(!result.length);
+        setData(result);
+      }
+    });
+  };
+
+  const getTicketList = () => {
+    list({}).then((res) => {
+      if (res.code === 200) {
+        setData(res.data);
+        setShowEmpty(!res.data?.length);
+      }
+    });
+  };
+
+  useDidShow(() => {
+    if (pageType === 'kpsq') {
+      getBookList();
+    } else if (pageType === 'wdsq') {
+      getTicketList();
     }
   });
   const handleClick = (item) => {
@@ -42,10 +56,18 @@ export default function Index() {
         url: `./detail/index?id=${item.id}&totalAmount=${item?.book?.totalAmount}`,
       });
       return;
+    } else {
+      if (item.ticket?.id) {
+        return showToast({
+          title: '已申请开票',
+          icon: 'none',
+          duration: 1000,
+        });
+      }
+      navigateTo({
+        url: `../as-invoiceApply/index?id=${item.id}&type=${pageType}&totalAmount=${item?.totalAmount}`,
+      });
     }
-    navigateTo({
-      url: `../as-invoiceApply/index?id=${item.id}&type=${pageType}&totalAmount=${item?.totalAmount}`,
-    });
   };
 
   return (

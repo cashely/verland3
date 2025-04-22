@@ -62,10 +62,10 @@ export default function AsApplyInvoice() {
   };
   const handleClose = () => {
     setIsOpened(false);
+    navigateBack();
   };
   const handleConfirm = () => {
     setIsOpened(false);
-    navigateBack();
   };
   const handleRadioChange = (e) => {
     const { value } = e.detail;
@@ -75,9 +75,11 @@ export default function AsApplyInvoice() {
     });
   };
   const handleInputChange = (value, name) => {
-    setFormData({
-      ...formData,
-      [name]: value,
+    setFormData((d) => {
+      return {
+        ...d,
+        [name]: value,
+      };
     });
   };
   return (
