@@ -39,7 +39,11 @@ export default function Index() {
     );
 
     try {
-      await edit(id, values);
+      await edit(id, {
+        ...values,
+        replayAt: undefined,
+        createdAt: undefined,
+      });
       message.success('回复成功');
       pageRef.current?.load();
     } finally {

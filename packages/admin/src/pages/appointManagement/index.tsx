@@ -20,7 +20,7 @@ export default function TickManagement() {
     }).then((res) => {
       if (res?.code === 200) {
         searchItems.find((item) => {
-          if (item.prop === 'type') {
+          if (item.prop === 'menuIds') {
             item.options = res?.data.map((iten) => {
               return {
                 label: iten.name,

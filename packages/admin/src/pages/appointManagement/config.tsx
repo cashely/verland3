@@ -13,9 +13,10 @@ import { message } from 'antd';
 const searchItems = [
   {
     label: '套餐类型',
-    prop: 'type',
+    prop: 'menuIds',
     type: 'select',
     clearable: true,
+    mode: 'multiple',
     placeholder: '请选择',
     options: [],
     initValue: '',
@@ -106,7 +107,7 @@ const tableColumns = [
     showTitle: true,
     render(_: any) {
       return `${_?.province || ''}${_?.city || ''}${_?.area || ''}${
-        _?.detail || ''
+        _?.detail || '-'
       }`;
     },
   },
