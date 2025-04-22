@@ -174,7 +174,7 @@ model Advise {
   id            String   @id @default(uuid())
   type          Int      @default(1) // 投诉建议类型 1-建议 2-投诉
   content       String
-  replayAt      Int?
+  replayAt      DateTime?
   replayContent String?
   userId        String
   user          User     @relation(fields: [userId], references: [id])
