@@ -22,8 +22,7 @@ router.get('/', validate(z => (
                   include: {
                     menu: true
                   }
-                },
-                menu: true
+                }
             },
             orderBy: {
                 createdAt: 'desc'
@@ -73,8 +72,7 @@ router.get('/:id', validate(z => (
                   include: {
                     menu: true
                   }
-                },
-                menu: true
+                }
             },
         });
         res.response.success(ticket);
