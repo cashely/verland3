@@ -33,7 +33,7 @@ router.get('/', validate(z => (
         if (end) {
             whereCondition.createdAt.lte = new Date(end)
         }
-        if (menuIdsArr.length > 0) {
+        if (menuIds && menuIdsArr.length > 0) {
             whereCondition.menuId = {
                 in: menuIdsArr
             }
@@ -96,7 +96,7 @@ router.get('/count', validate(z => (
         if (end) {
             whereCondition.createdAt.lte = new Date(end)
         }
-        if (menuIdsArr.length > 0) {
+        if (menuIds && menuIdsArr.length > 0) {
             whereCondition.menuId = {
                 in: menuIdsArr
             }
