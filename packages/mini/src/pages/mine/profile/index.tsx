@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, Picker, Image } from '@tarojs/components';
 import {
-  useLoad,
   navigateBack,
   getStorageSync,
   setStorageSync,
@@ -17,10 +16,6 @@ import { putUser } from '@/apis/user';
 import './index.scss';
 
 export default function Profile() {
-  useLoad(() => {
-    console.log('Page loaded.');
-  });
-
   const [formData, setFormData] = useState<any>({
     avatar: '',
     username: '',
@@ -91,7 +86,6 @@ export default function Profile() {
         success: (res) => {
           if (res?.statusCode == 200) {
             const { data = {} } = res?.data ? JSON.parse(res.data) : {};
-            console.log(data);
             setFormData({
               ...formData,
               avatar: baseUrl + '/' + data?.path,
@@ -146,7 +140,6 @@ export default function Profile() {
           cursor={1000}
           value={formData['username']}
           onChange={(e) => handleChange(e, 'username')}
-          onClick={() => console.log('click')}
         />
         <AtInput
           name="phone"

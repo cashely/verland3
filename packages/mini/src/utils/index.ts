@@ -37,14 +37,12 @@ const getlocal = (formItem: Record<string, any>) => {
     type: 'gcj02',
     altitude: true,
     success: function (res) {
-      console.log(res.longitude);
       QQMapSDK.reverseGeocoder({
         location: {
           latitude: res.latitude,
           longitude: res.longitude,
         },
         success: function (res) {
-          console.log(res);
           const {
             result: {
               // address,

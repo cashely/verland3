@@ -1,16 +1,15 @@
 import { useState } from 'react';
-import { View, Text } from '@tarojs/components';
+import { View, Text, Image } from '@tarojs/components';
 import { useLoad } from '@tarojs/taro';
 import { AtAvatar, AtListItem, AtList } from 'taro-ui';
 import { detail } from '@/apis/book';
 import dayjs from 'dayjs';
 import { formatPrice } from '@/utils';
 import {
-  DEFAULT_IMAGE,
   IS_RITE,
-  IS_SELF_EXPRESS,
   HANDLE_WAYS,
   PET_RECEIVE_WAYS,
+  APPOINTMENT_TYPES,
 } from '@/constants';
 import './index.scss';
 
@@ -60,7 +59,7 @@ const rowsData = [
     key: 'petStore',
   },
   {
-    label: '接收地址',
+    label: '上门收取地址',
     key: 'local',
   },
   {
@@ -79,10 +78,11 @@ const rowsData = [
 // 预约详情
 export default function Index() {
   const [info, setInfo] = useState({});
-  const [statuName, setStatuName] = useState('');
+
   useLoad((option) => {
     if (option?.id) {
-      setStatuName(option?.statuName);
+      console.log('option', option);
+
       detail(option.id).then((res) => {
         if (res.code === 200) {
           const result = res.data;
@@ -90,28 +90,31 @@ export default function Index() {
           setInfo({
             ...result,
             local:
-              result?.address && result.handleWay == 3
+              result?.address && result.expressWay == 3
                 ? `${result?.address?.province} ${result?.address?.city} ${result?.address?.area}`
                 : '',
             petname: result.pet?.petname,
-            bookDateTime: dayjs(result.bookDateTime).format(
-              'YYYY-MM-DD HH:mm:ss'
-            ),
+            bookDateTime: result.bookDateTime
+              ? dayjs(result.bookDateTime).format('YYYY-MM-DD HH:mm:ss')
+              : undefined,
             isRite: IS_RITE.find((n) => n.value == result.isRite)?.label || '-',
             expressWay:
               PET_RECEIVE_WAYS.find((n) => n.value == result.expressWay)
-                ?.label || '-',
+                ?.label || undefined,
             handleWay:
               HANDLE_WAYS.find((n) => n.value == result.handleWay)?.label ||
-              '-',
-            handleDateTime: dayjs(result.handleDateTime).format(
-              'YYYY-MM-DD HH:mm:ss'
-            ),
+              undefined,
+            handleDateTime: result.handleDateTime
+              ? dayjs(result.handleDateTime).format('YYYY-MM-DD HH:mm:ss')
+              : undefined,
             petStore:
-              result?.petStore?.name && result.handleWay == 2
+              result?.petStore?.name && result.expressWay == 2
                 ? `${result?.petStore?.name}-${result?.petStore?.address}`
-                : '',
-            detail: (result.handleWay == 3 && result?.address?.detail) || '',
+                : result.expressWay === 1
+                ? '广东省广州市海珠区仑头路78号之3A01栋108铺'
+                : undefined,
+            detail: (result.expressWay == 3 && result?.address?.detail) || '',
+
             pet: undefined,
             address: undefined,
             bookGoods:
@@ -125,8 +128,23 @@ export default function Index() {
   return (
     <View className="page-appointDetail">
       <View className="text-center header">
-        <AtAvatar circle image={DEFAULT_IMAGE} className="mx-auto"></AtAvatar>
-        <View className="mt-10">{statuName}</View>
+        <Image
+          src={APPOINTMENT_TYPES[info.statu]?.icon}
+          mode="widthFix"
+          style={{
+            width: '40px',
+            height: '40px',
+          }}
+          className="mx-auto"
+        ></Image>
+        <View
+          className="mt-10"
+          style={{
+            color: '#72C8F6',
+          }}
+        >
+          {APPOINTMENT_TYPES[info.statu]?.label}
+        </View>
       </View>
       <View className="body">
         <AtList>
@@ -146,8 +164,8 @@ export default function Index() {
                     <>
                       {['bookGoods'].includes(item.key) &&
                       !info?.[item.key]?.length
-                        ? '-'
-                        : info[item.key] || '-'}
+                        ? '无'
+                        : info[item.key] || '无'}
                     </>
                   }
                 ></AtListItem>

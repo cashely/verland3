@@ -164,7 +164,6 @@ export default function Add() {
               placeholder={item.placeholder}
               value={formData[item.key]}
               onChange={(e) => handleChange(e, item.key)}
-              onClick={() => console.log('click')}
             />
           ) : (
             <AtInput

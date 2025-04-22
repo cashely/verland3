@@ -122,8 +122,9 @@ export default forwardRef<CustomFormRef, CustomFormProps>(
     // _fileList={formatFileList(formData, item.prop)}
     const formatFileList = (item: any) => {
       console.log('43+++formData+++', formData, formData[item.prop], '+++43');
+      if (!formData[item.prop]) return [];
       const fileList = [] as any;
-      if (formData[item.prop] && Array.isArray(formData[item.prop])) {
+      if (Array.isArray(formData[item.prop])) {
         formData[item.prop].map((n: any) => {
           fileList.push({
             url: FILE_URL + '/' + n?.image?.path,

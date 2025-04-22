@@ -135,6 +135,17 @@ const SERVICE_TYPE = [
   },
 ];
 
+//是否需要预约时间
+const APPOINTMENT = [
+  {
+    label: '是',
+    value: 1,
+  },
+  {
+    label: '否',
+    value: 2,
+  },
+];
 //是否需要仪式
 const RITE_TYPE = [
   {
@@ -218,6 +229,7 @@ export {
   APPOINTMENT_STATUS,
   GENDER_TYPE,
   DELIVERY_TYPE,
+  APPOINTMENT,
   PET_RECEIVE_WAYS,
   getLabelByValue,
   tagColorMap,

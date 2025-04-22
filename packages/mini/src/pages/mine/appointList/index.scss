@@ -4,7 +4,7 @@
   min-height: 100%;
 }
 .tab-content {
-  padding: 40px;
+  padding: 0 36px;
   .item {
     background: linear-gradient(
       179.97deg,
@@ -108,4 +108,12 @@
   .submitBtn {
     margin-top: 40px;
   }
+}
+.at-tabs__header {
+  position: fixed;
+  top: 0;
+  z-index: 999;
+}
+.at-tabs__body {
+  padding-top: 116px;
 }

@@ -9,6 +9,10 @@ export async function list<T>(params: any): Promise<RequestResult<T>> {
   return request.get(`/book?${new URLSearchParams(params).toString()}`);
 }
 
+export function listCount<T>(params: any): Promise<RequestResult<T>> {
+  return request.get(`/book/count?${new URLSearchParams(params).toString()}`);
+}
+
 /**
  * @name 详情
  */

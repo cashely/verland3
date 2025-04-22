@@ -33,7 +33,6 @@ export default function AsApplyInvoice() {
   const [status, setStatus] = useState(0);
 
   useLoad((option) => {
-    console.log(option);
     const { totalAmount, id } = option;
     setFormData({
       ...formData,
@@ -55,15 +54,11 @@ export default function AsApplyInvoice() {
       ...formData,
       type: Number(formData.type),
     }).then((res) => {
-      console.log(res);
       if (res.code === 200) {
         setStatus(1);
         if (!isOpened) setIsOpened(true);
-        // navigateBack();
       }
     });
-
-    console.log(formData);
   };
   const handleClose = () => {
     setIsOpened(false);
@@ -80,8 +75,6 @@ export default function AsApplyInvoice() {
     });
   };
   const handleInputChange = (value, name) => {
-    console.log(value, name);
-
     setFormData({
       ...formData,
       [name]: value,
@@ -128,7 +121,9 @@ export default function AsApplyInvoice() {
             name="header"
             title="发票抬头"
             type="text"
+            clear
             placeholder="请填写（个人不需）"
+            cursor={1000}
             value={formData.header}
             onChange={(e) => handleInputChange(e, 'header')}
           />
@@ -138,6 +133,8 @@ export default function AsApplyInvoice() {
             name="number"
             title="企业税号"
             // required
+            cursor={1000}
+            clear
             type="text"
             onChange={(e) => handleInputChange(e, 'number')}
             placeholder="请填写"
@@ -147,7 +144,9 @@ export default function AsApplyInvoice() {
         <AtInput
           name="email"
           title="邮箱"
+          clear
           type="text"
+          cursor={1000}
           placeholder="请填写"
           onChange={(e) => handleInputChange(e, 'email')}
           value={formData.email}

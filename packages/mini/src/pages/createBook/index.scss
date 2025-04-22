@@ -29,15 +29,15 @@
     border: none;
   }
   .checkboxLabel {
-    color: #154e7b;
     vertical-align: middle;
-    font-size: 24px;
     .checkbox {
       zoom: 0.7;
     }
-    .txt {
-      vertical-align: middle;
-    }
+  }
+  .txt {
+    vertical-align: middle;
+    font-size: 26px;
+    color: #154e7b;
   }
 }
 

@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Flex, message } from 'antd';
 import { searchItems, tableColumns, formConfig } from './config.ts';
-import { list, edit } from '@/apis/modules/ticket';
+import { list, edit, listCount } from '@/apis/modules/ticket';
 import MyPage from '@/components/BasicPage';
 import ModalForm from '@/components/ModalForm';
 import { produce } from 'immer';
@@ -63,6 +63,7 @@ export default function TickManagement() {
       <MyPage
         ref={pageRef}
         pageApi={list}
+        pageCountApi={listCount}
         tableOptions={tableColumns}
         searchItems={searchItems}
       >

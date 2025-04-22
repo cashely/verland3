@@ -1,0 +1,21 @@
+.content {
+  padding: 40px 40px 140px;
+  max-height: 80vh;
+  overflow-y: scroll;
+  font-size: 28px;
+  text-align: left;
+  line-height: 2;
+}
+
+.title {
+  color: #6190e8;
+}
+
+.btnbox {
+  position: fixed;
+  padding: 0 20px 30px;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  bottom: 0;
+}

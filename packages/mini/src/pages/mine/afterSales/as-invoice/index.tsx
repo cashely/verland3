@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text } from '@tarojs/components';
-import { navigateTo, useLoad } from '@tarojs/taro';
+import { navigateTo, useLoad, setNavigationBarTitle } from '@tarojs/taro';
 import { list as bookList } from '@/apis/book';
 import { list } from '@/apis/ticket';
 import { TICKET_STATUS_TYPE } from '@/constants';
@@ -10,6 +10,7 @@ import './index.scss';
 export default function Index() {
   const [data, setData] = useState([]);
   const [pageType, setPageType] = useState('');
+  const [showEmpty, setShowEmpty] = useState(false);
   useLoad((option) => {
     const { type } = option;
     setPageType(type);
@@ -18,20 +19,24 @@ export default function Index() {
         if (res.code === 200) {
           if (!res.data) return;
           const result = res.data?.filter((item) => item.statu === 0);
+          setShowEmpty(!result.length);
           setData(result);
         }
       });
     } else if (type === 'wdsq') {
+      setNavigationBarTitle({
+        title: '我的申请',
+      });
       list({}).then((res) => {
         if (res.code === 200) {
           setData(res.data);
+          setShowEmpty(!res.data?.length);
         }
       });
     }
   });
   const handleClick = (item) => {
     //跳转发票详情
-    console.log(item);
     if (pageType === 'wdsq') {
       navigateTo({
         url: `./detail/index?id=${item.id}&totalAmount=${item?.book?.totalAmount}`,
@@ -52,7 +57,7 @@ export default function Index() {
           key={index}
         >
           <View className="flex items-center justify-between title">
-            <Text>{item.menu?.name || '-'}</Text>
+            <Text>{item?.menu?.name || item?.book?.menu?.name || '-'}</Text>
             <Text className="time">
               {formatDateTime(item.bookDateTime || item.createdAt)}
             </Text>
@@ -71,7 +76,7 @@ export default function Index() {
           )}
         </View>
       ))}
-      {data.length === 0 && (
+      {showEmpty && (
         <View className="empty">
           <Text>暂无数据</Text>
         </View>

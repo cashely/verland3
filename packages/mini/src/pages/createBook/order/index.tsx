@@ -13,12 +13,8 @@ import { detail, prepay, pay } from '@/apis/book';
 import { formatPrice } from '@/utils';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash-es';
-import {
-  PAY_TMP,
-  IS_SELF_EXPRESS,
-  HANDLE_WAYS,
-  PET_RECEIVE_WAYS,
-} from '@/constants';
+import { PAY_TMP, HANDLE_WAYS, PET_RECEIVE_WAYS } from '@/constants';
+import ServiceContent from '@/components/ServiceContent';
 import './index.scss';
 
 export default () => {
@@ -42,8 +38,11 @@ export default () => {
     payAmount: '',
     totalAmount: 0,
   });
-  const [agreement, setAgreement] = useState(false);
+  const [agreeCheck, setAgreeCheck] = useState(false);
+  const [agreeCheck2, setAgreeCheck2] = useState(false);
   const [payDisabled, setPayDisabled] = useState(false);
+  const [isOpened, setIsOpened] = useState(false);
+  const [isOpened2, setIsOpened2] = useState(false);
   useLoad((option) => {
     console.log(option);
 
@@ -71,19 +70,25 @@ export default () => {
     return `${address.province}${address.city}${address.area || '-'}`;
   };
 
-  const handleChange = (e) => {
-    setAgreement(e.detail.value[0] === '1');
-    // setOrder({ ...order, book: e.detail.value.join(',') });
-  };
-
   const handlePay = debounce(() => {
-    if (!agreement) {
+    if (!agreeCheck) {
+      return showToast({
+        title: '请勾选用户服务协议',
+        icon: 'none',
+      });
+    } else if (!agreeCheck2) {
       return showToast({
         title: '请勾选商品支付协议',
         icon: 'none',
       });
     }
+    // requestSubscribeMessage({
+    //   tmplIds: [REFUND_TMP],
+    //   entityIds: [],
+    //   complete() {},
+    // });
     handlePrepay();
+
     //判断授权状况
     // getSetting({
     //   withSubscriptions: true,
@@ -172,14 +177,22 @@ export default () => {
               paySign,
               success: function () {
                 //付款通知消息订阅
-                requestSubscribeMessage({
-                  tmplIds: [PAY_TMP],
-                  entityIds: [],
-                  complete() {
-                    console.log(2);
-                    removeStorageSync('bookInfo');
-                    reLaunch({
-                      url: '/pages/createBook/payResult/index?id=' + order.id,
+                showToast({
+                  title: '支付成功!',
+                  icon: 'none',
+                  success() {
+                    //弹出订阅消息
+                    requestSubscribeMessage({
+                      tmplIds: [PAY_TMP],
+                      entityIds: [],
+                      complete() {
+                        console.log(2);
+                        removeStorageSync('bookInfo');
+                        reLaunch({
+                          url:
+                            '/pages/createBook/payResult/index?id=' + order.id,
+                        });
+                      },
                     });
                   },
                 });
@@ -200,6 +213,25 @@ export default () => {
         });
       }
     });
+  };
+
+  const handleAgreementChange = (e, type: string) => {
+    const res = e.detail.value;
+
+    if (type === 'service') {
+      setAgreeCheck(res?.length);
+    } else if (type === 'pay') {
+      setAgreeCheck2(res?.length);
+    }
+  };
+
+  const handleSure = () => {
+    setAgreeCheck(true);
+    setIsOpened(false);
+  };
+  const handleSure2 = () => {
+    setAgreeCheck2(true);
+    setIsOpened2(false);
   };
 
   return (
@@ -276,10 +308,10 @@ export default () => {
 
         {order?.address && order?.expressWay == 3 ? (
           <>
-            <AtListItem
+            {/* <AtListItem
               title="上门收取时间"
               extraText={formatDate(order.expressDateTime || '-')}
-            />
+            /> */}
             <AtListItem
               title="接收地址"
               extraText={getAddress(order.address)}
@@ -308,16 +340,40 @@ export default () => {
           <View className="sub-item">2</View>
         </View> */}
         <View className="footer">
-          <CheckboxGroup onChange={handleChange}>
-            <Label className="checkboxLabel">
-              <Checkbox className="checkbox" value="1" color="#004ebf" />
-              <Text className="txt">商品支付协议</Text>
-            </Label>
-          </CheckboxGroup>
-          {/*      <View className="right">
-            <View>基础套餐A:￥399.00</View>
-            <View>超重费用:￥100.00</View>
-          </View> */}
+          {/* 协议 */}
+          <View className="flex items-center mb-20">
+            <CheckboxGroup
+              onChange={(e) => handleAgreementChange(e, 'service')}
+            >
+              <Label className="checkboxLabel">
+                <Checkbox
+                  className="checkbox"
+                  value="agree"
+                  color="#004ebf"
+                  checked={agreeCheck}
+                />
+              </Label>
+            </CheckboxGroup>
+
+            <Text className="txt" onClick={() => setIsOpened(true)}>
+              用户服务协议
+            </Text>
+          </View>
+          <View className="flex items-center">
+            <CheckboxGroup onChange={(e) => handleAgreementChange(e, 'pay')}>
+              <Label className="checkboxLabel">
+                <Checkbox
+                  className="checkbox"
+                  checked={agreeCheck2}
+                  value="agree"
+                  color="#004ebf"
+                />
+              </Label>
+            </CheckboxGroup>
+            <Text className="txt" onClick={() => setIsOpened2(true)}>
+              商品支付协议
+            </Text>
+          </View>
         </View>
       </AtList>
 
@@ -335,6 +391,21 @@ export default () => {
           去支付
         </AtButton>
       </View>
+
+      <ServiceContent
+        title="用户服务协议"
+        type="service"
+        isOpened={isOpened}
+        onClose={() => setIsOpened(false)}
+        onConfirm={handleSure}
+      ></ServiceContent>
+      <ServiceContent
+        title="商品支付协议"
+        isOpened={isOpened2}
+        type="pay"
+        onClose={() => setIsOpened2(false)}
+        onConfirm={handleSure2}
+      ></ServiceContent>
     </View>
   );
 };

@@ -2,10 +2,10 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Modal, Typography, message, Space } from 'antd';
 import { searchItems, tableColums, formConfig } from './config.tsx';
-import { list, del, edit, add } from '@/apis/modules/bookGood';
+import { list, del, edit, add, listCount } from '@/apis/modules/bookGood';
 import MyPage from '@/components/BasicPage';
 import ModalForm from '@/components/ModalForm';
-import { FILE_URL } from '@/apis/request.ts';
+
 import { produce } from 'immer';
 
 export default function appointManagement() {
@@ -89,6 +89,7 @@ export default function appointManagement() {
     <>
       <MyPage
         pageApi={list}
+        pageCountApi={listCount}
         tableOptions={tableColums}
         ref={pageRef}
         searchItems={searchItems}

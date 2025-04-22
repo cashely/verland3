@@ -5,8 +5,12 @@ import request from '../request';
  * @name 列表
  */
 
-export async function list<T>(params: any): Promise<RequestResult<T>> {
+export function list<T>(params: any): Promise<RequestResult<T>> {
   return request.get(`/ticket?${new URLSearchParams(params).toString()}`);
+}
+
+export function listCount<T>(params: any): Promise<RequestResult<T>> {
+  return request.get(`/ticket/count?${new URLSearchParams(params).toString()}`);
 }
 
 /**

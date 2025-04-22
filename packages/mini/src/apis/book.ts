@@ -2,7 +2,7 @@ import request from './index';
 
 const APIS = {
   ADD: '/mp/book', // 新增图书
-  LIST: '/mp/book/hasBookDate',
+  LIST: '/mp/book',
   DETAIL: '/mp/book', // 获取图书列表
   PREPAY: '/mp/wx/prepay',
   PAY: '/mp/wx/pay',
@@ -74,7 +74,7 @@ const isBooked = (params: any) => {
   // start=2023-12-12 00:00:10&end=2025-12-12 00:00:00
   console.log(params);
   return request(
-    APIS.LIST,
+    APIS.IS_BOOKED,
     {
       method: 'get',
     },

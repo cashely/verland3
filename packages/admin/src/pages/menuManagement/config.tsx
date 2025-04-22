@@ -3,6 +3,7 @@ import {
   DELIVERY_TYPE,
   PET_RECEIVE_WAYS,
   getLabelByValue,
+  APPOINTMENT,
 } from '@/constants';
 import { formatPrice } from '@/utils';
 import { Image } from 'antd';
@@ -144,12 +145,21 @@ const formConfig = {
       },
     },
     {
+      label: '是否需要上门服务时间',
+      prop: 'isBookDate',
+      type: 'radio',
+      // rules: [{ required: true, message: '请输入产品名称' }],
+      labelCol: 7,
+      wrapperCol: 17,
+      options: APPOINTMENT,
+    },
+    {
       label: '是否需要仪式',
       prop: 'isRite',
       type: 'radio',
       // rules: [{ required: true, message: '请输入产品名称' }],
-      labelCol: 6,
-      wrapperCol: 18,
+      labelCol: 7,
+      wrapperCol: 17,
       options: RITE_TYPE,
     },
     {
@@ -157,8 +167,8 @@ const formConfig = {
       prop: 'isHandleWay',
       type: 'radio',
       // rules: [{ required: true, message: '请输入产品名称' }],
-      labelCol: 6,
-      wrapperCol: 18,
+      labelCol: 7,
+      wrapperCol: 17,
       options: DELIVERY_TYPE,
     },
     {
@@ -166,8 +176,8 @@ const formConfig = {
       prop: 'expressWays',
       type: 'checkbox',
       // rules: [{ required: true, message: '请输入产品名称' }],
-      labelCol: 6,
-      wrapperCol: 16,
+      labelCol: 7,
+      wrapperCol: 17,
       options: PET_RECEIVE_WAYS,
     },
     {

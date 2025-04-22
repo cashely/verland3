@@ -2,12 +2,18 @@ import './App.css';
 import { ConfigProvider, App as AntdApp } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN'; // 引入中文配置
 import Router from './router';
-//TODO
+import 'dayjs/locale/zh-cn'; // 引入中文语言包
 import useTheme from '@/hooks/themeContext';
+import dayjs from 'dayjs';
+dayjs.locale('zh-cn'); // 设置语言
 
 function App() {
   const customLocale = {
     ...zhCN,
+    DatePicker: {
+      ...zhCN.DatePicker,
+      placeholder: '请选择日期', // 修改日期选择器的占位符
+    },
     Pagination: {
       ...zhCN.Pagination,
       items_per_page: '/页', // 修改分页显示文案

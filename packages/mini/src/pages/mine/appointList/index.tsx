@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { View, Text, Image } from '@tarojs/components';
 import {
   navigateTo,
@@ -46,6 +46,7 @@ export default function Index() {
   const [bookId, setBookId] = useState('');
   const [showEmpty, setShowEmpty] = useState(false);
   const getlist = async (current = 0) => {
+    setShowEmpty(false);
     const res = await list();
     if (res.code === 200) {
       const result = res.data.map((item) => ({
@@ -159,12 +160,9 @@ export default function Index() {
   };
 
   const handleToDetail = (item) => {
-    console.log(item);
     if (!item?.id) return;
     navigateTo({
-      url: `./detail/index?id=${item.id}&statuName=${
-        APPOINTMENT_TYPES[item.statu]?.label
-      }`,
+      url: `./detail/index?id=${item.id}&status=${item.status}`,
     });
   };
 

@@ -1,14 +1,11 @@
 import { View } from '@tarojs/components';
-import { useLoad, showToast, navigateBack } from '@tarojs/taro';
+import { showToast, navigateBack } from '@tarojs/taro';
 import { AtTextarea, AtButton } from 'taro-ui';
 import './index.scss';
 import { useState } from 'react';
 import { add } from '@/apis/advise';
 
 export default function Create() {
-  useLoad(() => {
-    console.log('Page loaded.');
-  });
   const [content, setContent] = useState<string>('');
   const handleSubmit = () => {
     if (!content.trim())
@@ -16,7 +13,7 @@ export default function Create() {
         title: '内容不为空!',
         icon: 'none',
       });
-    console.log(content);
+
     add({
       content,
       type: 2,
