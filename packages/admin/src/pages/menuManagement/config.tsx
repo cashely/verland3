@@ -176,8 +176,8 @@ const formConfig = {
       prop: 'expressWays',
       type: 'checkbox',
       // rules: [{ required: true, message: '请输入产品名称' }],
-      labelCol: 6,
-      wrapperCol: 16,
+      labelCol: 7,
+      wrapperCol: 17,
       options: PET_RECEIVE_WAYS,
     },
     {
