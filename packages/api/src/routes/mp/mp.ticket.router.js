@@ -18,7 +18,11 @@ router.get('/', validate(z => (
                 userId: id
             },
             include: {
-                book: true,
+                book: {
+                  include: {
+                    menu: true
+                  }
+                },
                 menu: true
             },
             orderBy: {
@@ -65,7 +69,11 @@ router.get('/:id', validate(z => (
                 id
             },
             include: {
-                book: true,
+                book: {
+                  include: {
+                    menu: true
+                  }
+                },
                 menu: true
             },
         });
