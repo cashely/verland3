@@ -18,7 +18,8 @@ router.get('/', validate(z => (
                 userId: id
             },
             include: {
-                book: true
+                book: true,
+                menu: true
             },
             orderBy: {
                 createdAt: 'desc'
@@ -64,7 +65,8 @@ router.get('/:id', validate(z => (
                 id
             },
             include: {
-                book: true
+                book: true,
+                menu: true
             },
         });
         res.response.success(ticket);
