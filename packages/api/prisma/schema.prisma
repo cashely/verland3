@@ -223,6 +223,7 @@ model Menu {
   book    Book[]
   isRite  Int @default(2) // 是否需要仪式 1 是 2否
   isHandleWay Int @default(2) // 是否需要寄送回收 1 是 2 否
+  isBookDate  Int  @default(2) // 是否需要预约上门时间 1 是 2否
   expressWays  String?  // 宠物寄送方式，可多选，用顿号分割开
 }
 
