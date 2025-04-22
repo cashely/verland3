@@ -32,16 +32,20 @@ export default () => {
     <View className="page-invoice-detail">
       <View className="item">
         <View className="text-center title">发票信息</View>
-        <AtInput
-          name="value"
-          title="开票金额"
-          type="text"
-          value={formData?.totalAmount}
-        />
+        {formData?.totalAmount && (
+          <AtInput
+            name="value"
+            title="开票金额"
+            type="text"
+            editable={false}
+            value={formData?.totalAmount + '元'}
+          />
+        )}
         <AtInput
           name="value"
           title="开票类型"
           type="text"
+          editable={false}
           value={formData?.type === 1 ? '个人' : '企业'}
         />
         {formData?.type === 2 && (

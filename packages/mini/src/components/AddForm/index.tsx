@@ -208,7 +208,10 @@ export default forwardRef((props, ref) => {
                 <AtList className="flex items-center justify-between">
                   <AtListItem
                     title={formItem.label}
-                    extraText={formData[formItem.prop] || 'xxxx'}
+                    extraText={
+                      formData[formItem.prop] ||
+                      '广东省广州市海珠区仑头路78号之3A01栋108铺'
+                    }
                   />
                 </AtList>
               </View>

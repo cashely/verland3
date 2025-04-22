@@ -39,8 +39,10 @@ export default () => {
     totalAmount: 0,
   });
   const [agreeCheck, setAgreeCheck] = useState(false);
+  const [agreeCheck2, setAgreeCheck2] = useState(false);
   const [payDisabled, setPayDisabled] = useState(false);
   const [isOpened, setIsOpened] = useState(false);
+  const [isOpened2, setIsOpened2] = useState(false);
   useLoad((option) => {
     console.log(option);
 
@@ -71,11 +73,10 @@ export default () => {
   const handlePay = debounce(() => {
     if (!agreeCheck) {
       return showToast({
-        title: '请勾选用户购买套餐协议',
+        title: '请勾选用户服务协议',
         icon: 'none',
       });
-    }
-    if (!agreeCheck) {
+    } else if (!agreeCheck2) {
       return showToast({
         title: '请勾选商品支付协议',
         icon: 'none',
@@ -214,14 +215,23 @@ export default () => {
     });
   };
 
-  const handleAgreementChange = (e) => {
+  const handleAgreementChange = (e, type: string) => {
     const res = e.detail.value;
-    setAgreeCheck(res?.length);
+
+    if (type === 'service') {
+      setAgreeCheck(res?.length);
+    } else if (type === 'pay') {
+      setAgreeCheck2(res?.length);
+    }
   };
 
   const handleSure = () => {
     setAgreeCheck(true);
     setIsOpened(false);
+  };
+  const handleSure2 = () => {
+    setAgreeCheck2(true);
+    setIsOpened2(false);
   };
 
   return (
@@ -331,8 +341,10 @@ export default () => {
         </View> */}
         <View className="footer">
           {/* 协议 */}
-          {/* <View className="flex items-center mb-20">
-            <CheckboxGroup onChange={handleAgreementChange}>
+          <View className="flex items-center mb-20">
+            <CheckboxGroup
+              onChange={(e) => handleAgreementChange(e, 'service')}
+            >
               <Label className="checkboxLabel">
                 <Checkbox
                   className="checkbox"
@@ -344,22 +356,22 @@ export default () => {
             </CheckboxGroup>
 
             <Text className="txt" onClick={() => setIsOpened(true)}>
-              用户服务协议/商品支付协议
+              用户服务协议
             </Text>
-          </View> */}
+          </View>
           <View className="flex items-center">
-            <CheckboxGroup onChange={handleAgreementChange}>
+            <CheckboxGroup onChange={(e) => handleAgreementChange(e, 'pay')}>
               <Label className="checkboxLabel">
                 <Checkbox
                   className="checkbox"
-                  checked={agreeCheck}
+                  checked={agreeCheck2}
                   value="agree"
                   color="#004ebf"
                 />
               </Label>
             </CheckboxGroup>
-            <Text className="txt" onClick={() => setIsOpened(true)}>
-              用户服务协议/商品支付协议
+            <Text className="txt" onClick={() => setIsOpened2(true)}>
+              商品支付协议
             </Text>
           </View>
         </View>
@@ -381,10 +393,18 @@ export default () => {
       </View>
 
       <ServiceContent
-        title="商品支付协议"
+        title="用户服务协议"
+        type="service"
         isOpened={isOpened}
         onClose={() => setIsOpened(false)}
         onConfirm={handleSure}
+      ></ServiceContent>
+      <ServiceContent
+        title="商品支付协议"
+        isOpened={isOpened2}
+        type="pay"
+        onClose={() => setIsOpened2(false)}
+        onConfirm={handleSure2}
       ></ServiceContent>
     </View>
   );

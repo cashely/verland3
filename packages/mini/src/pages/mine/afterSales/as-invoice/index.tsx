@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text } from '@tarojs/components';
-import { navigateTo, useLoad } from '@tarojs/taro';
+import { navigateTo, useLoad, setNavigationBarTitle } from '@tarojs/taro';
 import { list as bookList } from '@/apis/book';
 import { list } from '@/apis/ticket';
 import { TICKET_STATUS_TYPE } from '@/constants';
@@ -24,6 +24,9 @@ export default function Index() {
         }
       });
     } else if (type === 'wdsq') {
+      setNavigationBarTitle({
+        title: '我的申请',
+      });
       list({}).then((res) => {
         if (res.code === 200) {
           setData(res.data);
@@ -54,7 +57,7 @@ export default function Index() {
           key={index}
         >
           <View className="flex items-center justify-between title">
-            <Text>{item.menu?.name || '-'}</Text>
+            <Text>{item?.menu?.name || item?.book?.menu?.name || '-'}</Text>
             <Text className="time">
               {formatDateTime(item.bookDateTime || item.createdAt)}
             </Text>

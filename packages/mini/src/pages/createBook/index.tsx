@@ -1,6 +1,12 @@
 import { useState, useRef, useEffect, Suspense } from 'react';
 import { View } from '@tarojs/components';
-import { useLoad, showToast, navigateTo, setStorageSync } from '@tarojs/taro';
+import {
+  useLoad,
+  showToast,
+  navigateTo,
+  setStorageSync,
+  useUnload,
+} from '@tarojs/taro';
 import { AtButton, AtToast } from 'taro-ui';
 import { otherFormList, baseInfoFormList } from './model';
 import AddForm from '@/components/AddForm';
@@ -18,18 +24,17 @@ export default () => {
   const baseInfoRef = useRef(null);
   const otherInfoRef = useRef(null);
   const [menuList, setMenuList] = useState([]);
-  const [isMenuA, setIsMenuA] = useState(false);
+  const [selectMenuItem, setSelectMenuItem] = useState({});
   const [formModel, setformModel] = useState({
-    isRite: '1',
     handleWay: '2',
-    expressWay: '1',
+    // expressWay: '1',
   });
 
   useLoad(() => {
     console.log('Page loaded.');
     _setOtherFormList(otherFormList);
   });
-  const [_otherFormList, _setOtherFormList] = useState(otherFormList);
+  const [_otherFormList, _setOtherFormList] = useState([...otherFormList]);
   const [_baseInfoFormList, _setBaseInfoFormList] = useState(baseInfoFormList);
   const [invalidTimes, setInvalidTimes] = useState<string[]>([]);
   const toast = (text: string) => {
@@ -40,10 +45,21 @@ export default () => {
   };
 
   const getExpressOptions = (menuId: string) => {
-    const wayIds = menuList.find((o) => o.id === menuId)?.expressWays;
-    console.log('wayIds', wayIds);
-
+    const menuItem = menuList.find((o) => o.id === menuId);
+    const wayIds = menuItem?.expressWays?.split(',') || [];
+    setSelectMenuItem(menuItem || {});
+    setformModel((d) => {
+      d['isRite'] = menuItem?.isRite || undefined;
+      d.expressWay = wayIds[0] || null;
+      return d;
+    });
     _otherFormList.forEach((item) => {
+      if (item.prop === 'bookDateTime') {
+        item.hidden = menuItem?.isBookDate === 2;
+      }
+      if (item.prop === 'isRite' || item.prop === 'riteDateTime') {
+        item.hidden = menuItem?.isRite === 2;
+      }
       if (item.prop === 'expressWay') {
         item.options = PET_RECEIVE_WAYS.filter((o) =>
           wayIds?.includes(o.value)
@@ -51,7 +67,14 @@ export default () => {
         item.hidden = !wayIds?.length;
       }
       if (item.prop === 'expressAddress') {
-        item.hidden = !wayIds?.length;
+        item.hidden = ['2', '3'].includes(wayIds[0]);
+      }
+      //门店接收显示
+      if (item.prop === 'petStoreId') {
+        item.hidden = ['1', '3'].includes(wayIds[0]);
+      }
+      if (item.prop === 'postAddress' || item.prop === 'detail') {
+        item.hidden = ['1', '2'].includes(wayIds[0]);
       }
     });
     console.log(_otherFormList, '_otherFormList');
@@ -59,6 +82,7 @@ export default () => {
   };
 
   useEffect(() => {
+    console.log('422');
     menu().then((res) => {
       if (res?.code === 200) {
         setformModel((d) => {
@@ -119,19 +143,23 @@ export default () => {
     } else if (!baseInfo?.type) {
       return toast('爱宠类型不为空');
     }
-    if (isMenuA) {
-    } else {
-      if (!otherInfo?.bookDateTime) {
-        return toast('上门服务时间不为空');
-      } else if (otherInfo.isRite === '1' && !otherInfo.riteDateTime) {
-        return toast('预约仪式日期不为空');
-      } else if (
-        ['2'].includes(otherInfo?.handleWay) &&
-        !otherInfo?.handleDateTime
-      ) {
-        return toast('纪念物获取时间不为空');
-      }
+    if (selectMenuItem?.isBookDate === 1 && !otherInfo?.bookDateTime) {
+      return toast('上门服务时间不为空');
     }
+    if (
+      selectMenuItem?.isRite === 1 &&
+      otherInfo?.isRite == 1 &&
+      !otherInfo?.riteDateTime
+    ) {
+      return toast('预约仪式日期不为空');
+    }
+    // if (selectMenuItem?.isHandleWay === 1 && !otherInfo?.handleDateTime) {
+    //   return toast('纪念物获取时间不为空');
+    // }
+    if (['2'].includes(otherInfo?.handleWay) && !otherInfo?.handleDateTime) {
+      return toast('纪念物获取时间不为空');
+    }
+
     if (otherInfo.expressWay === '2') {
       if (!otherInfo.petStoreId) {
         return toast('请选择宠物门店');
@@ -174,21 +202,11 @@ export default () => {
 
   const handleFormDataChange = (propName: string, val: any) => {
     console.log('handleFormDataChange+411', val, propName);
-    const checkProps = [
-      'handleWay',
-      'handleDateTime',
-      'bookDateTime',
-      'isRite',
-      'riteDateTime',
-      'postAddress',
-      'detail',
-    ];
+    const checkProps = ['handleWay', 'handleDateTime', 'postAddress', 'detail'];
     const { menuId, petname, type, subType } = val;
     const isMenuA = menuList.findIndex((n) => n.id === val.menuId) === 1;
 
     if (propName === 'menuId') {
-      setIsMenuA(isMenuA);
-
       _otherFormList.forEach((item: any) => {
         item.hidden = checkProps.includes(item.prop) && isMenuA;
 
@@ -237,7 +255,7 @@ export default () => {
             type,
             subType,
             handleWay: '2',
-            isRite: '1',
+
             expressWay: '1',
           };
         });
@@ -323,13 +341,7 @@ export default () => {
 
   useEffect(() => {
     console.log('menuList变更411');
-    const showProps = [
-      'handleWay',
-      'handleDateTime',
-      'bookDateTime',
-      'isRite',
-      'riteDateTime',
-    ];
+    const showProps = ['handleWay', 'handleDateTime'];
     _otherFormList.forEach((item: any) => {
       if (item.prop === 'menuId') {
         item.tabsOptions = menuList.map((item: any) => ({
@@ -340,75 +352,17 @@ export default () => {
         item.tabsTitle = menuList.map((iten: any) => iten.name);
       }
       //重置
-      if (showProps.includes(item.prop) && item.hidden === undefined) {
-        item.hidden = false;
-      }
+      // if (showProps.includes(item.prop) && item.hidden === undefined) {
     });
+    console.log(formModel, '422');
     getExpressOptions(menuList[0]?.id);
   }, [menuList]);
 
-  const endDate = new Date(dayjs().endOf('year').format('YYYY-MM-DD'));
-
-  const [defaultDate, setDefaultDate] = useState({
-    startDate: new Date(dayjs().year(), dayjs().month(), dayjs().date()),
-    bookDateTime: '',
-    endDate: endDate,
-    timeRange: [],
-    propName: '',
-    pickerTitle: '日期选择',
-    //currentDate: new Date(),
+  useUnload(() => {
+    console.log('卸载');
+    setMenuList([]);
+    _setOtherFormList([]);
   });
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [validTimesRange, setValidTimesRange] = useState<string[]>([]);
-
-  const filterAvailableRanges = (times: string[]) => {
-    return times?.filter((slot) => {
-      // 将时间段转换为今天的日期时间对象
-      const slotTime = dayjs().set('hour', parseInt(slot));
-      // 比较时间段是否在当前时间之后
-      return slotTime.isAfter(dayjs());
-    });
-  };
-
-  const handlePickerClick = (formItem, formData) => {
-    console.log('pickerClick410', formItem, formData);
-
-    defaultDate.propName = formItem.prop;
-    // dateInfo.timeRange = formItem.timeRange;
-    // selectedTime?.split(' ')[1] ||
-    //设置可选时间范围
-    let bookDateTimeHour = 0;
-    if (formItem.prop === 'bookDateTime') {
-      console.log('410handleDateChange', validTimesRange);
-
-      defaultDate.pickerTitle = '请选择上门服务时间';
-    } else {
-      const titleObj = {
-        riteDateTime: '请选择预约仪式时间',
-        handleDateTime: '请选择纪念物收取时间',
-      };
-
-      defaultDate.pickerTitle = titleObj[formItem.prop];
-      bookDateTimeHour = dayjs(formData.bookDateTime).hour();
-      console.log('410handleDateChangexxx', formData, bookDateTimeHour);
-    }
-
-    //筛选掉不可用日期
-    // .filter(
-    //   (n: string) =>
-    //     !invalidTimes.includes(n) && n > bookDateTimeHour.toString()
-    // )
-    console.log(
-      '410handleDateChangexxx',
-      formItem.timeRange,
-      formItem.timeRange.filter((n) => n > (bookDateTimeHour || 0))
-    );
-    setValidTimesRange(() =>
-      filterAvailableRanges(
-        formItem.timeRange.filter((n) => n > (bookDateTimeHour || 0))
-      )
-    );
-  };
 
   return (
     <Suspense fallback={<AtToast isOpened text="loading"></AtToast>}>
@@ -421,13 +375,13 @@ export default () => {
             onFormChange={handleFormDataChange}
           ></AddForm>
         </View>
+
         <View className="formCon">
           <AddForm
             ref={otherInfoRef}
             formList={_otherFormList}
             formModel={formModel}
             onFormChange={handleFormDataChange}
-            onPickerClick={handlePickerClick}
             invalidTimes={invalidTimes}
           >
             {{

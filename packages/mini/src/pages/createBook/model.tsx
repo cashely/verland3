@@ -62,9 +62,6 @@ const otherFormList = [
     label: '基础服务',
     prop: 'menuId',
     type: 'tabs',
-    itemProps: {
-      placeholder: '请输入用户名',
-    },
     tabsTitle: [],
     tabsOptions: [],
     rules: [],

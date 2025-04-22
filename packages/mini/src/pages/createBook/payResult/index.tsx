@@ -15,8 +15,7 @@ export default function OtherBookService() {
   const goView = () => {
     // 跳转我的预约
     redirectTo({
-      url:
-        '/pages/mine/appointList/detail/index?id=' + id + '&statuName=已付款',
+      url: '/pages/mine/appointList/detail/index?id=' + id,
     });
   };
   return (
