@@ -145,11 +145,12 @@ router.post('/', validate((z) => (
             imageIds: z.array(z.string().min(1)).optional(),
             isRite: z.optional(z.union([z.literal(1), z.literal(2)])),
             isHandleWay: z.optional(z.union([z.literal(1), z.literal(2)])),
+            isBookDate: z.optional(z.union([z.literal(1), z.literal(2)])),
         })
     })
 )), async (req, res) => {
     try {
-        const { name, price, description, imageIds = [], isRite, isHandleWay, expressWays } = req.body;
+        const { name, price, description, imageIds = [], isRite, isHandleWay, isBookDate, expressWays } = req.body;
         const menu = await prisma.menu.create({
             data: {
                 name,
@@ -158,6 +159,7 @@ router.post('/', validate((z) => (
                 isHandleWay,
                 isRite,
                 expressWays,
+                isBookDate,
                 images: {
                     createMany: {
                         data: imageIds.map((imageId) => ({
@@ -197,13 +199,14 @@ router.put('/:id', validate((z) => (
             description: z.string().min(1),
             imageIds: z.array(z.string().min(1)).optional(),
             isRite: z.optional(z.union([z.literal(1), z.literal(2)])),
-            isHandleWay: z.optional(z.union([z.literal(1), z.literal(2)]))
+            isHandleWay: z.optional(z.union([z.literal(1), z.literal(2)])),
+            isBookDate: z.optional(z.union([z.literal(1), z.literal(2)])),
         })
     })
 )), async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, price, description, imageIds = [], isRite, isHandleWay, expressWays } = req.body;
+        const { name, price, description, imageIds = [], isRite, isHandleWay, isBookDate, expressWays } = req.body;
         const menu = await prisma.menu.update({
             where: {
                 id
@@ -215,6 +218,7 @@ router.put('/:id', validate((z) => (
                 isRite,
                 isHandleWay,
                 expressWays,
+                isBookDate,
                 images: {
                     deleteMany: {},
                     createMany: {
