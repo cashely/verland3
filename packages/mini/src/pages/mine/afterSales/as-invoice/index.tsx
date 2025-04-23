@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text } from '@tarojs/components';
 import {
   navigateTo,
@@ -42,13 +42,14 @@ export default function Index() {
     });
   };
 
-  useDidShow(() => {
+  useEffect(() => {
+    console.log(pageType, 'pageType');
     if (pageType === 'kpsq') {
       getBookList();
     } else if (pageType === 'wdsq') {
       getTicketList();
     }
-  });
+  }, [pageType]);
   const handleClick = (item) => {
     //跳转发票详情
     if (pageType === 'wdsq') {
