@@ -130,7 +130,6 @@ export default function AsApplyInvoice() {
         <AtInput
           name="number"
           title="企业税号"
-          // required
           cursor={1000}
           clear
           type="text"
@@ -142,7 +141,6 @@ export default function AsApplyInvoice() {
       <AtInput
         name="email"
         title="邮箱"
-        clear
         type="text"
         cursor={1000}
         placeholder="请填写"
