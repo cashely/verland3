@@ -13,16 +13,18 @@ export default function Index() {
   });
   const token = getStorageSync('token');
   const handleGoPage = (item: Record<string, any>) => {
-    console.log(item, 'item');
+    if (item.isPhone) {
+      Taro.makePhoneCall({
+        phoneNumber: item.value,
+      });
+      return;
+    }
     if (!token) {
       relogin()
         .then((data) => {
-          console.log(data, 'data');
           setUserInfo(data);
           if (item?.pagePath) {
             Taro.navigateTo({ url: item.pagePath });
-          } else {
-            Taro.makePhoneCall({ phoneNumber: item.value });
           }
         })
         .catch(() => {
@@ -44,6 +46,7 @@ export default function Index() {
 
   useEffect(() => {
     const userInfo = getStorageSync('userInfo');
+    console.log(userInfo, 'userInfo');
     if (userInfo) {
       setUserInfo({
         ...userInfo,

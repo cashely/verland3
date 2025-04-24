@@ -57,7 +57,7 @@ export default function Index() {
   const fetchUserInfo = async (initUserInfo: any) => {
     try {
       setBtnDisabled(true);
-      relogin(initUserInfo).then((res) => {
+      relogin(initUserInfo, 'login').then((res) => {
         if (!res) return setBtnDisabled(false);
         setTimeout(() => {
           pageFlag === '1'

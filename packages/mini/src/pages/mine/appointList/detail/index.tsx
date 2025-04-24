@@ -35,12 +35,16 @@ const rowsData = [
     key: 'petname',
   },
   {
-    label: '预约时间',
+    label: '预约服务时间',
     key: 'bookDateTime',
   },
   {
     label: '是否需要仪式',
     key: 'isRite',
+  },
+  {
+    label: '预约仪式时间',
+    key: 'riteDateTime',
   },
   {
     label: '纪念物获取方式',
@@ -98,6 +102,9 @@ export default function Index() {
               ? dayjs(result.bookDateTime).format('YYYY-MM-DD HH:mm:ss')
               : undefined,
             isRite: IS_RITE.find((n) => n.value == result.isRite)?.label || '-',
+            riteDateTime: result.riteDateTime
+              ? dayjs(result.riteDateTime).format('YYYY-MM-DD HH:mm:ss')
+              : undefined,
             expressWay:
               PET_RECEIVE_WAYS.find((n) => n.value == result.expressWay)
                 ?.label || undefined,

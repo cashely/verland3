@@ -18,9 +18,10 @@ const baseInfoFormList = [
   {
     label: '联系电话',
     prop: 'phone',
-    type: 'input',
+    type: 'digit',
     itemProps: {
       placeholder: '请填写联系人的电话',
+      maxLength: 11,
     },
     rules: [],
   },

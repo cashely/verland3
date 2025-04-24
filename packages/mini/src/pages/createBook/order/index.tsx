@@ -70,7 +70,7 @@ export default () => {
     return `${address.province}${address.city}${address.area || '-'}`;
   };
 
-  const handlePay = debounce(() => {
+  const handlePay = () => {
     if (!agreeCheck) {
       return showToast({
         title: '请勾选用户服务协议',
@@ -87,7 +87,17 @@ export default () => {
     //   entityIds: [],
     //   complete() {},
     // });
-    handlePrepay();
+    //弹出订阅消息
+    requestSubscribeMessage({
+      tmplIds: [PAY_TMP],
+      entityIds: [],
+      success(res) {
+        console.log(res, 'res++++');
+      },
+      complete() {
+        handlePrepay();
+      },
+    });
 
     //判断授权状况
     // getSetting({
@@ -146,7 +156,7 @@ export default () => {
     //     }
     //   },
     // });
-  }, 300);
+  };
 
   //发起预支付
   const handlePrepay = () => {
@@ -181,18 +191,9 @@ export default () => {
                   title: '支付成功!',
                   icon: 'none',
                   success() {
-                    //弹出订阅消息
-                    requestSubscribeMessage({
-                      tmplIds: [PAY_TMP],
-                      entityIds: [],
-                      complete() {
-                        console.log(2);
-                        removeStorageSync('bookInfo');
-                        reLaunch({
-                          url:
-                            '/pages/createBook/payResult/index?id=' + order.id,
-                        });
-                      },
+                    removeStorageSync('bookInfo');
+                    reLaunch({
+                      url: '/pages/createBook/payResult/index?id=' + order.id,
                     });
                   },
                 });

@@ -22,6 +22,7 @@ const menuList = [
   {
     value: '19120038398',
     text: '联系客服',
+    isPhone: true,
   },
 ];
 
