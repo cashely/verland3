@@ -215,7 +215,7 @@ const tableColumns = [
     render(_: any) {
       return (
         <div style={{ whiteSpace: 'wrap' }}>
-          <p>评分：{_?.score}</p>
+          <p>评分：{_?.score || '-'}</p>
           <p>评价内容：{_?.content || '-'}</p>
         </div>
       );

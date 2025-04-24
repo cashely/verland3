@@ -13,6 +13,7 @@ import MyPage from '@/components/BasicPage';
 import { produce } from 'immer';
 import ModalForm from '@/components/ModalForm';
 import dayjs from 'dayjs';
+import _ from 'lodash-es';
 
 //发票
 export default function TickManagement() {
@@ -92,7 +93,8 @@ export default function TickManagement() {
             ...record,
             expressWays: record?.expressWays?.split(','),
             price: record?.price / 100,
-            imageIds: record?.images?.map((n) => n.id),
+            imageIds: [...new Set(record?.images?.map((n) => n.imageId))],
+            images: _.unionBy(record?.images, 'imageId'),
           };
         }
       })
