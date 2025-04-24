@@ -43,32 +43,23 @@ export default function (
           });
           return;
         } else if (data?.code === 401) {
-          const token = getStorageSync('token') || '';
+          //过期重新登录
           showLoading().then((res) => {
             console.log(res, 'xxxx');
-            if (token) {
-              clearStorageSync();
-              relogin().then((res) => {
-                if (!res) {
-                  Taro.reLaunch({
-                    url: '/pages/index/index',
-                  });
-                } else {
-                  console.log(getCurrentPages());
-                  const pageLen = getCurrentPages().length;
-                  const currentPage = getCurrentPages()[pageLen - 1];
-                  redirectTo({
-                    url: ('/' + currentPage.route) as string,
-                  });
-                }
-              });
-            } else {
-              setTimeout(() => {
-                Taro.reLaunch({
-                  url: '/pages/index/index',
+            clearStorageSync();
+            relogin().then((res) => {
+              console.log('424', res);
+              if (!res) {
+                Taro.navigateTo({ url: '/pages/createBook/index' });
+              } else {
+                console.log(getCurrentPages());
+                const pageLen = getCurrentPages().length;
+                const currentPage = getCurrentPages()[pageLen - 1];
+                redirectTo({
+                  url: ('/' + currentPage.route) as string,
                 });
-              }, 1000);
-            }
+              }
+            });
           });
           return;
         }

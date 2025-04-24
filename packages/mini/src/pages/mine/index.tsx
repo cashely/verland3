@@ -4,6 +4,7 @@ import { AtAvatar, AtListItem, AtList } from 'taro-ui';
 import { menuList } from './config';
 import './index.scss';
 import { useEffect, useState } from 'react';
+import relogin from '@/apis/relogin';
 
 export default function Index() {
   const [userInfo, setUserInfo] = useState({
@@ -12,11 +13,23 @@ export default function Index() {
   });
   const token = getStorageSync('token');
   const handleGoPage = (item: Record<string, any>) => {
-    if (!token) return goLogin();
-    if (item?.pagePath) {
-      Taro.navigateTo({ url: item.pagePath });
+    console.log(item, 'item');
+    if (!token) {
+      relogin()
+        .then((data) => {
+          console.log(data, 'data');
+          setUserInfo(data);
+          if (item?.pagePath) {
+            Taro.navigateTo({ url: item.pagePath });
+          } else {
+            Taro.makePhoneCall({ phoneNumber: item.value });
+          }
+        })
+        .catch(() => {
+          goLogin();
+        });
     } else {
-      Taro.makePhoneCall({ phoneNumber: item.value });
+      Taro.navigateTo({ url: item.pagePath });
     }
   };
 
@@ -25,7 +38,8 @@ export default function Index() {
   };
 
   const handleCheckLogin = () => {
-    if (!token) goLogin();
+    if (!token) {
+    }
   };
 
   useEffect(() => {

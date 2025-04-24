@@ -1,5 +1,6 @@
 import { mpLogin, getUser, putUser } from '@/apis/user';
 import { setStorageSync, login } from '@tarojs/taro';
+import { navigateTo } from '@tarojs/taro';
 const relogin = (useInfo?: {
   avatar: string;
   nickname: string;
@@ -16,6 +17,10 @@ const relogin = (useInfo?: {
         //拿到token之后获取用户信息
         const { data, code } = await getUser();
         if (code === 200) {
+          if (!data.phone) {
+            //没有用户手机号就去登录
+            return reject(false);
+          }
           //如果当前用户没有头像或者名称那就从微信获取
           if (useInfo) {
             //取微信用户信息
@@ -32,7 +37,7 @@ const relogin = (useInfo?: {
             });
           }
           setStorageSync('userInfo', data);
-          resolve(true);
+          resolve(data);
         } else {
           reject(false);
         }
