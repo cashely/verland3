@@ -62,10 +62,10 @@ export default function AsApplyInvoice() {
   };
   const handleClose = () => {
     setIsOpened(false);
+    navigateBack();
   };
   const handleConfirm = () => {
     setIsOpened(false);
-    navigateBack();
   };
   const handleRadioChange = (e) => {
     const { value } = e.detail;
@@ -75,91 +75,82 @@ export default function AsApplyInvoice() {
     });
   };
   const handleInputChange = (value, name) => {
-    setFormData({
-      ...formData,
-      [name]: value,
+    setFormData((d) => {
+      return {
+        ...d,
+        [name]: value,
+      };
     });
   };
   return (
     <View className="page-invoiceApply">
-      <AtForm>
-        <AtInput
-          name="value"
-          title="开票金额"
-          type="text"
-          // required
-          disabled
-          placeholder="请填写"
-          value={formData.price}
-        />
-        {/* <AtInput
+      <AtInput
+        name="value"
+        title="开票金额"
+        type="text"
+        // required
+        disabled
+        placeholder="请填写"
+        value={formData.price + '元'}
+      />
+      {/* <AtInput
           name="value"
           title="开票类型"
           type="number"
           placeholder="请选择开票类型"
           value={formData.type}
         /> */}
-        <View className="flex items-center justify-between customItem">
-          <View className="label">
-            <Text>开票类型</Text>
-          </View>
-          <RadioGroup className="radioGroup" onChange={handleRadioChange}>
-            {TICKET_TYPE?.map((item, index) => (
-              <Label className="radioItem" key={index}>
-                <Radio
-                  value={item.value}
-                  checked={formData.type === item.value}
-                >
-                  {item.label}
-                </Radio>
-              </Label>
-            ))}
-          </RadioGroup>
+      <View className="flex items-center justify-between customItem">
+        <View className="label">
+          <Text>开票类型</Text>
         </View>
-        {formData.type === '2' && (
-          <AtInput
-            name="header"
-            title="发票抬头"
-            type="text"
-            clear
-            placeholder="请填写（个人不需）"
-            cursor={1000}
-            value={formData.header}
-            onChange={(e) => handleInputChange(e, 'header')}
-          />
-        )}
-        {formData.type === '2' && (
-          <AtInput
-            name="number"
-            title="企业税号"
-            // required
-            cursor={1000}
-            clear
-            type="text"
-            onChange={(e) => handleInputChange(e, 'number')}
-            placeholder="请填写"
-            value={formData.number}
-          />
-        )}
+        <RadioGroup className="radioGroup" onChange={handleRadioChange}>
+          {TICKET_TYPE?.map((item, index) => (
+            <Label className="radioItem" key={index}>
+              <Radio value={item.value} checked={formData.type === item.value}>
+                {item.label}
+              </Radio>
+            </Label>
+          ))}
+        </RadioGroup>
+      </View>
+      {formData.type === '2' && (
         <AtInput
-          name="email"
-          title="邮箱"
+          name="header"
+          title="发票抬头"
+          type="text"
+          clear
+          placeholder="请填写（个人不需）"
+          cursor={1000}
+          value={formData.header}
+          onChange={(e) => handleInputChange(e, 'header')}
+        />
+      )}
+      {formData.type === '2' && (
+        <AtInput
+          name="number"
+          title="企业税号"
+          cursor={1000}
           clear
           type="text"
-          cursor={1000}
+          onChange={(e) => handleInputChange(e, 'number')}
           placeholder="请填写"
-          onChange={(e) => handleInputChange(e, 'email')}
-          value={formData.email}
+          value={formData.number}
         />
-        <AtButton
-          circle
-          type="primary"
-          className="subBtn"
-          onClick={handleSubmit}
-        >
-          提交
-        </AtButton>
-      </AtForm>
+      )}
+      <AtInput
+        name="email"
+        title="邮箱"
+        type="text"
+        cursor={1000}
+        placeholder="请填写"
+        onChange={(e) => handleInputChange(e, 'email')}
+        value={formData.email}
+      />
+      <AtButton circle type="primary" className="subBtn" onClick={handleSubmit}>
+        提交
+      </AtButton>
+
       <AtModal
         isOpened={isOpened}
         cancelText="我已知晓"

@@ -66,14 +66,18 @@ export default () => {
         );
         item.hidden = !wayIds?.length;
       }
-      if (item.prop === 'expressAddress') {
+      if (menuItem?.expressWays && item.prop === 'expressAddress') {
+        console.log(menuItem, '422');
         item.hidden = ['2', '3'].includes(wayIds[0]);
       }
       //门店接收显示
-      if (item.prop === 'petStoreId') {
+      if (item.prop === 'petStoreId' && menuItem?.expressWays) {
         item.hidden = ['1', '3'].includes(wayIds[0]);
       }
-      if (item.prop === 'postAddress' || item.prop === 'detail') {
+      if (
+        (item.prop === 'postAddress' || item.prop === 'detail') &&
+        menuItem?.expressWays
+      ) {
         item.hidden = ['1', '2'].includes(wayIds[0]);
       }
     });
@@ -243,7 +247,7 @@ export default () => {
           petStoreId: '',
           postAddress: '',
           detail: '',
-          expressWay: '1',
+          // expressWay: '1',
         });
       } else {
         setformModel((d) => {
@@ -255,8 +259,7 @@ export default () => {
             type,
             subType,
             handleWay: '2',
-
-            expressWay: '1',
+            // expressWay: '1',
           };
         });
       }

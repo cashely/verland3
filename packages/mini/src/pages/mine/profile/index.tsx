@@ -12,7 +12,7 @@ import { AtAvatar, AtButton, AtInput } from 'taro-ui';
 import { baseUrl } from '@/apis';
 import { GENDER } from '@/constants';
 import editIcon from '../../../assets/imgs/edit.png';
-import { putUser } from '@/apis/user';
+import { putUser, getUser } from '@/apis/user';
 import './index.scss';
 
 export default function Profile() {
@@ -58,8 +58,8 @@ export default function Profile() {
     if (key === 'gender') {
       setFormData({
         ...formData,
-        [key]: val.detail.value,
-        genderDesc: GENDER[val.detail.value],
+        [key]: +val.detail.value + 1,
+        genderDesc: GENDER[+val.detail.value + 1],
       });
       return;
     }
@@ -104,17 +104,15 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    const userInfo = getStorageSync('userInfo');
-    if (userInfo) {
+    getUser().then((res) => {
+      console.log(res);
+      if (res.code !== 200) return;
       setFormData({
         ...formData,
-        username: userInfo.username,
-        phone: userInfo.phone,
-        avatar: userInfo.avatar,
-        gender: userInfo.gender,
-        genderDesc: GENDER[userInfo.gender],
+        ...res.data,
+        genderDesc: GENDER[res.data.gender],
       });
-    }
+    });
   }, []);
 
   return (
@@ -152,10 +150,10 @@ export default function Profile() {
         />
 
         <Picker
-          range={GENDER}
+          range={GENDER.filter((item) => !!item)}
           mode="selector"
           onChange={(e) => handleChange(e, 'gender')}
-          value={formData['gender']}
+          value={formData['genderDesc']}
         >
           <AtInput
             name="gender"

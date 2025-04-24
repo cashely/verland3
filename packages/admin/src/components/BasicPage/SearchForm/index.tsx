@@ -3,6 +3,7 @@ import SearchTools from './FormTools';
 import './index.scss';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import { omit } from 'lodash-es';
 const { Option } = Select;
 const formItemClasses = `rounded-[4px]`;
 export default function SearchForm({ items = [], onSearch = () => {} }: any) {
@@ -22,20 +23,27 @@ export default function SearchForm({ items = [], onSearch = () => {} }: any) {
   //重置
   const handleResetForm = () => {
     searchForm.resetFields();
-    setFormData(initData);
-    onSearch && onSearch(initData);
+    const params = omit(initData, ['dateRange', 'start', 'end']);
+    setFormData(params);
+    onSearch && onSearch(params);
   };
 
   const handleChange = (prop: string, value: any) => {
     console.log(prop, value, '43handleChange');
     if (prop === 'dateRange') {
-      const [start, end] = value;
-      setFormData((prev) => ({
-        ...prev,
-        start: dayjs(start).format('YYYY-MM-DD'),
-        end: dayjs(end).format('YYYY-MM-DD'),
-        [prop]: undefined,
-      }));
+      let range = {} as any;
+      let params = {};
+      setFormData((prev) => {
+        if (value) {
+          const [start = '', end = ''] = value;
+          range['start'] = dayjs(start).format('YYYY-MM-DD');
+          range['end'] = dayjs(end).format('YYYY-MM-DD');
+        } else {
+          params = omit(prev, ['start', 'end']);
+        }
+        params = omit(prev, [prop]);
+        return params;
+      });
       return;
     }
     setFormData((prev) => ({ ...prev, [prop]: value ?? '' }));
@@ -80,6 +88,7 @@ export default function SearchForm({ items = [], onSearch = () => {} }: any) {
                     onChange={(value) => handleChange(field.prop, value)}
                     allowClear={field.clearable ?? false}
                     className={formItemClasses}
+                    mode={field.mode}
                     placeholder={field.placeholder}
                   >
                     {field?.options?.map((option, indey) => (

@@ -13,9 +13,10 @@ import { message } from 'antd';
 const searchItems = [
   {
     label: '套餐类型',
-    prop: 'type',
+    prop: 'menuIds',
     type: 'select',
     clearable: true,
+    mode: 'multiple',
     placeholder: '请选择',
     options: [],
     initValue: '',
@@ -60,14 +61,15 @@ const tableColumns = [
     key: 'user',
     dataIndex: 'user',
     width: 150,
-    render: (_: any) => {
+    render: (_: any, record: any) => {
+      console.log('xxxxx', _);
       return (
         <Space direction="vertical">
           <Tag icon={<UserOutlined />} color="processing">
-            {_?.nickname || '-'}
+            {record?.username || '-'}
           </Tag>
           <Tag icon={<PhoneFilled />} color="processing">
-            {_?.phone || ''}
+            {record?.phone || ''}
           </Tag>
         </Space>
       );
@@ -106,7 +108,7 @@ const tableColumns = [
     showTitle: true,
     render(_: any) {
       return `${_?.province || ''}${_?.city || ''}${_?.area || ''}${
-        _?.detail || ''
+        _?.detail || '-'
       }`;
     },
   },

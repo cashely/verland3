@@ -62,7 +62,10 @@ export default function TickManagement() {
         });
         message.success('编辑成功');
       } else {
-        const result = await menuCreate(values);
+        const result = await menuCreate({
+          ...values,
+          expressWays: values.expressWays?.join(','),
+        });
         console.log(result);
         message.success('添加成功');
       }
@@ -89,6 +92,7 @@ export default function TickManagement() {
             ...record,
             expressWays: record?.expressWays?.split(','),
             price: record?.price / 100,
+            imageIds: record?.images?.map((n) => n.id),
           };
         }
       })

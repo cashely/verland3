@@ -45,8 +45,8 @@ export default function appointManagement() {
             id: record?.id,
             content: record?.content,
             price: record?.price / 100,
-            thumb: record?.thumb.path,
-            thumbId: record?.thumb.id,
+            thumb: record?.thumb?.path,
+            thumbId: record?.thumb?.id,
           };
         }
       })

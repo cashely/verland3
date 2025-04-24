@@ -53,7 +53,7 @@ export default function Index() {
         ...item,
         bookDateTime: item.bookDateTime
           ? dayjs(item.bookDateTime).format('YYYY-MM-DD HH:mm:ss')
-          : '-',
+          : undefined,
       }));
       const _showData =
         current !== 0

@@ -63,6 +63,7 @@ const BasicPage = (
           pageSize: pageData.pageSize,
           pageNo: pageData.pageNo,
         };
+        console.log(obj, '----入参');
         const { code, data } = await pageApi(obj);
         //获取总条数
         let total = 0;
