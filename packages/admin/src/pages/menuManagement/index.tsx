@@ -92,6 +92,7 @@ export default function TickManagement() {
             ...record,
             expressWays: record?.expressWays?.split(','),
             price: record?.price / 100,
+            imageIds: record?.images?.map((n) => n.id),
           };
         }
       })

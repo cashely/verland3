@@ -61,14 +61,15 @@ const tableColumns = [
     key: 'user',
     dataIndex: 'user',
     width: 150,
-    render: (_: any) => {
+    render: (_: any, record: any) => {
+      console.log('xxxxx', _);
       return (
         <Space direction="vertical">
           <Tag icon={<UserOutlined />} color="processing">
-            {_?.nickname || '-'}
+            {record?.username || '-'}
           </Tag>
           <Tag icon={<PhoneFilled />} color="processing">
-            {_?.phone || ''}
+            {record?.phone || ''}
           </Tag>
         </Space>
       );
