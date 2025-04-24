@@ -220,7 +220,6 @@ router.put('/:id', validate((z) => (
                 expressWays,
                 isBookDate,
                 images: {
-                    deleteMany: {},
                     createMany: {
                         data: imageIds.map((imageId) => ({
                             imageId
