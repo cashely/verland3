@@ -259,8 +259,8 @@ router.get('/hasBookDate', validate(z => (
 })
 
 /**
-  检查特定的预约日期是否可用
-*/
+ * 检查特定的预约日期是否可用
+  */
 router.post('/checkBookDateTime', validate(z => (
     z.object({
         body: z.object({
