@@ -269,8 +269,8 @@ router.post('/checkBookDateTime', validate(z => (
     })
 )), async (req, res) => {
   try {
-      const { bookDateTime } = req.body;
-      const bookDateTime = new Date(bookDateTime);
+      // const { bookDateTime } = req.body;
+      const bookDateTime = new Date(req.body.bookDateTime);
       const book = await prisma.book.findFirst({
           where: {
               bookDateTime: {
