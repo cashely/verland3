@@ -258,6 +258,33 @@ router.get('/hasBookDate', validate(z => (
     }
 })
 
+/**
+  检查特定的预约日期是否可用
+*/
+router.post('/checkBookDateTime', validate(z => (
+    z.object({
+        body: z.object({
+            bookDateTime: z.string().min(1),
+        }) 
+    })
+)), async (req, res) => {
+  try {
+      const { bookDateTime } = req.body;
+      const bookDateTime = new Date(bookDateTime);
+      const book = await prisma.book.findFirst({
+          where: {
+              bookDateTime: {
+                  equals: bookDateTime
+              },
+              statu: 1
+          }
+      });
+      res.response.success(!book);
+  } catch (error) {
+      res.response.error(error); 
+  }
+})
+
 router.get('/:id', validate(z => (
     z.object({
         params: z.object({
