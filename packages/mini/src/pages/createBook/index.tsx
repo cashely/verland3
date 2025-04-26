@@ -47,16 +47,18 @@ export default () => {
   const getExpressOptions = (menuId: string) => {
     const menuItem = menuList.find((o) => o.id === menuId);
     const wayIds = menuItem?.expressWays?.split(',') || [];
+
     setSelectMenuItem(menuItem || {});
     setformModel((d) => {
       d['isRite'] = menuItem?.isRite || undefined;
       d.expressWay = wayIds[0] || null;
       return d;
     });
+    console.log(wayIds, 'wayIds');
     _otherFormList.forEach((item) => {
-      if (item.prop === 'bookDateTime') {
-        item.hidden = menuItem?.isBookDate === 2;
-      }
+      // if (item.prop === 'bookDateTime') {
+      //   item.hidden = menuItem?.isBookDate === 2;
+      // }
       if (item.prop === 'isRite' || item.prop === 'riteDateTime') {
         item.hidden = menuItem?.isRite === 2;
       }
@@ -103,6 +105,22 @@ export default () => {
         setMenuList(menus);
       }
     });
+
+    _otherFormList.forEach(async (item) => {
+      if (item.prop === 'petStoreId') {
+        const { data } = await storeList();
+        console.log(data, 'data');
+        item.options = data.map((n) => ({
+          label: n.name,
+          value: n.id,
+        }));
+      }
+    });
+    _setOtherFormList(_otherFormList);
+  }, []);
+
+  //获取已经预约的时间段
+  useEffect(() => {
     isBooked({
       start: dayjs().startOf('year').format('YYYY-MM-DD HH:mm:ss'),
       end: dayjs().endOf('year').format('YYYY-MM-DD HH:mm:ss'),
@@ -119,20 +137,10 @@ export default () => {
         console.log(result, 'result');
         _otherFormList.find((n) => n.prop === 'bookDateTime').invalidTimes =
           result;
+        setStorageSync('invalidTimes', result);
         setInvalidTimes(result);
       }
     });
-    _otherFormList.forEach(async (item) => {
-      if (item.prop === 'petStoreId') {
-        const { data } = await storeList();
-        console.log(data, 'data');
-        item.options = data.map((n) => ({
-          label: n.name,
-          value: n.id,
-        }));
-      }
-    });
-    _setOtherFormList(_otherFormList);
   }, []);
   const handleSubmit = () => {
     const baseInfo = baseInfoRef.current?.getFormValues() || {};
@@ -147,7 +155,7 @@ export default () => {
     } else if (!baseInfo?.type) {
       return toast('爱宠类型不为空');
     }
-    if (selectMenuItem?.isBookDate === 1 && !otherInfo?.bookDateTime) {
+    if (otherInfo.expressWay === '3' && !otherInfo?.bookDateTime) {
       return toast('上门服务时间不为空');
     }
     if (
@@ -288,22 +296,41 @@ export default () => {
           if (item.prop === 'expressAddress') {
             item.hidden = false;
           }
+          if (item.prop === 'bookDateTime') {
+            item.hidden = true;
+          }
           if (['petStoreId', 'postAddress', 'detail'].includes(item.prop)) {
             item.hidden = true;
             model['petStoreId'] = '';
             model['postAddress'] = '';
             model['detail'] = '';
+            model['bookDateTime'] = '';
           }
         } else if (val?.expressWay === '2') {
+          console.log('426', val.expressWay);
           if (item.prop === 'petStoreId') {
             item.hidden = false;
           }
-          if (['postAddress', 'detail', 'expressAddress'].includes(item.prop)) {
+          if (item.prop === 'bookDateTime') {
+            item.hidden = true;
+          }
+          if (
+            [
+              'postAddress',
+              'detail',
+              'expressAddress',
+              'bookDateTime',
+            ].includes(item.prop)
+          ) {
             item.hidden = true;
             model['postAddress'] = '';
             model['detail'] = '';
+            model['bookDateTime'] = '';
           }
         } else if (val?.expressWay === '3') {
+          if (item.prop === 'bookDateTime') {
+            item.hidden = false;
+          }
           if (item.prop === 'postAddress' || item.prop === 'detail') {
             item.hidden = false;
           }
@@ -312,6 +339,8 @@ export default () => {
             model['petStoreId'] = '';
           }
         }
+        model['riteDateTime'] = '';
+        model['handleDateTime'] = '';
       });
       setformModel((d) => {
         return {
@@ -337,10 +366,14 @@ export default () => {
         ...val,
       });
     } else {
-      // console.log('handleFormDataChange41111++', val);
+      console.log('handleFormDataChange425++', val);
       setformModel(val);
     }
   };
+
+  useEffect(() => {
+    console.log('bookDateTime变更411', formModel.bookDateTime);
+  }, [formModel.bookDateTime]);
 
   useEffect(() => {
     console.log('menuList变更411');

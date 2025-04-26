@@ -5,6 +5,7 @@ const APIS = {
   TEST: '/mp/user',
   File: '/file',
   MENU: '/mp/menu',
+  checkBook: '/mp/book/checkBookDateTime',
 };
 
 const loginApi = (data) => {
@@ -30,8 +31,17 @@ const testApi = () => {
 //小程序菜单
 const menu = () => {
   return request(APIS.MENU, {
-    methods: 'post',
+    method: 'get',
   });
 };
 
-export { loginApi, testApi, uploadFile, menu };
+const checkBook = (bookDateTime: string) => {
+  return request(APIS.checkBook, {
+    method: 'post',
+    data: {
+      bookDateTime,
+    },
+  });
+};
+
+export { loginApi, testApi, uploadFile, menu, checkBook };

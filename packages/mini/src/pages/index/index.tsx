@@ -3,6 +3,7 @@ import Taro, { clearStorageSync, navigateTo, useDidShow } from '@tarojs/taro';
 import { useState } from 'react';
 import { AtButton } from 'taro-ui';
 import { relogin } from '@/apis/relogin';
+import { getUser } from '@/apis/user';
 import './index.scss';
 import { useEffect } from 'react';
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import dayjs from 'dayjs';
 import { View, Image, Text } from '@tarojs/components';
 import { AtList, AtListItem } from 'taro-ui';
@@ -10,6 +10,8 @@ import {
   HANDLE_TIME_RANGES,
 } from '@/constants';
 import { showToast } from '@tarojs/taro';
+import _ from 'lodash-es';
+import { checkBook } from '@/apis/common';
 
 const FILTERTIMES = {
   bookDateTime: SERVICE_TIME_RANGES,
@@ -19,13 +21,13 @@ const FILTERTIMES = {
 
 function CustomDatePicker(props: any) {
   const { formItem, formData, invalidTimes = [] } = props;
-
   const latestRightDateRef = useRef<any>(null);
-
+  const invalidTimesRef = useRef<any>([]);
   const [value, setValue] = useState(() => {
     // 获取时间的最大值
     // 获取formItem里面prop的值
     const currentHour = dayjs().hour() + 1;
+    console.log(currentHour, '426currentHour');
     if (!FILTERTIMES[formItem.prop]) {
       return new Date(
         dayjs().set('hour', currentHour).format('YYYY/MM/DD HH:mm:00')
@@ -36,7 +38,46 @@ function CustomDatePicker(props: any) {
     if (!FILTERTIMES[formItem.prop].includes(String(maxHour))) {
       maxHour = FILTERTIMES[formItem.prop][0];
     }
+    console.log(formData, '===form426Data===');
+    // if (formData.prop === 'bookDateTime' && !formData.bookDateTime) {
+    //   return new Date(
+    //     dayjs(formData.bookDateTime)
+    //       .set('hour', maxHour)
+    //       .format('YYYY-MM-DD HH:mm:00')
+    //   );
+    // }
+    // if (formItem.prop === 'riteDateTime') {
+    //   return formData.bookDateTime
+    //     ? new Date(
+    //         dayjs()
+    //           .set('hour', maxHour)
+    //           .set('date', dayjs(formData.bookDateTime).date() + 1)
+    //           .format('YYYY-MM-DD HH:mm:00')
+    //       )
+    //     : new Date(
+    //         dayjs()
+    //           .set('hour', maxHour)
+    //           .set('date', dayjs().date() + 1)
+    //           .format('YYYY-MM-DD HH:mm:00')
+    //       );
+    // } else if (formItem.prop === 'handleDateTime') {
+    //   return formData.riteDateTime
+    //     ? new Date(
+    //         dayjs()
+    //           .set('hour', maxHour)
+    //           .set('date', dayjs(formData.riteDateTime).date() + 1)
+    //           .format('YYYY-MM-DD HH:mm:00')
+    //       )
+    //     : new Date(
+    //         dayjs()
+    //           .set('hour', maxHour)
+    //           .set('date', dayjs().date() + 2)
+    //           .format('YYYY-MM-DD HH:mm:00')
+    //       );
+    // }
+
     const rightNow = dayjs().set('hour', maxHour).format('YYYY-MM-DD HH:mm:00');
+    console.log('426', rightNow);
     return new Date(rightNow);
   });
 
@@ -45,6 +86,24 @@ function CustomDatePicker(props: any) {
   // 选择时间点击
   const handleListClick = (formItem: any) => {
     setVisible(true);
+
+    //默认小时设置为没有被预约的枚举销售第一个
+    // const getInvalidTimes = props.invalidTimes
+    //   .filter((item: any) => item.includes(dayjs().format('YYYY/MM/DD')))
+    //   .map((n) => n.split(' ')[1].split(':')[0]);
+
+    // if (formItem.prop === 'bookDateTime') {
+    //   onChange([
+    //     { label: '', value: dayjs().year(), isShow: true },
+    //     { label: '', value: dayjs().month() + 1, disabled: false },
+    //     { label: '', value: dayjs().date(), isShow: false },
+    //     {
+    //       label: '',
+    //       value: _.xor(FILTERTIMES[formItem.prop], getInvalidTimes)[0],
+    //       isShow: false,
+    //     },
+    //   ]);
+    // }
   };
 
   // 取消
@@ -52,9 +111,84 @@ function CustomDatePicker(props: any) {
     setVisible(false);
   };
 
+  const checkDate = (currentValue: any) => {
+    return new Promise(async (resolve, reject) => {
+      const res = await checkBook(
+        dayjs(
+          `${currentValue[0]}-${currentValue[1]}-${currentValue[2]}`
+        ).format('YYYY-MM-DD HH:mm:00')
+      );
+      if (res.code === 200) {
+        resolve(res.data);
+        // throw new Error('当前时间已被预约');
+      }
+    });
+  };
+
   // 确定
-  const onConfirm = (latestValue: any) => {
+  const onConfirm = (latestValue: any, currentValue) => {
     // 判断latestRightDateRef.current的时间跟value是否一致，如果不一致，就不允许选择
+    const [{ value: year }, { value: month }, { value: day }, { value: hour }] =
+      latestValue;
+
+    console.log(
+      year,
+      month,
+      day,
+      hour,
+      latestValue,
+      currentValue,
+      props.invalidTimes,
+      dayjs(
+        `${currentValue[0]}-${currentValue[1]}-${currentValue[2]} ${currentValue[3]}`
+      ).format('YYYY/MM/DD HH:mm:00'),
+      '===latestValue==='
+    );
+    //判断时间是否在当前时间之前
+    if (
+      dayjs(
+        dayjs(
+          `${currentValue[0]}-${currentValue[1]}-${currentValue[2]} ${currentValue[3]}`
+        ).format('YYYY/MM/DD HH:mm:00')
+      ).isBefore(dayjs())
+    ) {
+      showToast({
+        title: '当前时间不可选',
+        icon: 'none',
+      });
+      return onCancel();
+    }
+
+    //判断是否有预约
+    if (formItem.prop === 'bookDateTime') {
+      // const result = await checkDate(currentValue);
+      if (
+        props.invalidTimes.includes(
+          dayjs(
+            `${currentValue[0]}-${currentValue[1]}-${currentValue[2]} ${currentValue[3]}`
+          ).format('YYYY/MM/DD HH:mm:00')
+        )
+      ) {
+        showToast({
+          title: '当前时间已被预约',
+          icon: 'none',
+        });
+        return onCancel();
+      }
+    }
+
+    // 判断是否有预约
+    // const res = await checkBook(dayjs(value).format('YYYY-MM-DD HH:mm:00'));
+    // console.log(res, '===checkBook===');
+    // 选择的时间小于当前时间，就不允许选择
+    // if (dayjs(value).isBefore(dayjs())) {
+    //   showToast({
+    //     title: '当前时间不可选',
+    //     icon: 'none',
+    //   });
+    //   return;
+    //
+
     if (
       latestRightDateRef.current &&
       dayjs(latestRightDateRef.current).format('YYYY-MM-DD HH:mm:00') !==
@@ -73,10 +207,7 @@ function CustomDatePicker(props: any) {
     // if (formItem.prop === 'riteDateTime') {
     //   props.onChange('', { prop: 'handleDateTime' });
     // }
-    // 修改外部的值
-    const [{ value: year }, { value: month }, { value: day }, { value: hour }] =
-      latestValue;
-
+    //修改外部的值
     const selectedValue = `${year}-${month}-${day} ${hour}:00`;
     props.onChange(selectedValue, formItem);
     onCancel();
@@ -106,7 +237,8 @@ function CustomDatePicker(props: any) {
         dayjs(selectedValue).unix() <= dayjs(formData.bookDateTime).unix()) ||
       // 如果是handleDateTime，如果是小于riteDateTime之后的一个小时，就不允许选择
       (formItem.prop === 'handleDateTime' &&
-        (dayjs(selectedValue).unix() <= dayjs(formData.riteDateTime).unix() ||
+        (dayjs(selectedValue).unix() <=
+          dayjs(formData.riteDateTime).add(1, 'day').unix() ||
           dayjs(selectedValue).unix() <= dayjs(formData.bookDateTime).unix()))
     ) {
       console.error('选择的时间小于当前时间, 不赋值', selectedValue);
@@ -119,7 +251,7 @@ function CustomDatePicker(props: any) {
     } else {
       latestRightDateRef.current = new Date(selectedValue);
     }
-
+    console.log('change', selectedValue);
     setValue(new Date(selectedValue));
   };
 
@@ -136,8 +268,8 @@ function CustomDatePicker(props: any) {
   };
 
   useEffect(() => {
-    console.log(formItem, formData, '======');
-  }, []);
+    console.log(formItem, formData, '===425===');
+  }, [formItem.prop]);
 
   return (
     <>
@@ -157,6 +289,7 @@ function CustomDatePicker(props: any) {
           extraText={formData[formItem.prop] || formItem.itemProps.placeholder}
         />
         <Image
+          onClick={() => handleListClick(formItem)}
           src={dateIcon}
           mode="widthFix"
           style={{
@@ -166,6 +299,7 @@ function CustomDatePicker(props: any) {
           }}
         ></Image>
       </AtList>
+
       <DatePicker
         title={formItem.label}
         // startDate={defaultDate.startDate}
@@ -222,7 +356,7 @@ function CustomDatePicker(props: any) {
               (invalidTimes.includes(
                 dayjs(value)
                   .set('hour', option.value as number)
-                  .format('YYYY/MM/DD HH:mm:00')
+                  .format('YYYY/MM/DD HH:00:00')
               ) &&
                 !!FILTERTIMES[formItem.prop]) ||
               dayjs(value)
@@ -236,7 +370,8 @@ function CustomDatePicker(props: any) {
               (formItem.prop === 'handleDateTime' &&
                 (dayjs(value)
                   .set('hour', option.value as number)
-                  .unix() <= dayjs(formData.riteDateTime).unix() ||
+                  .unix() <=
+                  dayjs(formData.riteDateTime).add(1, 'day').unix() ||
                   dayjs(value)
                     .set('hour', option.value as number)
                     .unix() <= dayjs(formData.bookDateTime).unix()));

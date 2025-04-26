@@ -68,6 +68,18 @@ const otherFormList = [
     rules: [],
   },
   {
+    label: '宠物接收方式',
+    prop: 'expressWay',
+    type: 'radio',
+    options: [],
+  },
+  {
+    label: '门店地址',
+    prop: 'expressAddress',
+    type: 'text',
+    hidden: true,
+  },
+  {
     label: '上门服务时间', //"上门服务日期",
     prop: 'bookDateTime',
     type: 'picker-date',
@@ -75,6 +87,7 @@ const otherFormList = [
       placeholder: '请选择',
     },
     rules: [],
+    hidden: true,
     timeRange: SERVICE_TIME_RANGES,
     invalidTimes: [],
   },
@@ -149,18 +162,6 @@ const otherFormList = [
     // supportAll: true,
   },
 
-  {
-    label: '宠物接收方式',
-    prop: 'expressWay',
-    type: 'radio',
-    options: [],
-  },
-  {
-    label: '门店地址',
-    prop: 'expressAddress',
-    type: 'text',
-    hidden: true,
-  },
   // {
   //   label: '上门收取时间',
   //   prop: 'expressDateTime',
@@ -197,9 +198,10 @@ const otherFormList = [
   {
     label: '门牌号',
     prop: 'detail',
-    type: 'input',
+    type: 'textarea',
     hidden: true,
     itemProps: {
+      maxLength: 50,
       placeholder: '详细地址，例1层101室',
     },
     rules: [],
@@ -209,6 +211,8 @@ const otherFormList = [
     prop: 'mark',
     type: 'textarea',
     itemProps: {
+      count: true,
+      height: 200,
       placeholder: '请输入',
     },
     rules: [],

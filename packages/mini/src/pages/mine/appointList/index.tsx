@@ -278,29 +278,31 @@ export default function Index() {
           src={sheetCat}
           style={{ width: 100 }}
         ></Image>
-        <View className="sheetContent p-40px pb-60px">
-          <AtTextarea
-            className="cls-textarea"
-            value={context}
-            onChange={handleChange}
-            maxLength={200}
-            placeholder="感谢留下宝贵评价"
-          ></AtTextarea>
-          <AtRate
-            value={rateValue}
-            className="mt-20px"
-            onChange={handleRateChange}
-          />
-          <AtButton
-            className="submitBtn"
-            type="primary"
-            circle
-            size="small"
-            onClick={handleSubmit}
-          >
-            提交
-          </AtButton>
-        </View>
+        {isOpened && (
+          <View className="sheetContent p-40px pb-60px">
+            <AtTextarea
+              className="cls-textarea"
+              value={context}
+              onChange={handleChange}
+              maxLength={200}
+              placeholder="感谢留下宝贵评价"
+            ></AtTextarea>
+            <AtRate
+              value={rateValue}
+              className="mt-20px"
+              onChange={handleRateChange}
+            />
+            <AtButton
+              className="submitBtn"
+              type="primary"
+              circle
+              size="small"
+              onClick={handleSubmit}
+            >
+              提交
+            </AtButton>
+          </View>
+        )}
       </AtActionSheet>
     </View>
   );

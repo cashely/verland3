@@ -38,9 +38,12 @@ export default forwardRef((props, ref) => {
 
   const [petPickerShow, setPetPickerShow] = useState(false);
   const [_formList, setFormList] = useState(formList);
-  const [formData, setFormData] = useState(formModel);
+  const [formData, setFormData] = useState({
+    ...formModel,
+  });
   const [tabIndex, setTabIndex] = useState(0);
   const handleChange = (e, formItem: Record<string, any>) => {
+    console.log(e, formItem, 'hand425leChange');
     if (formItem?.type === 'tabs') {
       setTabIndex(e);
       console.log(formItem.tabsOptions[e]?.id, 'handleChange488');
@@ -310,6 +313,9 @@ export default forwardRef((props, ref) => {
                 </View>
                 <AtTextarea
                   key={index}
+                  height={formItem.itemProps?.height || 52}
+                  maxLength={formItem.itemProps?.maxLength || 100}
+                  count={formItem.itemProps?.count || false}
                   placeholder={formItem.itemProps.placeholder}
                   value={formData[formItem.prop]}
                   onChange={(e) => handleChange(e, formItem)}
