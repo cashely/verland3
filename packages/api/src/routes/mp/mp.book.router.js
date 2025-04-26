@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import Router from "../../middles/route";
 import prisma, { transaction } from "../../configs/prisma";
 import payment from "../../utils/wechat.pay.sdk";
@@ -38,6 +39,15 @@ router.post('/', validate(z => (
 )), async (req, res) => {
     transaction(async (prisma) => {
         const { id } = req.user;
+
+        // 如果遗物提取时间小于仪式时间，则返回
+
+        const { riteDateTime, handleDateTime } = req.body;
+
+        if (dayjs(handleDateTime).isAfter(dayjs(riteDateTime).add(1, 'day'))) {
+            throw new Error('仪式时间不能小于遗物提取时间');
+        }
+
         let address = {};
         const { expressWay, petStoreId } = req.body;
 
@@ -113,7 +123,7 @@ router.post('/', validate(z => (
 
         const { id: addressId } = address;
         const { id: petId } = pet;
-        const { bookDateTime, handleWay, handleDateTime, isRite, riteDateTime, payChannel = 1, mark, phone, username, expressDateTime } = req.body;
+        const { bookDateTime, handleWay, isRite, payChannel = 1, mark, phone, username, expressDateTime } = req.body;
 
         const book = await prisma.book.create({
             data: {
