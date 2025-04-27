@@ -55,6 +55,7 @@ router.post('/', validate(z => (
         });
 
         if (!!isThisTimeHasBook) {
+            console.log(isThisTimeHasBook)
             throw new Error('该时间已经被预约'); 
         }
 
