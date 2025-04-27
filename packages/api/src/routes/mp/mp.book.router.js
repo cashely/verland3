@@ -42,7 +42,20 @@ router.post('/', validate(z => (
 
         // 如果遗物提取时间小于仪式时间，则返回
 
-        const { riteDateTime, handleDateTime } = req.body;
+        const { riteDateTime, handleDateTime, bookDateTime } = req.body;
+
+        // 查询当前时间是否已经被预约，如果已经被预约，则返回给前端错误
+        const isThisTimeHasBook = await prisma.book.findFirst({
+            where: {
+                bookDateTime: {
+                    equals: bookDateTime
+                },
+            }
+        });
+
+        if (!!isThisTimeHasBook) {
+            throw new Error('该时间已经被预约'); 
+        }
 
         if (!dayjs(handleDateTime).isAfter(dayjs(riteDateTime).add(1, 'day'))) {
             throw new Error('纪念物领取时间必须在仪式之后的二十四小时以后');
@@ -118,12 +131,9 @@ router.post('/', validate(z => (
 
         }
 
-
-        
-
         const { id: addressId } = address;
         const { id: petId } = pet;
-        const { bookDateTime, handleWay, isRite, payChannel = 1, mark, phone, username, expressDateTime } = req.body;
+        const { handleWay, isRite, payChannel = 1, mark, phone, username, expressDateTime } = req.body;
 
         const book = await prisma.book.create({
             data: {
