@@ -45,18 +45,19 @@ router.post('/', validate(z => (
         const { riteDateTime, handleDateTime, bookDateTime } = req.body;
 
         // 查询当前时间是否已经被预约，如果已经被预约，则返回给前端错误
-        const isThisTimeHasBook = await prisma.book.findFirst({
-            where: {
-                bookDateTime: {
-                    equals: bookDateTime
-                },
-                statu: 1
+        if (bookDateTime) {
+            const isThisTimeHasBook = await prisma.book.findFirst({
+                where: {
+                    bookDateTime: {
+                        equals: bookDateTime
+                    },
+                    statu: 1
+                }
+            });
+    
+            if (!!isThisTimeHasBook) {
+                throw new Error('该时间已经被预约'); 
             }
-        });
-
-        if (!!isThisTimeHasBook) {
-            console.log(isThisTimeHasBook)
-            throw new Error('该时间已经被预约'); 
         }
 
         if (!dayjs(handleDateTime).isAfter(dayjs(riteDateTime).add(1, 'day'))) {
