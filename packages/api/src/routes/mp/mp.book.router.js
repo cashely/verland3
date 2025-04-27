@@ -44,7 +44,7 @@ router.post('/', validate(z => (
 
         const { riteDateTime, handleDateTime } = req.body;
 
-        if (dayjs(handleDateTime).isAfter(dayjs(riteDateTime).add(1, 'day'))) {
+        if (!dayjs(handleDateTime).isAfter(dayjs(riteDateTime).add(1, 'day'))) {
             throw new Error('仪式时间不能小于遗物提取时间');
         }
 
