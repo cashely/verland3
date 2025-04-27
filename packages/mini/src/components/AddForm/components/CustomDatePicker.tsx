@@ -38,6 +38,7 @@ function CustomDatePicker(props: any) {
     if (!FILTERTIMES[formItem.prop].includes(String(maxHour))) {
       maxHour = FILTERTIMES[formItem.prop][0];
     }
+
     console.log(formData, '===form426Data===');
     // if (formData.prop === 'bookDateTime' && !formData.bookDateTime) {
     //   return new Date(
@@ -75,8 +76,7 @@ function CustomDatePicker(props: any) {
     //           .format('YYYY-MM-DD HH:mm:00')
     //       );
     // }
-
-    const rightNow = dayjs().set('hour', maxHour).format('YYYY-MM-DD HH:mm:00');
+    let rightNow = dayjs().set('hour', maxHour).format('YYYY-MM-DD HH:mm:00');
     console.log('426', rightNow);
     return new Date(rightNow);
   });
@@ -85,8 +85,14 @@ function CustomDatePicker(props: any) {
 
   // 选择时间点击
   const handleListClick = (formItem: any) => {
-    setVisible(true);
+    if (formItem.prop === 'handleDateTime' && !formData.riteDateTime) {
+      return showToast({
+        title: '请先选择预约仪式日期',
+        icon: 'none',
+      });
+    }
 
+    setVisible(true);
     //默认小时设置为没有被预约的枚举销售第一个
     // const getInvalidTimes = props.invalidTimes
     //   .filter((item: any) => item.includes(dayjs().format('YYYY/MM/DD')))
@@ -130,7 +136,9 @@ function CustomDatePicker(props: any) {
     // 判断latestRightDateRef.current的时间跟value是否一致，如果不一致，就不允许选择
     const [{ value: year }, { value: month }, { value: day }, { value: hour }] =
       latestValue;
-
+    const currentDate = dayjs(
+      `${currentValue[0]}-${currentValue[1]}-${currentValue[2]} ${currentValue[3]}`
+    );
     console.log(
       year,
       month,
@@ -139,21 +147,25 @@ function CustomDatePicker(props: any) {
       latestValue,
       currentValue,
       props.invalidTimes,
-      dayjs(
-        `${currentValue[0]}-${currentValue[1]}-${currentValue[2]} ${currentValue[3]}`
-      ).format('YYYY/MM/DD HH:mm:00'),
+      currentDate,
       '===latestValue==='
     );
     //判断时间是否在当前时间之前
-    if (
-      dayjs(
-        dayjs(
-          `${currentValue[0]}-${currentValue[1]}-${currentValue[2]} ${currentValue[3]}`
-        ).format('YYYY/MM/DD HH:mm:00')
-      ).isBefore(dayjs())
-    ) {
+    if (dayjs(currentDate.format('YYYY/MM/DD HH:mm:00')).isBefore(dayjs())) {
       showToast({
         title: '当前时间不可选',
+        icon: 'none',
+      });
+      return onCancel();
+    }
+
+    if (
+      formData.bookDateTime &&
+      formItem.prop === 'riteDateTime' &&
+      dayjs(formData.bookDateTime).unix() === currentDate.unix()
+    ) {
+      showToast({
+        title: '预约仪式时间不能与预约上门服务时间相同',
         icon: 'none',
       });
       return onCancel();
@@ -163,11 +175,7 @@ function CustomDatePicker(props: any) {
     if (formItem.prop === 'bookDateTime') {
       // const result = await checkDate(currentValue);
       if (
-        props.invalidTimes.includes(
-          dayjs(
-            `${currentValue[0]}-${currentValue[1]}-${currentValue[2]} ${currentValue[3]}`
-          ).format('YYYY/MM/DD HH:mm:00')
-        )
+        props.invalidTimes.includes(currentDate.format('YYYY/MM/DD HH:mm:00'))
       ) {
         showToast({
           title: '当前时间已被预约',

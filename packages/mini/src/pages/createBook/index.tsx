@@ -56,9 +56,9 @@ export default () => {
     });
     console.log(wayIds, 'wayIds');
     _otherFormList.forEach((item) => {
-      // if (item.prop === 'bookDateTime') {
-      //   item.hidden = menuItem?.isBookDate === 2;
-      // }
+      if (item.prop === 'bookDateTime') {
+        item.hidden = true;
+      }
       if (item.prop === 'isRite' || item.prop === 'riteDateTime') {
         item.hidden = menuItem?.isRite === 2;
       }
@@ -367,6 +367,20 @@ export default () => {
       });
     } else {
       console.log('handleFormDataChange425++', val);
+      if (val.riteDateTime && propName === 'bookDateTime') {
+        setformModel({
+          ...val,
+          riteDateTime: '',
+          handleDateTime: '',
+        });
+        return;
+      } else if (!val.riteDateTime && propName === 'riteDateTime') {
+        setformModel({
+          ...val,
+          handleDateTime: '',
+        });
+        return;
+      }
       setformModel(val);
     }
   };
