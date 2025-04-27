@@ -56,12 +56,12 @@ router.post('/', validate(z => (
             });
     
             if (!!isThisTimeHasBook) {
-                throw new Error('该时间已经被预约'); 
+                throw new Error('该上门预约时间已经被预约，请选择其他时间'); 
             }
         }
 
         if (!dayjs(handleDateTime).isAfter(dayjs(riteDateTime).add(1, 'day'))) {
-            throw new Error('纪念物领取时间必须在仪式之后的二十四小时以后');
+            throw new Error('纪念物领取时间必须在仪式之后的二十四小时以后，请重新选择');
         }
 
         let address = {};
