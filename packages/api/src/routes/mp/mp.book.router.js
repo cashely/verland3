@@ -50,6 +50,7 @@ router.post('/', validate(z => (
                 bookDateTime: {
                     equals: bookDateTime
                 },
+                statu: 1
             }
         });
 
