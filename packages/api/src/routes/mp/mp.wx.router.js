@@ -27,6 +27,21 @@ router.post('/prepay', validate(z => (
             }
         });
 
+        // 查询当前订单的预约时间是否已经存在有预约成功的订单
+        if (book.bookDateTime) {
+            const bookCount = await prisma.book.count({
+                where: {
+                    bookDateTime: {
+                        equals: book.bookDateTime
+                    },
+                    statu: 1,
+                }
+            });
+            if (bookCount >= 1) {
+                throw new Error('当前时间段预约人数已满');
+            }
+        }
+
         const outTradeNo = String(+new Date());
 
         if (book) {

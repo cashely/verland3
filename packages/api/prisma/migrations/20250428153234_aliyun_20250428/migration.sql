@@ -1,0 +1,33 @@
+-- AlterTable
+ALTER TABLE "Address" ADD COLUMN     "hidden" INTEGER NOT NULL DEFAULT 2;
+
+-- AlterTable
+ALTER TABLE "Advise" ADD COLUMN     "hidden" INTEGER NOT NULL DEFAULT 2;
+
+-- AlterTable
+ALTER TABLE "Book" ADD COLUMN     "hidden" INTEGER NOT NULL DEFAULT 2;
+
+-- AlterTable
+ALTER TABLE "BookGood" ADD COLUMN     "hidden" INTEGER NOT NULL DEFAULT 2;
+
+-- AlterTable
+ALTER TABLE "Evaluate" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "hidden" INTEGER NOT NULL DEFAULT 2;
+
+-- AlterTable
+ALTER TABLE "Menu" ADD COLUMN     "hidden" INTEGER NOT NULL DEFAULT 2;
+
+-- AlterTable
+ALTER TABLE "Pet" ADD COLUMN     "hidden" INTEGER NOT NULL DEFAULT 2;
+
+-- AlterTable
+ALTER TABLE "PetStore" ADD COLUMN     "hidden" INTEGER NOT NULL DEFAULT 2;
+
+-- AlterTable
+ALTER TABLE "Ticket" ADD COLUMN     "hidden" INTEGER NOT NULL DEFAULT 2;
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "hidden" INTEGER NOT NULL DEFAULT 2;
+
+-- AlterTable
+ALTER TABLE "adminUser" ADD COLUMN     "hidden" INTEGER NOT NULL DEFAULT 2;

@@ -22,6 +22,7 @@ model adminUser {
   role      Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  hidden    Int      @default(2) // 是否隐藏 2-否 1-是
 }
 
 model User {
@@ -41,6 +42,7 @@ model User {
   wxAccessToken WxAccessToken[]
   tickets   Ticket[]
   evaluates  Evaluate[]
+  hidden    Int      @default(2) // 是否隐藏 2-否 1-是
 }
 
 model Address {
@@ -53,6 +55,7 @@ model Address {
   user      User?
   createdAt DateTime @default(now())
   Book      Book[]
+  hidden    Int      @default(2) // 是否隐藏 2-否 1-是
 }
 
 model Pet {
@@ -70,6 +73,7 @@ model Pet {
   book      Book?
   statu     Int      @default(1) // 宠物的状态 1-活着 2-死亡
   petImage  PetImage[]
+  hidden    Int      @default(2) // 是否隐藏 2-否 1-是
 }
 
 model Image {
@@ -98,6 +102,7 @@ model BookGood {
   thumb   Image?  @relation(fields: [thumbId], references: [id])
   content String // 产品描述
   book    BookRelationBookGood[]
+  hidden  Int    @default(2) // 是否隐藏 2-否 1-是
 }
 
 // 预约单
@@ -141,6 +146,7 @@ model Book {
   petStore        PetStore?  @relation(fields: [petStoreId], references: [id])
   expressWay      Int?       // 宠物接收方式 0-未知  1-自送 2-门店接受 3-上门收取
   expressDateTime DateTime?  // 上门收取的时间, 如果expessWay为3的时候这个字段需要传递过来
+  hidden          Int        @default(2) // 是否隐藏 2-否 1-是
 }
 
 // 订单关联的附加服务 多对多中间表
@@ -167,6 +173,7 @@ model Ticket {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   file      Image?   @relation(fields: [fileId], references: [id])
+  hidden    Int      @default(2) // 是否隐藏 2-否 1-是
 }
 
 // 投诉建议
@@ -179,6 +186,7 @@ model Advise {
   userId        String
   user          User     @relation(fields: [userId], references: [id])
   createdAt     DateTime @default(now())
+  hidden        Int      @default(2) // 是否隐藏 2-否 1-是
 }
 
 // 微信token临时存储表
@@ -200,6 +208,8 @@ model Evaluate {
   user    User   @relation(fields: [userId], references: [id])
   bookId  String  @unique
   book    Book   @relation(fields: [bookId], references: [id])
+  hidden  Int     @default(2) // 是否隐藏 2-否 1-是
+  createdAt DateTime @default(now())
 }
 
 // 宠物跟图片的关联表
@@ -225,6 +235,7 @@ model Menu {
   isHandleWay Int @default(2) // 是否需要寄送回收 1 是 2 否
   isBookDate  Int  @default(2) // 是否需要预约上门时间 1 是 2否
   expressWays  String?  // 宠物寄送方式，可多选，用顿号分割开
+  hidden  Int     @default(2) // 是否隐藏 2-否 1-是
 }
 
 // 套餐图片关联表
@@ -247,4 +258,5 @@ model PetStore {
   books Book[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  hidden  Int     @default(2) // 是否隐藏 2-否 1-是
 }
