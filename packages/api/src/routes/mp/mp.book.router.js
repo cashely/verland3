@@ -86,6 +86,7 @@ router.post('/', validate(z => (
                 }
             }); 
             if (!!isThisTimeHasBook) {
+                console.log(isThisTimeHasBook);
                 throw new Error('该仪式预约时间已经被预约，请选择其他时间'); 
             }
         }
