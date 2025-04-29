@@ -46,6 +46,10 @@ router.post('/', validate(z => (
 
         // 查询当前时间是否已经被预约，如果已经被预约，则返回给前端错误
         if (bookDateTime) {
+            // 检查当前时间是否在两个小时以后，如果不是，则返回错误
+            if (!dayjs(bookDateTime).isAfter(dayjs().add(2, 'hour'))) {
+                throw new Error('预约时间必须在当前时间的两个小时以后，请重新选择');
+            }
             const isThisTimeHasBook = await prisma.book.findFirst({
                 where: {
                     bookDateTime: {
@@ -64,6 +68,25 @@ router.post('/', validate(z => (
         if (handleDateTime && riteDateTime) {
             if (!dayjs(handleDateTime).isAfter(dayjs(riteDateTime).add(1, 'day'))) {
                 throw new Error('纪念物领取时间必须在仪式之后的二十四小时以后，请重新选择');
+            }
+        }
+
+        // 查询当前仪式时间是否已经被预约，如果已经被预约，则返回给前端错误
+        if (riteDateTime) {
+            // 检查当前时间是否在两个小时以后，如果不是，则返回错误
+            if (!dayjs(riteDateTime).isAfter(dayjs().add(2, 'hour'))) {
+                throw new Error('预约时间必须在当前时间的两个小时以后，请重新选择');
+            }
+            const isThisTimeHasBook = await prisma.book.findFirst({
+                where: {
+                    riteDateTime: {
+                        equals: riteDateTime
+                    },
+                    statu: 1
+                }
+            }); 
+            if (!!isThisTimeHasBook) {
+                throw new Error('该仪式预约时间已经被预约，请选择其他时间'); 
             }
         }
 
@@ -301,6 +324,33 @@ router.post('/checkBookDateTime', validate(z => (
           where: {
               bookDateTime: {
                   equals: bookDateTime
+              },
+              statu: 1
+          }
+      });
+      res.response.success(!book);
+  } catch (error) {
+      res.response.error(error); 
+  }
+})
+
+/**
+ * 检查特定的仪式日期是否可用
+  */
+router.post('/checkRiteDateTime', validate(z => (
+    z.object({
+        body: z.object({
+            riteDateTime: z.string().min(1),
+        }) 
+    })
+)), async (req, res) => {
+  try {
+      // const { bookDateTime } = req.body;
+      const riteDateTime = new Date(req.body.riteDateTime);
+      const book = await prisma.book.findFirst({
+          where: {
+              riteDateTime: {
+                  equals: riteDateTime
               },
               statu: 1
           }

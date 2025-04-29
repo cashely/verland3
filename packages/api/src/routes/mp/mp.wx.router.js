@@ -38,7 +38,23 @@ router.post('/prepay', validate(z => (
                 }
             });
             if (bookCount >= 1) {
-                throw new Error('当前时间段预约人数已满');
+                throw new Error('当前上门服务时间预约人数已满');
+            }
+        }
+
+        // 查询当前订单的仪式预约时间是否已经存在有预约成功的订单
+        if (book.riteDateTime) {
+            
+            const bookCount = await prisma.book.count({
+                where: {
+                    riteDateTime: {
+                        equals: book.riteDateTime
+                    },
+                    statu: 1,
+                }
+            });
+            if (bookCount >= 1) {
+                throw new Error('当前预约仪式时间预约人数已满');
             }
         }
 
