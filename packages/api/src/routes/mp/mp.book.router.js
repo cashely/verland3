@@ -220,8 +220,8 @@ router.get('/', validate(z => (
         const whereCondition = {
             userId: id
         }
-        if (Number.isInteger(statu)) {
-            whereCondition.statu = statu;
+        if (statu ?? false) {
+            whereCondition.statu = +statu;
         }
         const books = await prisma.book.findMany({
             where: whereCondition,
@@ -268,8 +268,8 @@ router.get('/count', validate(z => (
         const whereCondition = {
             userId: id
         }
-        if (Number.isInteger(statu)) {
-            whereCondition.statu = statu;
+        if (statu ?? false) {
+            whereCondition.statu = +statu;
         }
         const count = await prisma.book.count({
             where: whereCondition,
