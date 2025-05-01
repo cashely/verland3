@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import dayjs from 'dayjs';
 import { View, Image, Text } from '@tarojs/components';
-import { AtList, AtListItem } from 'taro-ui';
+import { AtList, AtListItem, AtActionSheet  } from 'taro-ui';
 import { DatePicker, PickerOption } from '@nutui/nutui-react-taro';
+import WeekSwiper from '../../WeekSwiper/index';
 import dateIcon from '../../../assets/imgs/date-icon.png';
 import {
   SERVICE_TIME_RANGES,
@@ -406,82 +407,11 @@ function CustomDatePicker(props: any) {
         ></Image>
       </AtList>
 
-      <DatePicker
-        title={formItem.label}
-        // startDate={defaultDate.startDate}
-        visible={visible}
-        type="datehour"
-        // key={renderKey}
-        formatter={(type: string, option: PickerOption): any => {
-          if (type == 'month') {
-            // const isDisabled = dayjs(value)
-            //   .set('month', (option.value as number) - 1)
-            //   .isBefore(dayjs());
-            return {
-              label: <View>{option.label}</View>,
-              value: option.value,
-              // disabled: isDisabled,
-            };
-          }
-          // console.log('year', dayjs().year(), option.value);
-          if (type == 'year') {
-            const formatCurrentValue = dayjs();
-            const isDisabled =
-              (option.value as number) < formatCurrentValue.year();
-            return {
-              label: <View>{option.label}</View>,
-              value: option.value,
-              // isShow: isDisabled,
-            };
-          }
-          if (type == 'day') {
-            // const formatCurrentValue = dayjs(value);
-            const isDisabled = dayjs(value)
-              .set('date', option.value as number)
-              .isBefore(dayjs());
-            return {
-              label: <View>{option.label}</View>,
-              value: option.value,
-              // isShow: isDisabled,
-            };
-          }
-          // (invalidTimes.includes(
-          //   dayjs(value)
-          //     .set('hour', option.value as number)
-          //     .format('YYYY/MM/DD HH:00:00')
-          // ) &&  !!FILTERTIMES[formItem.prop]
-          if (type === 'hour') {
-            const isDisabled =
-              dayjs(value)
-                .set('hour', option.value as number)
-                .isBefore(dayjs()) ||
-              // 如果是riteDateTime，如果是小于bookDateTime之后的一个小时，就不允许选择
-              (formItem.prop === 'riteDateTime' &&
-                dayjs(value)
-                  .set('hour', option.value as number)
-                  .unix() <= dayjs(formData.bookDateTime).unix()) ||
-              (formItem.prop === 'handleDateTime' &&
-                (dayjs(value)
-                  .set('hour', option.value as number)
-                  .unix() <=
-                  dayjs(formData.riteDateTime).add(1, 'day').unix() ||
-                  dayjs(value)
-                    .set('hour', option.value as number)
-                    .unix() <= dayjs(formData.bookDateTime).unix()));
-            return {
-              label: <View>{option.label}:00</View>,
-              value: `${option.value}`,
-              isShow: false,
-            };
-          }
-        }}
-        // defaultValue={defaultDate.startDate}
-        filter={(type, options) => handleFilter(type, options)}
-        value={value}
-        onChange={onChange}
-        onCancel={onCancel}
-        onConfirm={onConfirm}
-      />
+      <AtActionSheet isOpened={true}>
+        <View>
+          <WeekSwiper />
+        </View>
+      </AtActionSheet>
     </>
   );
 }
