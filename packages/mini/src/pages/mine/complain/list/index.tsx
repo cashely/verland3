@@ -7,6 +7,7 @@ import { formatDateTime } from '@/utils';
 
 export default function List() {
   const [data, setData] = useState([]);
+  const [showEmpty, setShowEmpty] = useState(false);
   const getStatusBg = (item) => {
     const obj = {
       0: {
@@ -29,6 +30,7 @@ export default function List() {
   useEffect(() => {
     list().then((res) => {
       if (res?.data) {
+        setShowEmpty(!res.data?.length);
         setData(res.data);
       }
     });
@@ -48,7 +50,7 @@ export default function List() {
         >
           <View className="items-center item-head">
             <View className="text-888">
-              预：{formatDateTime(item.createdAt)}
+              创建时间：{formatDateTime(item.createdAt)}
             </View>
             {getStatusBg(item)}
           </View>
@@ -56,6 +58,11 @@ export default function List() {
           <View className="bottom">点击查看</View>
         </View>
       ))}
+      {showEmpty && (
+        <View className="empty">
+          <Text>暂无数据</Text>
+        </View>
+      )}
     </View>
   );
 }

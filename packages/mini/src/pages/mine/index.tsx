@@ -1,5 +1,5 @@
 import { View, Text } from '@tarojs/components';
-import Taro, { getStorageSync, navigateTo } from '@tarojs/taro';
+import Taro, { getStorageSync, navigateTo, useDidShow } from '@tarojs/taro';
 import { AtAvatar, AtListItem, AtList } from 'taro-ui';
 import { menuList } from './config';
 import './index.scss';
@@ -39,14 +39,8 @@ export default function Index() {
     navigateTo({ url: `../login/index?type=2` });
   };
 
-  const handleCheckLogin = () => {
-    if (!token) {
-    }
-  };
-
-  useEffect(() => {
+  useDidShow(() => {
     const userInfo = getStorageSync('userInfo');
-    console.log(userInfo, 'userInfo');
     if (userInfo) {
       setUserInfo({
         ...userInfo,
@@ -55,10 +49,10 @@ export default function Index() {
         gender: userInfo.gender,
       });
     }
-  }, []);
+  });
 
   return (
-    <View className="page-mine" onClick={handleCheckLogin}>
+    <View className="page-mine">
       <View className="content">
         <View className="header">
           <AtAvatar

@@ -4,6 +4,7 @@ import {
   showLoading,
   hideLoading,
   redirectTo,
+  showModal,
   getCurrentPages,
 } from '@tarojs/taro';
 import { relogin } from '@/apis/relogin';
@@ -13,10 +14,11 @@ let loadingInstance: any = null;
 export default function (
   url: string,
   options: any = {},
-  searchParams: any = ''
+  searchParams: any = '',
+  showloading: boolean = true
 ) {
   return new Promise<any>((resolve, reject) => {
-    if (!loadingInstance) {
+    if (!loadingInstance && showloading) {
       loadingInstance = showLoading();
     }
     const token = getStorageSync('token') || '';
@@ -25,22 +27,32 @@ export default function (
       url:
         baseUrl +
         url +
-        `${token ? `?${searchParams}&token=Bearer ${token}` : ''}`,
+        `${token ? `${searchParams ? '?' + searchParams : ''}` : ''}`,
       method: options.method || 'GET',
       data: options.data || {},
       header: {
         'content-type': 'application/json',
         id: userInfo?.id || '',
-        // token,
+        token: `Bearer ${token}`,
       },
       success: (res) => {
         console.log(res, '----');
         const data = res.data;
         if (data?.code === 400) {
-          showToast({
-            title: (data.message?.[0].message || data.message) ?? '系统错误',
-            icon: 'none',
-          });
+          const errText = data.message?.[0].message || data.message;
+          if (errText?.length > 20) {
+            showModal({
+              content: errText ?? '系统错误',
+              showCancel: false,
+            });
+            hideLoading();
+          } else {
+            showToast({
+              title: errText ?? '系统错误',
+              icon: 'none',
+              duration: 2000,
+            });
+          }
           return;
         } else if (data?.code === 401) {
           //过期重新登录

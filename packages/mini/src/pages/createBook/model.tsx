@@ -113,7 +113,7 @@ const otherFormList = [
     prop: 'riteDateTime',
     type: 'picker-date',
     itemProps: {
-      placeholder: '请选择预约仪式日期',
+      placeholder: '请选择',
     },
     rules: [],
     timeRange: RITE_SERVICE_TIME_RANGES,
@@ -124,6 +124,7 @@ const otherFormList = [
     label: '纪念物获取方式',
     prop: 'handleWay',
     type: 'radio',
+    hidden: false,
     options: [
       {
         label: '自行提取',

@@ -1,5 +1,5 @@
 import { View, Text, Image } from '@tarojs/components';
-import { getStorageSync, showToast, redirectTo } from '@tarojs/taro';
+import { getStorageSync, showToast, navigateTo } from '@tarojs/taro';
 import { AtButton, AtActionSheet } from 'taro-ui';
 import { Suspense, useEffect, useState } from 'react';
 import { list } from '@/apis/bookGood';
@@ -52,7 +52,7 @@ export default function AdditionalService() {
           icon: 'none',
           success() {
             setTimeout(() => {
-              redirectTo({
+              navigateTo({
                 url: '../order/index?id=' + data.id,
               });
             }, 1000);

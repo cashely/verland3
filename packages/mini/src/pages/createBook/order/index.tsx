@@ -245,6 +245,19 @@ export default () => {
           title="爱宠名字"
           extraText={<>{order?.pet?.petname || '-'}</>}
         />
+
+        {
+          <AtListItem
+            title="宠物接收方式"
+            extraText={
+              <>
+                {PET_RECEIVE_WAYS.find((n) => n.value == order.expressWay)
+                  ?.label || '-'}
+              </>
+            }
+          />
+        }
+
         {formatDate(order.bookDateTime) ? (
           <AtListItem
             title="上门服务时间"
@@ -252,12 +265,12 @@ export default () => {
           />
         ) : null}
 
-        {
+        {order?.menu?.isRite === 1 ? (
           <AtListItem
             title="是否需要仪式"
             extraText={order?.isRite == 1 ? '是' : '否'}
           />
-        }
+        ) : null}
 
         {order?.riteDateTime ? (
           <AtListItem
@@ -283,18 +296,6 @@ export default () => {
             extraText={formatDate(order?.handleDateTime) || '-'}
           />
         ) : null}
-
-        {
-          <AtListItem
-            title="宠物接收方式"
-            extraText={
-              <>
-                {PET_RECEIVE_WAYS.find((n) => n.value == order.expressWay)
-                  ?.label || '-'}
-              </>
-            }
-          />
-        }
 
         {order?.expressWay == 2 ? (
           <AtListItem

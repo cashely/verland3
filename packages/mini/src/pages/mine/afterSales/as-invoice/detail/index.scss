@@ -17,6 +17,13 @@
     }
     .at-input {
       padding-left: 0;
+      &:last-child {
+        margin-bottom: 0;
+        &::after {
+          border: none;
+        }
+      }
+
       &__title {
         font-size: 28px;
       }

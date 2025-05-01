@@ -46,8 +46,14 @@ export default function Index() {
     console.log(pageType, 'pageType');
     if (pageType === 'kpsq') {
       getBookList();
+      setNavigationBarTitle({
+        title: '订单列表',
+      });
     } else if (pageType === 'wdsq') {
       getTicketList();
+      setNavigationBarTitle({
+        title: '申请列表',
+      });
     }
   }, [pageType]);
   const handleClick = (item) => {

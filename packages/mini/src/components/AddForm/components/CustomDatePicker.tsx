@@ -11,7 +11,6 @@ import {
 } from '@/constants';
 import { showToast } from '@tarojs/taro';
 import _ from 'lodash-es';
-import { checkBook } from '@/apis/common';
 
 const FILTERTIMES = {
   bookDateTime: SERVICE_TIME_RANGES,
@@ -21,7 +20,8 @@ const FILTERTIMES = {
 
 function CustomDatePicker(props: any) {
   const { formItem, formData, invalidTimes = [] } = props;
-  const latestRightDateRef = useRef<any>(null);
+  const latestRightDateRef = useRef<any>();
+  const [YMD, setYMD] = useState<any>(new Date());
   const invalidTimesRef = useRef<any>([]);
   const [value, setValue] = useState(() => {
     // 获取时间的最大值
@@ -85,13 +85,106 @@ function CustomDatePicker(props: any) {
 
   // 选择时间点击
   const handleListClick = (formItem: any) => {
-    if (formItem.prop === 'handleDateTime' && !formData.riteDateTime) {
-      return showToast({
-        title: '请先选择预约仪式日期',
-        icon: 'none',
-      });
+    const filterTimes = FILTERTIMES[formItem.prop];
+    const getlastHour = filterTimes[filterTimes.length - 1];
+    if (formItem.prop === 'bookDateTime' || formItem.prop === 'riteDateTime') {
+      const filterTimes = FILTERTIMES[formItem.prop].filter(
+        (n) => n > dayjs().add(2, 'hour').get('hour')
+      );
+      let setHour = filterTimes.filter(
+        (n) => n != dayjs(formData.bookDateTime).get('hour')
+      )[0];
+      console.log('438', filterTimes, setHour);
+      if (filterTimes.length > 0) {
+        // if (formData.bookDateTime) {
+        //   setValue(
+        //     new Date(
+        //       dayjs(formData.bookDateTime)
+        //         .set('hour', setHour)
+        //         .format('YYYY-MM-DD HH:mm:00')
+        //     )
+        //   );
+        // setYMD(
+        //   new Date(
+        //     dayjs(formData.bookDateTime)
+        //       .set('hour', setHour)
+        //       .format('YYYY-MM-DD HH:mm:00')
+        //   )
+        // );
+        // } else {
+        setValue(
+          new Date(
+            dayjs().set('hour', filterTimes[0]).format('YYYY-MM-DD HH:mm:00')
+          )
+        );
+        // setYMD(
+        //   new Date(dayjs().set('hour', setHour).format('YYYY-MM-DD HH:mm:00'))
+        // );
+        // }
+      } else {
+        setValue(
+          new Date(
+            dayjs().set('hour', getlastHour).format('YYYY-MM-DD HH:mm:00')
+          )
+        );
+        // setYMD(
+        //   new Date(
+        //     dayjs().set('hour', getlastHour).format('YYYY-MM-DD HH:mm:00')
+        //   )
+        // );
+      }
+      // let getHour = dayjs().add(2, 'hour');
+      // if (filterTimes.includes(getHour.hour())) {
+      //   setValue(
+      //     new Date(dayjs().add(2, 'hour').format('YYYY-MM-DD HH:mm:00'))
+      //   );
+      // }
+    } else {
+      if (formData.riteDateTime && !formData.handleDateTime) {
+        const hour = dayjs(formData.riteDateTime).add(24, 'hour').get('hour');
+        const minHours = filterTimes.filter((n) => n > dayjs().hour());
+        console.log('449', hour);
+        if (filterTimes.includes(String(hour))) {
+          setValue(
+            new Date(
+              dayjs(formData.riteDateTime)
+                .add(24, 'hour')
+                .set(
+                  'hour',
+                  minHours.includes(hour)
+                    ? hour
+                    : minHours[minHours.length - 1] || 10
+                )
+                .format('YYYY-MM-DD HH:mm:00')
+            )
+          );
+          // setYMD(
+          //   new Date(
+          //     dayjs(formData.riteDateTime)
+          //       .add(24, 'hour')
+          //       .set(
+          //         'hour',
+          //         minHours.includes(hour)
+          //           ? hour
+          //           : minHours[minHours.length - 1] || 10
+          //       )
+          //       .format('YYYY-MM-DD HH:mm:00')
+          //   )
+          // );
+        }
+      } else {
+        setValue(
+          new Date(
+            dayjs().set('hour', getlastHour).format('YYYY-MM-DD HH:mm:00')
+          )
+        );
+        // setYMD(
+        //   new Date(
+        //     dayjs().set('hour', getlastHour).format('YYYY-MM-DD HH:mm:00')
+        //   )
+        // );
+      }
     }
-
     setVisible(true);
     //默认小时设置为没有被预约的枚举销售第一个
     // const getInvalidTimes = props.invalidTimes
@@ -117,107 +210,43 @@ function CustomDatePicker(props: any) {
     setVisible(false);
   };
 
-  const checkDate = (currentValue: any) => {
-    return new Promise(async (resolve, reject) => {
-      const res = await checkBook(
-        dayjs(
-          `${currentValue[0]}-${currentValue[1]}-${currentValue[2]}`
-        ).format('YYYY-MM-DD HH:mm:00')
-      );
-      if (res.code === 200) {
-        resolve(res.data);
-        // throw new Error('当前时间已被预约');
-      }
-    });
-  };
-
   // 确定
-  const onConfirm = (latestValue: any, currentValue) => {
+  const onConfirm = async (latestValue: any, currentValue) => {
     // 判断latestRightDateRef.current的时间跟value是否一致，如果不一致，就不允许选择
-    const [{ value: year }, { value: month }, { value: day }, { value: hour }] =
-      latestValue;
-    const currentDate = dayjs(
-      `${currentValue[0]}-${currentValue[1]}-${currentValue[2]} ${currentValue[3]}`
-    );
-    console.log(
-      year,
-      month,
-      day,
-      hour,
-      latestValue,
-      currentValue,
-      props.invalidTimes,
-      currentDate,
-      '===latestValue==='
-    );
-    //判断时间是否在当前时间之前
-    if (dayjs(currentDate.format('YYYY/MM/DD HH:mm:00')).isBefore(dayjs())) {
+    if (latestValue.length < 4) {
       showToast({
-        title: '当前时间不可选',
+        title: '选择的时间格式错误',
         icon: 'none',
+        duration: 2000,
       });
-      return onCancel();
-    }
+      // console.error('选择的时间格式错误');
+    } else {
+      const [
+        { value: year },
+        { value: month },
+        { value: day },
+        { value: hour },
+      ] = latestValue;
+      // const curdate = dayjs(
+      //   `${currentValue[0]}-${currentValue[1]}-${currentValue[2]} ${currentValue[3]}`
+      // );
 
-    if (
-      formData.bookDateTime &&
-      formItem.prop === 'riteDateTime' &&
-      dayjs(formData.bookDateTime).unix() === currentDate.unix()
-    ) {
-      showToast({
-        title: '预约仪式时间不能与预约上门服务时间相同',
-        icon: 'none',
-      });
-      return onCancel();
-    }
+      // if (
+      //   !!formData.riteDateTime &&
+      //   formItem.prop === 'handleDateTime' &&
+      //   formData.riteDateTime == formData.handleDateTime
+      // ) {
+      //   showToast({
+      //     title: '预约仪式时间不能与纪念物获取时间相同',
+      //     icon: 'none',
+      //   });
+      //   return onCancel();
+      // }
 
-    //判断是否有预约
-    if (formItem.prop === 'bookDateTime') {
-      // const result = await checkDate(currentValue);
-      if (
-        props.invalidTimes.includes(currentDate.format('YYYY/MM/DD HH:mm:00'))
-      ) {
-        showToast({
-          title: '当前时间已被预约',
-          icon: 'none',
-        });
-        return onCancel();
-      }
+      //修改外部的值
+      const selectedValue = `${year}-${month}-${day} ${hour}:00`;
+      props.onChange(selectedValue, formItem);
     }
-
-    // 判断是否有预约
-    // const res = await checkBook(dayjs(value).format('YYYY-MM-DD HH:mm:00'));
-    // console.log(res, '===checkBook===');
-    // 选择的时间小于当前时间，就不允许选择
-    // if (dayjs(value).isBefore(dayjs())) {
-    //   showToast({
-    //     title: '当前时间不可选',
-    //     icon: 'none',
-    //   });
-    //   return;
-    //
-
-    if (
-      latestRightDateRef.current &&
-      dayjs(latestRightDateRef.current).format('YYYY-MM-DD HH:mm:00') !==
-        dayjs(value).format('YYYY-MM-DD HH:mm:00')
-    ) {
-      showToast({
-        title: '当前时间不可选',
-        icon: 'none',
-      });
-      return;
-    }
-    // if (formItem.prop === 'bookDateTime') {
-    //   props.onChange('', { prop: 'handleDateTime' });
-    //   props.onChange('', { prop: 'riteDateTime' });
-    // }
-    // if (formItem.prop === 'riteDateTime') {
-    //   props.onChange('', { prop: 'handleDateTime' });
-    // }
-    //修改外部的值
-    const selectedValue = `${year}-${month}-${day} ${hour}:00`;
-    props.onChange(selectedValue, formItem);
     onCancel();
   };
 
@@ -226,9 +255,15 @@ function CustomDatePicker(props: any) {
     // 修改内部的值
     console.log('选择之前的时间', value);
     console.log('选择的时间value', afterValue);
-
+    const [{ value: year1 }, { value: month1 }, { value: day1 }] = afterValue;
+    setYMD(`${year1}-${month1}-${day1}`);
     if (afterValue.length < 4) {
-      console.error('选择的时间格式错误');
+      // showToast({
+      //   title: '选择的时间格式错误1',
+      //   icon: 'none',
+      //   duration: 2000,
+      // });
+      // console.error('选择的时间格式错误');
       return false;
     }
     const [{ value: year }, { value: month }, { value: day }, { value: hour }] =
@@ -237,40 +272,103 @@ function CustomDatePicker(props: any) {
     const selectedValue = `${year}/${month}/${day} ${hour}:00:00`;
     console.log(selectedValue, '最后格式化赋值的时间');
     // 如果选择的时间小于当前时间，就不允许选择
-    if (
-      dayjs(selectedValue).isBefore(dayjs()) ||
-      (invalidTimes.includes(selectedValue) && !!FILTERTIMES[formItem.prop]) ||
-      // 如果是riteDateTime，如果是小于bookDateTime之后的一个小时，就不允许选择
-      (formItem.prop === 'riteDateTime' &&
-        dayjs(selectedValue).unix() <= dayjs(formData.bookDateTime).unix()) ||
-      // 如果是handleDateTime，如果是小于riteDateTime之后的一个小时，就不允许选择
-      (formItem.prop === 'handleDateTime' &&
-        (dayjs(selectedValue).unix() <=
-          dayjs(formData.riteDateTime).add(1, 'day').unix() ||
-          dayjs(selectedValue).unix() <= dayjs(formData.bookDateTime).unix()))
-    ) {
-      console.error('选择的时间小于当前时间, 不赋值', selectedValue);
-      showToast({
-        title: '当前时间不可选',
-        icon: 'none',
-      });
-      // return false;
-      latestRightDateRef.current = new Date(value);
-    } else {
-      latestRightDateRef.current = new Date(selectedValue);
-    }
-    console.log('change', selectedValue);
+    // (invalidTimes.includes(selectedValue) &&      !!FILTERTIMES[formItem.prop]
+    // if (
+    //   dayjs(selectedValue).isBefore(dayjs()) ||
+    //   // 如果是riteDateTime，如果是小于bookDateTime之后的一个小时，就不允许选择
+    //   (formItem.prop === 'riteDateTime' &&
+    //     dayjs(selectedValue).unix() <= dayjs(formData.bookDateTime).unix()) ||
+    //   // 如果是handleDateTime，如果是小于riteDateTime之后的一个小时，就不允许选择
+    //   (formItem.prop === 'handleDateTime' &&
+    //     (dayjs(selectedValue).unix() <=
+    //       dayjs(formData.riteDateTime).add(1, 'day').unix() ||
+    //       dayjs(selectedValue).unix() <= dayjs(formData.bookDateTime).unix()))
+    // ) {
+    //   console.error('选择的时间小于当前时间, 不赋值', selectedValue);
+
+    //   // return false;
+    //   latestRightDateRef.current = new Date(value);
+    // } else {
+    latestRightDateRef.current = new Date(selectedValue);
+    // }
     setValue(new Date(selectedValue));
   };
 
   // 过滤时间
   const handleFilter = (type: string, options: any) => {
     const filterTimes = FILTERTIMES[formItem.prop];
+    console.log(
+      'YMD',
+      dayjs(YMD).format('YYYY-MM-DD'),
+      dayjs(value).format('YYYY-MM-DD')
+    );
+    if (type === 'month') {
+      return options.filter((option: any) => {
+        return option.value >= dayjs().get('month') + 1;
+      });
+    }
     if (filterTimes && type === 'hour') {
       // 把options里面value包含在filterTimes里值的内容去掉
-      return options.filter((option: any) => {
-        return filterTimes.includes(option.value);
-      });
+      if (dayjs(YMD).isSame(dayjs(), 'day')) {
+        const minHour = dayjs().add(2, 'hour').hour();
+        console.log('最小小时', minHour);
+        if (['bookDateTime', 'riteDateTime'].includes(formItem.prop)) {
+          console.log('最小小时', minHour);
+          return options.filter((option: any) => {
+            return (
+              filterTimes.includes(option.value) &&
+              option.value > dayjs().hour() &&
+              option.value > minHour
+            );
+          });
+        }
+        return options.filter((option: any) => {
+          return (
+            filterTimes.includes(option.value) && option.value > dayjs().hour()
+          );
+        });
+      } else if (dayjs(YMD).isBefore(dayjs())) {
+        return [];
+      } else {
+        if (formItem.prop === 'riteDateTime') {
+          if (
+            !!formData.bookDateTime &&
+            dayjs(YMD).isSame(dayjs(formData.bookDateTime), 'day')
+          ) {
+            const checkDateTime = dayjs(formData.bookDateTime).get('hour');
+            console.log('checkDateTime1112', checkDateTime);
+            // && option.value > checkDateTime
+            return options.filter((option: any) => {
+              return filterTimes.includes(option.value);
+            });
+          }
+        }
+        if (formItem.prop === 'handleDateTime' && !!formData.riteDateTime) {
+          const checkDateTime = dayjs(formData.riteDateTime).add(1, 'day');
+          console.log('YMD', dayjs(YMD).format('YYYY-MM-DD'));
+          if (dayjs(YMD).isBefore(dayjs(checkDateTime), 'day')) {
+            return [];
+          } else {
+            return options.filter((option: any) => {
+              return filterTimes.includes(option.value);
+            });
+          }
+          //  else {
+          //   console.log(
+          //     'checkDateTime-handleDateTime',
+          //     checkDateTime.get('hour')
+          //   );
+          //   return options.filter((option: any) => {
+          //     return filterTimes
+          //       .filter((n) => n > checkDateTime.get('hour'))
+          //       .includes(option.value);
+          //   });
+          // }
+        }
+        return options.filter((option: any) => {
+          return filterTimes.includes(option.value);
+        });
+      }
     }
     return options;
   };
@@ -316,17 +414,13 @@ function CustomDatePicker(props: any) {
         // key={renderKey}
         formatter={(type: string, option: PickerOption): any => {
           if (type == 'month') {
-            const isDisabled = dayjs(value)
-              .set('month', (option.value as number) - 1)
-              .isBefore(dayjs());
+            // const isDisabled = dayjs(value)
+            //   .set('month', (option.value as number) - 1)
+            //   .isBefore(dayjs());
             return {
-              label: (
-                <View style={{ color: isDisabled ? '#bbb' : undefined }}>
-                  {option.label}
-                </View>
-              ),
+              label: <View>{option.label}</View>,
               value: option.value,
-              disabled: isDisabled,
+              // disabled: isDisabled,
             };
           }
           // console.log('year', dayjs().year(), option.value);
@@ -335,13 +429,9 @@ function CustomDatePicker(props: any) {
             const isDisabled =
               (option.value as number) < formatCurrentValue.year();
             return {
-              label: (
-                <View style={{ color: isDisabled ? '#bbb' : undefined }}>
-                  {option.label}
-                </View>
-              ),
+              label: <View>{option.label}</View>,
               value: option.value,
-              isShow: isDisabled,
+              // isShow: isDisabled,
             };
           }
           if (type == 'day') {
@@ -350,23 +440,18 @@ function CustomDatePicker(props: any) {
               .set('date', option.value as number)
               .isBefore(dayjs());
             return {
-              label: (
-                <View style={{ color: isDisabled ? '#bbb' : undefined }}>
-                  {option.label}
-                </View>
-              ),
+              label: <View>{option.label}</View>,
               value: option.value,
-              isShow: isDisabled,
+              // isShow: isDisabled,
             };
           }
+          // (invalidTimes.includes(
+          //   dayjs(value)
+          //     .set('hour', option.value as number)
+          //     .format('YYYY/MM/DD HH:00:00')
+          // ) &&  !!FILTERTIMES[formItem.prop]
           if (type === 'hour') {
             const isDisabled =
-              (invalidTimes.includes(
-                dayjs(value)
-                  .set('hour', option.value as number)
-                  .format('YYYY/MM/DD HH:00:00')
-              ) &&
-                !!FILTERTIMES[formItem.prop]) ||
               dayjs(value)
                 .set('hour', option.value as number)
                 .isBefore(dayjs()) ||
@@ -384,11 +469,7 @@ function CustomDatePicker(props: any) {
                     .set('hour', option.value as number)
                     .unix() <= dayjs(formData.bookDateTime).unix()));
             return {
-              label: (
-                <View style={{ color: isDisabled ? '#bbb' : undefined }}>
-                  {option.label}:00
-                </View>
-              ),
+              label: <View>{option.label}:00</View>,
               value: `${option.value}`,
               isShow: false,
             };

@@ -22,10 +22,10 @@ export default function Index(props: any) {
       {props.type === 'pay' ? (
         <View className="content">
           <View className="title">宠物善终服务协议</View>
-          <View> 乙方（宠物善终服务提供方）：</View>
-          <View> 公司名称：广州振德翊兆生物科技有限公司（品牌：“它念”）</View>
-          <View>公司地址：广州市海珠区仑头路78号之三A01栋108号房</View>
-          <View>联系电话：19120038398</View>
+          <View>乙方（宠物善终服务提供方）：</View>
+          <View>公司名称：广州振德翊兆生物科技有限公司（品牌：“它念”）</View>
+          <View>公司地址：广州市海珠区仑头路78号之三A01栋108号房</View>
+          <View>联系电话：19120038398</View>
           鉴于甲方拥有宠物，现因宠物死亡，甲方需要对宠物进行妥善处理。乙方作为专业的宠物善终服务提供方，愿意为甲方提供宠物善终服务。双方本着平等自愿、诚实信用的原则，经协商一致，订立本合同，以资共同遵守。
           <View>
             <View className="title">

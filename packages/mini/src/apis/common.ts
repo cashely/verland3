@@ -6,6 +6,7 @@ const APIS = {
   File: '/file',
   MENU: '/mp/menu',
   checkBook: '/mp/book/checkBookDateTime',
+  checkRiteDateTime: '/mp/book/checkRiteDateTime',
 };
 
 const loginApi = (data) => {
@@ -44,4 +45,13 @@ const checkBook = (bookDateTime: string) => {
   });
 };
 
-export { loginApi, testApi, uploadFile, menu, checkBook };
+const checkRiteDateTime = (riteDateTime: any) => {
+  return request(APIS.checkRiteDateTime, {
+    method: 'post',
+    data: {
+      riteDateTime,
+    },
+  });
+};
+
+export { loginApi, checkRiteDateTime, testApi, uploadFile, menu, checkBook };

@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, Image } from '@tarojs/components';
 import {
   navigateTo,
   useDidShow,
   showToast,
   requestSubscribeMessage,
+  useReachBottom,
 } from '@tarojs/taro';
 import {
   AtAvatar,
@@ -15,12 +16,13 @@ import {
   AtTextarea,
   AtButton,
 } from 'taro-ui';
-import { evaluate, list, cancel } from '@/apis/book';
+import { evaluate, list, cancel, listCount } from '@/apis/book';
 import sheetCat from '../../../subpackages/assets/images/sheetCat.png';
 import dayjs from 'dayjs';
 import { APPOINTMENT_TYPES, DEFAULT_IMAGE, REFUND_TMP } from '@/constants';
 import { formatPrice } from '@/utils';
 import { fileUrl } from '@/apis';
+import { unionBy } from 'lodash-es';
 import './index.scss';
 
 const tabList = [
@@ -36,7 +38,7 @@ const tabList = [
 
 export default function Index() {
   useDidShow(() => {
-    getlist();
+    // getlist();
   });
   const [current, setCurrent] = useState(0);
   const [data, setData] = useState([]);
@@ -45,27 +47,90 @@ export default function Index() {
   const [rateValue, setRate] = useState(5);
   const [bookId, setBookId] = useState('');
   const [showEmpty, setShowEmpty] = useState(false);
+  const [count, setCount] = useState(0);
+  const [pageParams, setPageParams] = useState({
+    pageSize: 20,
+    pageNo: 1,
+    tabValue: -1,
+  });
+
+  const getCount = (statu) => {
+    return new Promise((resolve) => {
+      listCount(statu == -1 ? '' : statu).then((res) => {
+        if (res.code !== 200) return;
+        setCount(res.data as number);
+        resolve(res.data);
+      });
+    });
+  };
   const getlist = async (current = 0) => {
     setShowEmpty(false);
-    const res = await list();
-    if (res.code === 200) {
-      const result = res.data.map((item) => ({
-        ...item,
-        bookDateTime: item.bookDateTime
-          ? dayjs(item.bookDateTime).format('YYYY-MM-DD HH:mm:ss')
-          : undefined,
-      }));
-      const _showData =
-        current !== 0
-          ? result.filter((item) => item.statu === current - 1)
-          : result;
-      setData(_showData);
-      setShowEmpty(_showData?.length == 0);
-      setCurrent(+current);
+    try {
+      const takeParams = {};
+      if (current !== 0) {
+        takeParams['statu'] = current - 1;
+      }
+      const res = await list({
+        ...pageParams,
+        ...takeParams,
+      });
+      if (res.code === 200) {
+        const result = res.data.map((item) => ({
+          ...item,
+          bookDateTime: item.bookDateTime
+            ? dayjs(item.bookDateTime).format('YYYY-MM-DD HH:mm:ss')
+            : undefined,
+        }));
+        const _showData =
+          current !== 0
+            ? result.filter((item) => item.statu === current - 1)
+            : result;
+        // if (current == 0) {
+        //   setData(lodash.unionBy([...data, ..._showData], 'id'));
+        // } else {
+        if (pageParams.pageNo == 1) {
+          setData(_showData);
+        } else {
+          setData(() => {
+            return unionBy([...data, ..._showData], 'id');
+          });
+        }
+        // }
+        console.log(_showData, 'showData');
+        if (pageParams.pageNo == 1) {
+          setShowEmpty(_showData?.length == 0);
+        }
+        getCount(current - 1);
+        setCurrent(+current);
+      }
+    } catch (_) {
+      showToast({
+        title: '获取列表失败',
+      });
     }
   };
+
+  // 监听上拉触底
+  useReachBottom(() => {
+    if (pageParams.pageNo >= Math.floor(count / 20) + 1) return;
+    setPageParams({
+      ...pageParams,
+      pageNo: pageParams.pageNo + 1,
+    });
+  });
+
+  useEffect(() => {
+    // if (current == 0) return;
+    getlist(current);
+  }, [current, pageParams.pageNo]);
   const handleTabClick = (value) => {
-    getlist(value);
+    setPageParams({
+      ...pageParams,
+      pageNo: 1,
+      tabValue: value,
+    });
+    setData([]);
+    setCurrent(+value);
   };
 
   const handleChange = (value) => {
@@ -107,7 +172,7 @@ export default function Index() {
               icon: 'none',
               success() {
                 setTimeout(() => {
-                  getlist();
+                  getlist(current);
                 }, 1000);
               },
             });
@@ -174,7 +239,7 @@ export default function Index() {
   return (
     <View className="page-appointList">
       <AtTabs current={current} tabList={tabList} onClick={handleTabClick}>
-        {tabList.map((_, index) => (
+        {Object.freeze(tabList).map((_, index) => (
           <AtTabsPane current={current} index={index}>
             <View className="tab-content" key={index}>
               {data.map((item, indey) => (
@@ -207,7 +272,7 @@ export default function Index() {
                         <Text className="text-888">
                           {item?.bookGoods
                             ?.map((n) => n.bookGood.title)
-                            .join(',') || '无'}
+                            .join(',') || '暂无'}
                         </Text>
                       </View>
                       <View>
@@ -219,7 +284,8 @@ export default function Index() {
                     </View>
                   </View>
                   <View className="absolute bottom-0 left-0 right-0 item-foot">
-                    {[1, 2].includes(item.statu) && (
+                    {/* 2待处理不显示取消预约按钮 */}
+                    {[1].includes(item.statu) && (
                       <View
                         className="btn-item"
                         onClick={() => onCancel(item)}
@@ -276,7 +342,7 @@ export default function Index() {
           className={'sheetImage absolute top-[-50px]'}
           mode="widthFix"
           src={sheetCat}
-          style={{ width: 100 }}
+          style={{ width: 100, objectFit: 'cover' }}
         ></Image>
         {isOpened && (
           <View className="sheetContent p-40px pb-60px">

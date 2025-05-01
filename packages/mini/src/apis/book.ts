@@ -9,6 +9,7 @@ const APIS = {
   EVALUATE: '/mp/evaluate',
   CANCEL: '/mp/wx/refund',
   IS_BOOKED: '/mp/book/hasBookDate',
+  listCount: '/mp/book/count',
 };
 
 const add = (data) => {
@@ -18,10 +19,26 @@ const add = (data) => {
   });
 };
 
-const list = () => {
-  return request(APIS.LIST, {
-    method: 'get',
-  });
+const list = (params) => {
+  const urlSearchParams = new URLSearchParams(params);
+  return request(
+    APIS.LIST,
+    {
+      method: 'get',
+    },
+    urlSearchParams.toString()
+  );
+};
+
+const listCount = (statu?: number) => {
+  return request(
+    APIS.listCount + `?statu=${statu}`,
+    {
+      method: 'get',
+    },
+    '',
+    false
+  );
 };
 
 const detail = (id) => {
@@ -91,5 +108,6 @@ export {
   cancel,
   evaluate,
   getEvaluate,
+  listCount,
   isBooked,
 };

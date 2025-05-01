@@ -42,11 +42,19 @@ export default function AsApplyInvoice() {
   });
 
   const handleSubmit = () => {
+    if (formData?.type == 2 && (!formData.header || !formData.number)) {
+      showToast({
+        title: '请填写发票抬头和企业税号',
+        icon: 'none',
+        duration: 2000,
+      });
+      return;
+    }
     if (!regexObj.email.test(formData.email)) {
       showToast({
         title: '请输入正确的邮箱',
         icon: 'none',
-        duration: 1000,
+        duration: 2000,
       });
       return;
     }
@@ -119,7 +127,6 @@ export default function AsApplyInvoice() {
           name="header"
           title="发票抬头"
           type="text"
-          clear
           placeholder="请填写（个人不需）"
           cursor={1000}
           value={formData.header}
@@ -131,7 +138,6 @@ export default function AsApplyInvoice() {
           name="number"
           title="企业税号"
           cursor={1000}
-          clear
           type="text"
           onChange={(e) => handleInputChange(e, 'number')}
           placeholder="请填写"

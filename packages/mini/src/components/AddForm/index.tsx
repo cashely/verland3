@@ -76,7 +76,7 @@ export default forwardRef((props, ref) => {
         formData[formItem.prop] = getLabel;
       }
     } else {
-      // console.log('++++++++++411', formItem.prop, e, formData);
+      console.log('++++++++++429', formItem.prop, e, formData);
       formData[formItem.prop] = e;
     }
     props.onFormChange && props?.onFormChange?.(formItem.prop, formData);
@@ -312,7 +312,6 @@ export default forwardRef((props, ref) => {
                   </Text>
                 </View>
                 <AtTextarea
-                  key={index}
                   height={formItem.itemProps?.height || 52}
                   maxLength={formItem.itemProps?.maxLength || 100}
                   count={formItem.itemProps?.count || false}

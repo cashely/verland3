@@ -20,7 +20,7 @@ const rowsData = [
   },
   {
     label: '下单时间',
-    key: 'bookDateTime',
+    key: 'createdAt',
   },
   {
     label: '联系人',
@@ -33,6 +33,10 @@ const rowsData = [
   {
     label: '爱宠名字',
     key: 'petname',
+  },
+  {
+    label: '宠物接收方式',
+    key: 'expressWay',
   },
   {
     label: '预约服务时间',
@@ -54,10 +58,7 @@ const rowsData = [
     label: '纪念物获取时间',
     key: 'handleDateTime',
   },
-  {
-    label: '宠物接收方式',
-    key: 'expressWay',
-  },
+
   {
     label: '门店地址',
     key: 'petStore',
@@ -96,12 +97,16 @@ export default function Index() {
             local:
               result?.address && result.expressWay == 3
                 ? `${result?.address?.province} ${result?.address?.city} ${result?.address?.area}`
-                : '',
+                : null,
             petname: result.pet?.petname,
+            createdAt: result.createdAt
+              ? dayjs(result.createdAt).format('YYYY-MM-DD HH:mm:ss')
+              : undefined,
             bookDateTime: result.bookDateTime
               ? dayjs(result.bookDateTime).format('YYYY-MM-DD HH:mm:ss')
               : undefined,
             isRite: IS_RITE.find((n) => n.value == result.isRite)?.label || '-',
+            showRiteDateTime: result.menu?.isRite === 1 ? true : false,
             riteDateTime: result.riteDateTime
               ? dayjs(result.riteDateTime).format('YYYY-MM-DD HH:mm:ss')
               : undefined,
@@ -163,7 +168,22 @@ export default function Index() {
                   title={item.label}
                   extraText={info?.[item.key]?.name || '-'}
                 ></AtListItem>
-              ) : info?.[item.key] ? (
+              ) : info?.[item.key] && item.key !== 'isRite' ? (
+                info?.[item.key] ? (
+                  <AtListItem
+                    className="detail-item"
+                    title={item.label}
+                    extraText={
+                      <>
+                        {['bookGoods'].includes(item.key) &&
+                        !info?.[item.key]?.length
+                          ? '暂无'
+                          : info[item.key] || '暂无'}
+                      </>
+                    }
+                  ></AtListItem>
+                ) : null
+              ) : info?.showRiteDateTime ? (
                 <AtListItem
                   className="detail-item"
                   title={item.label}
@@ -171,8 +191,8 @@ export default function Index() {
                     <>
                       {['bookGoods'].includes(item.key) &&
                       !info?.[item.key]?.length
-                        ? '无'
-                        : info[item.key] || '无'}
+                        ? '暂无'
+                        : info[item.key] || '暂无'}
                     </>
                   }
                 ></AtListItem>

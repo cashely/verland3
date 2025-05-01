@@ -1,15 +1,16 @@
 .content {
-  padding: 40px 40px 140px;
+  padding: 40px 40px 120px;
   max-height: 80vh;
   overflow-y: scroll;
-  font-size: 28px;
+  font-size: 24px;
   text-align: left;
-  line-height: 2;
+  line-height: 1.5;
+  color: #666;
 }
 
-.title {
-  color: #6190e8;
-}
+// .title {
+//   color: #6190e8;
+// }
 
 .btnbox {
   position: fixed;
@@ -18,4 +19,8 @@
   right: 0;
   background-color: #fff;
   bottom: 0;
+}
+
+.at-action-sheet__header {
+  color: #666;
 }
