@@ -213,6 +213,14 @@ export default function WeekIndex() {
   return (
     <View className="index">
       <WeekSwiper onChange={() => {}} />
+        <View>
+          {
+            Array.from(Array(10).keys()).map(i => {
+              return <View>{i}</View>
+            })
+          }
+        </View>
+        <View>点击按钮</View>
     </View>
   );
 }
