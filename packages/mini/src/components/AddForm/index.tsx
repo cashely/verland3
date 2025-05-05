@@ -33,7 +33,9 @@ export default forwardRef((props, ref) => {
     formList = [],
     formModel = {},
     handleSubmit,
+    invalidRiteTimes = [],
     invalidTimes = [],
+    setPageStyle,
   } = props;
 
   const [petPickerShow, setPetPickerShow] = useState(false);
@@ -328,6 +330,8 @@ export default forwardRef((props, ref) => {
                   formData={formData}
                   onChange={handleChange}
                   invalidTimes={invalidTimes}
+                  invalidRiteTimes={invalidRiteTimes}
+                  setPageStyle={setPageStyle}
                 />
               </View>
             ) : null}

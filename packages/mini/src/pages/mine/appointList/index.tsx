@@ -6,6 +6,7 @@ import {
   showToast,
   requestSubscribeMessage,
   useReachBottom,
+  showModal,
 } from '@tarojs/taro';
 import {
   AtAvatar,
@@ -165,18 +166,25 @@ export default function Index() {
       tmplIds: [REFUND_TMP],
       entityIds: [],
       complete() {
-        cancel(item.id).then((res) => {
-          if (res.code === 200) {
-            showToast({
-              title: '取消成功',
-              icon: 'none',
-              success() {
-                setTimeout(() => {
-                  getlist(current);
-                }, 1000);
-              },
+        showModal({
+          title: '警告',
+          content: '是否确定取消当前预约？',
+          success: ({ cancel: cancelFlag }) => {
+            if (cancelFlag) return;
+            cancel(item.id).then((res) => {
+              if (res.code === 200) {
+                showToast({
+                  title: '取消成功',
+                  icon: 'none',
+                  success() {
+                    setTimeout(() => {
+                      getlist(current);
+                    }, 1000);
+                  },
+                });
+              }
             });
-          }
+          },
         });
       },
     });

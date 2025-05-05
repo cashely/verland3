@@ -58,6 +58,7 @@
     "dayjs": "^1.11.13",
     "lodash-es": "^4.17.21",
     "moment": "^2.30.1",
+    "monent": "0.0.2-security",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "taro-ui": "^3.3.0",

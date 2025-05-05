@@ -5,12 +5,12 @@ import {
   useLoad,
   setNavigationBarTitle,
   showToast,
-  useDidShow,
 } from '@tarojs/taro';
 import { list as bookList } from '@/apis/book';
 import { list } from '@/apis/ticket';
 import { TICKET_STATUS_TYPE } from '@/constants';
 import { formatPrice, formatDateTime } from '@/utils';
+import dayjs from 'dayjs';
 import './index.scss';
 
 export default function Index() {
@@ -23,10 +23,16 @@ export default function Index() {
   });
 
   const getBookList = () => {
-    bookList().then((res) => {
+    const start = dayjs().startOf('year').format('YYYY/MM/DD HH:mm:ss');
+    const end = dayjs().endOf('year').format('YYYY/MM/DD HH:mm:ss');
+    bookList({
+      start,
+      end,
+      statu: 3,
+    }).then((res) => {
       if (res.code === 200) {
         if (!res.data) return;
-        const result = res.data?.filter((item) => item.statu === 0);
+        const result = res.data;
         setShowEmpty(!result.length);
         setData(result);
       }
