@@ -307,6 +307,33 @@ router.get('/hasBookDate', validate(z => (
     }
 })
 
+router.get('/hasRiteDate', validate(z => (
+    z.object({
+        query: z.object({
+            start: z.string().min(1),
+            end: z.string().min(1)
+        }) 
+    })
+)), async (req, res) => {
+    try {
+        const { start, end } = req.query;
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        const books = await prisma.book.findMany({
+            where: {
+                riteDateTime: {
+                    gte: startDate,
+                    lte: endDate
+                },
+                statu: 1
+            }
+        });
+        res.response.success(books);
+    } catch (error) {
+        res.response.error(error); 
+    }
+})
+
 /**
  * 检查特定的预约日期是否可用
   */
