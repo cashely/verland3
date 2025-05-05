@@ -190,12 +190,16 @@ const PET_RECEIVE_WAYS = [
 //性别
 const GENDER_TYPE = [
   {
-    label: '男',
+    label: '未知',
     value: 0,
   },
   {
-    label: '女',
+    label: '男',
     value: 1,
+  },
+  {
+    label: '女',
+    value: 2,
   },
 ];
 
