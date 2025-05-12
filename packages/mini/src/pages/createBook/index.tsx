@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, Suspense } from 'react';
-import { View } from '@tarojs/components';
+import { PageMeta, View } from '@tarojs/components';
 import {
   useLoad,
   showToast,
@@ -16,8 +16,8 @@ import regexObj from '@/utils/regexObj';
 //import AppContext from '@/hooks/useContext';
 import { storeList } from '@/apis/pet';
 import { isBooked } from '@/apis/book';
-import { menu, checkBook, checkRiteDateTime } from '@/apis/common';
-import dayjs, { Dayjs } from 'dayjs';
+import { menu, checkRite, checkRiteDateTime } from '@/apis/common';
+import dayjs from 'dayjs';
 
 import './index.scss';
 
@@ -37,6 +37,7 @@ export default () => {
   const [_otherFormList, _setOtherFormList] = useState([...otherFormList]);
   const [_baseInfoFormList, _setBaseInfoFormList] = useState(baseInfoFormList);
   const [invalidTimes, setInvalidTimes] = useState<string[]>([]);
+  const [invalidRiteTimes, setInvalidRiteTimes] = useState<string[]>([]);
 
   const toast = (text: string) => {
     showToast({
@@ -127,9 +128,11 @@ export default () => {
 
   //获取已经预约的时间段
   useEffect(() => {
+    const start = dayjs().startOf('year').format('YYYY-MM-DD HH:mm:ss');
+    const end = dayjs().endOf('year').format('YYYY-MM-DD HH:mm:ss');
     isBooked({
-      start: dayjs().startOf('year').format('YYYY-MM-DD HH:mm:ss'),
-      end: dayjs().endOf('year').format('YYYY-MM-DD HH:mm:ss'),
+      start,
+      end,
     }).then((res) => {
       console.log('res', res);
       if (res?.code === 200) {
@@ -137,7 +140,7 @@ export default () => {
           ...new Set([
             ...res?.data
               ?.filter((n) => n.bookDateTime)
-              .map((n) => dayjs(n.bookDateTime).format('YYYY/MM/DD HH:mm:00')),
+              .map((n) => dayjs(n.bookDateTime).format('YYYY-MM-DD HH:mm:00')),
           ]),
         ];
         console.log(result, 'result');
@@ -147,17 +150,23 @@ export default () => {
         setInvalidTimes(result);
       }
     });
-  }, []);
-
-  const checkDate = (date: any) => {
-    return new Promise(async (resolve) => {
-      const res = await checkBook(date);
-      if (res.code === 200) {
-        resolve(res.data);
-        // throw new Error('当前时间已被预约');
+    checkRite({
+      start,
+      end,
+    }).then((res) => {
+      if (res?.code === 200) {
+        const result = [
+          ...new Set([
+            ...res?.data
+              ?.filter((n) => n.riteDateTime)
+              .map((n) => dayjs(n.riteDateTime).format('YYYY-MM-DD HH:mm:00')),
+          ]),
+        ];
+        setStorageSync('invalidRiteTimes', result);
+        setInvalidRiteTimes(result || []);
       }
     });
-  };
+  }, []);
 
   const handleSubmit = async () => {
     const baseInfo = baseInfoRef.current?.getFormValues() || {};
@@ -213,81 +222,60 @@ export default () => {
     // }
     //handleWay纪念物获取方式2,3    expressWay 宠物接收方式1,3
     //自送
-    if (
-      (otherInfo.expressWay == 1 || otherInfo.expressWay == 3) &&
-      otherInfo.handleWay == 2
-    ) {
-      if (otherInfo?.riteDateTime) {
-        //判断纪念物获取时间是否和预约仪式时间间隔24小时
-        console.log(
-          'confirm',
-          dayjs(otherInfo.handleDateTime).format('YYYY-MM-DD HH:mm:ss'),
-          dayjs(otherInfo.riteDateTime).format('YYYY-MM-DD HH:mm:ss'),
-          dayjs(otherInfo.handleDateTime).unix() -
-            dayjs(otherInfo.riteDateTime).unix()
-        );
-        if (
-          !dayjs(otherInfo.handleDateTime).isAfter(
-            dayjs(otherInfo.riteDateTime).add(1, 'day')
-          )
-        ) {
-          return toast('纪念物获取时间和预约仪式时间间隔不能小于24小时');
-        }
-      }
-    }
+    // if (
+    //   (otherInfo.expressWay == 1 || otherInfo.expressWay == 3) &&
+    //   otherInfo.handleWay == 2
+    // ) {
+    //   if (otherInfo?.riteDateTime) {
+    //     //判断纪念物获取时间是否和预约仪式时间间隔24小时
+    //     console.log(
+    //       'confirm',
+    //       dayjs(otherInfo.handleDateTime).format('YYYY-MM-DD HH:mm:ss'),
+    //       dayjs(otherInfo.riteDateTime).format('YYYY-MM-DD HH:mm:ss'),
+    //       dayjs(otherInfo.handleDateTime).unix() -
+    //         dayjs(otherInfo.riteDateTime).unix()
+    //     );
+    //     if (
+    //       !dayjs(otherInfo.handleDateTime).isAfter(
+    //         dayjs(otherInfo.riteDateTime).add(1, 'day')
+    //       )
+    //     ) {
+    //       return toast('纪念物获取时间和预约仪式时间间隔不能小于24小时');
+    //     }
+    //   }
+    // }
     if (otherInfo?.handleWay == 2 && !otherInfo?.handleDateTime) {
-      console.log('xxxxxxxxxxxx', otherInfo);
-      if (
-        otherInfo?.handleDateTime &&
-        dayjs(otherInfo.bookDateTime).unix() ===
-          dayjs(otherInfo.handleDateTime).unix()
-      ) {
-        //和预约日期比较
-        return toast('预约日期和纪念物获取时间不能相同');
-      } else {
-        return toast('纪念物获取时间不为空');
-      }
+      return toast('纪念物获取时间不为空');
     }
     if (otherInfo.expressWay == 2) {
       if (!otherInfo.petStoreId) {
         return toast('请选择宠物门店');
       }
     } else if (otherInfo.expressWay == 3) {
-      // if (!otherInfo.handleDateTime) {
-      //   return toast('请选择上门收取时间');
-      //判断上门服务时间和预约仪式日期是否一样
-      if (
-        dayjs(otherInfo?.riteDateTime).unix() <=
-          dayjs(otherInfo?.bookDateTime).unix() &&
-        otherInfo.isRite == 1
-      ) {
-        return toast('预约仪式时间必须晚于上门服务时间');
-      }
-      console.log(otherInfo, '429');
       if (!otherInfo?.postAddress || !otherInfo?.detail) {
         return toast('接收地址不完整（包含门牌号）');
       }
     }
 
-    //判断上门服务时间是否被预约
-    if (otherInfo.expressWay === '3' && otherInfo?.bookDateTime) {
-      const result = await checkDate(otherInfo.bookDateTime);
-      if (!result) {
-        return toast('上门服务时间已被预约');
-      }
-    }
+    // //判断上门服务时间是否被预约
+    // if (otherInfo.expressWay === '3' && otherInfo?.bookDateTime) {
+    //   const result = await checkDate(otherInfo.bookDateTime);
+    //   if (!result) {
+    //     return toast('上门服务时间已被预约');
+    //   }
+    // }
 
     //判断仪式试驾是否可用
-    if (
-      (otherInfo.expressWay == 1 || otherInfo?.expressWay == 3) &&
-      otherInfo?.riteDateTime
-    ) {
-      const result = await checkRiteDateTime(otherInfo.riteDateTime);
-      console.log(result, '4298888');
-      if (!result?.data) {
-        return toast('当前仪式时间已被预约，请选择其他时间');
-      }
-    }
+    // if (
+    //   (otherInfo.expressWay == 1 || otherInfo?.expressWay == 3) &&
+    //   otherInfo?.riteDateTime
+    // ) {
+    //   const result = await checkRiteDateTime(otherInfo.riteDateTime);
+    //   console.log(result, '4298888');
+    //   if (!result?.data) {
+    //     return toast('当前仪式时间已被预约，请选择其他时间');
+    //   }
+    // }
 
     //添加数据到缓存
     setStorageSync('bookInfo', {
@@ -518,9 +506,16 @@ export default () => {
     _setOtherFormList([]);
   });
 
+  const [pageStyle, setPageStyle] = useState({});
+
+  const handleSetPageStyle = (flag) => {
+    setPageStyle({ overflow: flag ? 'hidden' : 'auto', height: '100%' });
+  };
+
   return (
     <Suspense fallback={<AtToast isOpened text="loading"></AtToast>}>
-      <View className="pt-20 page-createBox">
+      <PageMeta pageStyle="background:red"> 12 </PageMeta>
+      <View className="pt-20 page-createBox" style={pageStyle}>
         <View className="formCon">
           <AddForm
             ref={baseInfoRef}
@@ -537,6 +532,8 @@ export default () => {
             formModel={formModel}
             onFormChange={handleFormDataChange}
             invalidTimes={invalidTimes}
+            invalidRiteTimes={invalidRiteTimes}
+            setPageStyle={handleSetPageStyle}
           >
             {{
               handleRiteChange,

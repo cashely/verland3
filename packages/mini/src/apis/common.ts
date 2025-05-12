@@ -6,6 +6,7 @@ const APIS = {
   File: '/file',
   MENU: '/mp/menu',
   checkBook: '/mp/book/checkBookDateTime',
+  checkRite: '/mp/book/hasRiteDate',
   checkRiteDateTime: '/mp/book/checkRiteDateTime',
 };
 
@@ -54,4 +55,25 @@ const checkRiteDateTime = (riteDateTime: any) => {
   });
 };
 
-export { loginApi, checkRiteDateTime, testApi, uploadFile, menu, checkBook };
+const checkRite = (params: any) => {
+  const urlSearchParams = new URLSearchParams(params);
+  // start=2023-12-12 00:00:10&end=2025-12-12 00:00:00
+  console.log(params);
+  return request(
+    APIS.checkRite,
+    {
+      method: 'get',
+    },
+    urlSearchParams.toString()
+  );
+};
+
+export {
+  loginApi,
+  checkRiteDateTime,
+  testApi,
+  uploadFile,
+  menu,
+  checkBook,
+  checkRite,
+};
