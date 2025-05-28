@@ -2,12 +2,29 @@
   background-color: #f5f5f5;
   padding: 20px;
   height: 100%;
-  .listItem {
+  .at-list {
     box-shadow: 0px 2px 6px 0px rgba(232, 232, 232, 1);
-    border-radius: 10px;
-    color: #101010;
-    .item-content__info-title {
-      font-size: 32px;
+    border-radius: 30px;
+    overflow: hidden;
+    .listItem {
+      padding: 38px 34px;
+      color: #101010;
+      &::after {
+        // border-bottom: none;
+        padding-right: 20px;
+        right: 16px;
+        left: 16px;
+        height: 2px;
+        background-color: #cecece;
+      }
+      &:last-child {
+        &::after {
+          display: none;
+        }
+      }
+      .item-content__info-title {
+        font-size: 32px;
+      }
     }
   }
 }

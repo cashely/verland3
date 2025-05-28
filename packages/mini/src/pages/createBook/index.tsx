@@ -16,7 +16,7 @@ import regexObj from '@/utils/regexObj';
 //import AppContext from '@/hooks/useContext';
 import { storeList } from '@/apis/pet';
 import { isBooked } from '@/apis/book';
-import { menu, checkRite, checkRiteDateTime } from '@/apis/common';
+import { menu, checkRite } from '@/apis/common';
 import dayjs from 'dayjs';
 
 import './index.scss';
@@ -25,9 +25,10 @@ export default () => {
   const baseInfoRef = useRef(null);
   const otherInfoRef = useRef(null);
   const [menuList, setMenuList] = useState([]);
-  const [selectMenuItem, setSelectMenuItem] = useState({});
   const [formModel, setformModel] = useState({
-    handleWay: '2',
+    // handleWay: '2',
+    // isRite: '1',
+    // handleWay: '1',
   });
 
   useLoad(() => {
@@ -47,18 +48,15 @@ export default () => {
     });
   };
 
-  const getExpressOptions = (menuId: string, ismenua: boolean) => {
+  const getExpressOptions = (menuId: string) => {
     const menuItem = menuList.find((o) => o.id === menuId);
     const wayIds = menuItem?.expressWays?.split(',') || [];
-    console.log(menuItem, 'menuItemxxxxxxxx');
-
-    setSelectMenuItem(menuItem || {});
     setformModel((d) => {
-      d['isRite'] = ismenua ? undefined : 1;
+      d['isRite'] = menuItem?.isRite == 2 ? undefined : menuItem?.isRite;
       d.expressWay = wayIds[0] || null;
       return d;
     });
-    console.log(wayIds, 'wayIds');
+    console.log(wayIds, 'wayIds', menuItem);
     _otherFormList.forEach((item) => {
       if (item.prop === 'bookDateTime') {
         item.hidden = true;
@@ -87,7 +85,7 @@ export default () => {
         item.hidden = ['1', '2'].includes(wayIds[0]);
       }
       if (item.prop === 'handleWay' || item.prop === 'handleDateTime') {
-        item.hidden = !!ismenua;
+        item.hidden = menuItem?.isHandleWay == 2;
       }
     });
     console.log(_otherFormList, '_otherFormList');
@@ -95,7 +93,6 @@ export default () => {
   };
 
   useEffect(() => {
-    console.log('422');
     menu().then((res) => {
       if (res?.code === 200) {
         setformModel((d) => {
@@ -217,34 +214,12 @@ export default () => {
         return toast('预约仪式日期不为空');
       }
     }
-    // if (selectMenuItem?.isHandleWay === 1 && !otherInfo?.handleDateTime) {
-    //   return toast('纪念物获取时间不为空');
-    // }
-    //handleWay纪念物获取方式2,3    expressWay 宠物接收方式1,3
-    //自送
-    // if (
-    //   (otherInfo.expressWay == 1 || otherInfo.expressWay == 3) &&
-    //   otherInfo.handleWay == 2
-    // ) {
-    //   if (otherInfo?.riteDateTime) {
-    //     //判断纪念物获取时间是否和预约仪式时间间隔24小时
-    //     console.log(
-    //       'confirm',
-    //       dayjs(otherInfo.handleDateTime).format('YYYY-MM-DD HH:mm:ss'),
-    //       dayjs(otherInfo.riteDateTime).format('YYYY-MM-DD HH:mm:ss'),
-    //       dayjs(otherInfo.handleDateTime).unix() -
-    //         dayjs(otherInfo.riteDateTime).unix()
-    //     );
-    //     if (
-    //       !dayjs(otherInfo.handleDateTime).isAfter(
-    //         dayjs(otherInfo.riteDateTime).add(1, 'day')
-    //       )
-    //     ) {
-    //       return toast('纪念物获取时间和预约仪式时间间隔不能小于24小时');
-    //     }
-    //   }
-    // }
-    if (otherInfo?.handleWay == 2 && !otherInfo?.handleDateTime) {
+
+    if (
+      otherInfo?.handleWay == 2 &&
+      otherInfo.isRite == 1 &&
+      !otherInfo?.handleDateTime
+    ) {
       return toast('纪念物获取时间不为空');
     }
     if (otherInfo.expressWay == 2) {
@@ -253,29 +228,9 @@ export default () => {
       }
     } else if (otherInfo.expressWay == 3) {
       if (!otherInfo?.postAddress || !otherInfo?.detail) {
-        return toast('接收地址不完整（包含门牌号）');
+        return toast('收取地址不完整（包含门牌号）');
       }
     }
-
-    // //判断上门服务时间是否被预约
-    // if (otherInfo.expressWay === '3' && otherInfo?.bookDateTime) {
-    //   const result = await checkDate(otherInfo.bookDateTime);
-    //   if (!result) {
-    //     return toast('上门服务时间已被预约');
-    //   }
-    // }
-
-    //判断仪式试驾是否可用
-    // if (
-    //   (otherInfo.expressWay == 1 || otherInfo?.expressWay == 3) &&
-    //   otherInfo?.riteDateTime
-    // ) {
-    //   const result = await checkRiteDateTime(otherInfo.riteDateTime);
-    //   console.log(result, '4298888');
-    //   if (!result?.data) {
-    //     return toast('当前仪式时间已被预约，请选择其他时间');
-    //   }
-    // }
 
     //添加数据到缓存
     setStorageSync('bookInfo', {
@@ -309,11 +264,11 @@ export default () => {
     console.log('handleFormDataChange+411', val, propName);
     const checkProps = ['handleWay', 'handleDateTime', 'postAddress', 'detail'];
     const { menuId, petname, type, subType } = val;
-    const isMenuA = menuList.findIndex((n) => n.id === val.menuId) === 1;
+    const selectItem = menuList.find((n) => n.id === val.menuId) || {};
 
     if (propName === 'menuId') {
       _otherFormList.forEach((item: any) => {
-        item.hidden = checkProps.includes(item.prop) && isMenuA;
+        item.hidden = checkProps.includes(item.prop);
 
         if (
           [
@@ -328,59 +283,40 @@ export default () => {
         ) {
           item.hidden = true;
         }
-        if (!isMenuA) {
-          // if (item.prop === 'petStoreId') {
-          //   item.hidden = false;
-          // }
-          if (item.prop === 'postAddress' || item.prop === 'detail') {
-            item.hidden = true;
-          }
-        }
       });
-      if (isMenuA) {
-        setformModel({
-          ...val,
-          handleDateTime: undefined,
-          bookDateTime: undefined,
-          riteDateTime: undefined,
-          isRite: undefined,
-          handleWay: undefined,
-          petStoreId: '',
-          postAddress: '',
-          detail: '',
-          expressWay: selectMenuItem?.expressWays?.split(',') || [],
-        });
-      } else {
-        setformModel((d) => {
-          return {
-            ...d,
-            ...val,
-            menuId,
-            petname,
-            type,
-            subType,
-            handleWay: '2',
-            isRite: undefined,
-            // expressWay: '1',
-          };
-        });
-      }
-
-      getExpressOptions(val.menuId, isMenuA);
+      console.log(selectItem, '512');
+      setformModel({
+        ...val,
+        menuId,
+        petname,
+        type,
+        subType,
+        handleDateTime: selectItem?.isHandleWay == 1 ? '' : undefined,
+        bookDateTime: selectItem?.isRite == 1 ? '' : undefined,
+        isRite: selectItem?.isRite == 1 ? '1' : undefined,
+        handleWay: selectItem?.isHandleWay == 1 ? '2' : undefined,
+        expressWay: selectItem?.expressWays?.split(',') || [],
+      });
+      getExpressOptions(val.menuId);
     } else if (propName === 'isRite') {
       console.log('isRite411', val.isRite);
       _otherFormList.find((item) => item.prop === 'riteDateTime').hidden =
         val.isRite === '2';
+
       setformModel({
         ...val,
         riteDateTime: val.isRite === '2' ? undefined : val.riteDateTime,
-        handleDateTime: val.isRite === '2' ? undefined : val.handleDateTime,
+        handleDateTime:
+          val.isRite === '2'
+            ? undefined
+            : val.handleWay == 2
+            ? undefined
+            : val.handleDateTime,
       });
     } else if (propName === 'handleWay') {
       console.log('handlWay411', val.handleWay);
       _otherFormList.find((item) => item.prop === 'handleDateTime').hidden =
         val.handleWay === '1' || val.handleWay === '3';
-
       setformModel({
         ...val,
         handleDateTime: val.handleWay === '3' ? undefined : val.handleDateTime,
@@ -435,14 +371,18 @@ export default () => {
             model['petStoreId'] = '';
           }
         }
+
         model['riteDateTime'] = '';
         model['handleDateTime'] = '';
+        model['isRite'] = selectItem?.isRite == 1 ? '1' : undefined;
+        model['handleWay'] = selectItem?.isHandleWay == 1 ? '2' : undefined;
       });
       setformModel((d) => {
         return {
           ...d,
           ...val,
           ...model,
+          // isRite: '1',
         };
       });
     } else if (propName === 'location' || propName === 'detail') {
@@ -482,14 +422,14 @@ export default () => {
   };
 
   useEffect(() => {
-    console.log('menuList变更411');
-    const showProps = ['handleWay', 'handleDateTime'];
+    console.log('menuList变更411', menuList);
+
     _otherFormList.forEach((item: any) => {
       if (item.prop === 'menuId') {
         item.tabsOptions = menuList.map((item: any) => ({
           id: item.id,
           label: item.name,
-          content: item.description,
+          content: JSON.parse(item.description),
         }));
         item.tabsTitle = menuList.map((iten: any) => iten.name);
       }
@@ -498,10 +438,9 @@ export default () => {
     });
     console.log(formModel, '422');
     getExpressOptions(menuList[0]?.id);
-  }, [menuList]);
+  }, [menuList.length]);
 
   useUnload(() => {
-    console.log('卸载');
     setMenuList([]);
     _setOtherFormList([]);
   });

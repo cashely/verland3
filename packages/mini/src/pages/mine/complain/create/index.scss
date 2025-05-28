@@ -1,13 +1,50 @@
 .page-complain-create {
-  padding: 32px;
+  padding: 98px 0 0;
+  background-color: #f7f7f9;
+  min-height: calc(100% - 98px);
   .title {
     color: #1c3762;
+    padding-left: 20px;
+    font-size: 36px;
+  }
+  .content {
+    background-color: #fff;
+    padding: 28px 36px;
+    height: 100vh;
+    box-shadow: 0 4px 12px 0 rgba(232, 232, 232, 1);
+    border-radius: 30px 30px 0 0;
+    // overflow: hidden;
+    position: relative;
+    .square {
+      // width: 100px;
+      border-radius: 0 16px 16px 0;
+      // height: 100px;
+      width: 0;
+      height: 0;
+      border-left: 68px solid transparent;
+      border-right: 68px solid transparent;
+      border-bottom: 68px solid #fff;
+      // transform: rotate(45deg);
+      position: absolute;
+      // background-color: white;
+      filter: drop-shadow(2px 2px 2px #fff);
+      top: -71px;
+      border-radius: 16px;
+      // box-shadow: 0 2px 6px 0 rgba(232, 232, 232, 1);
+      &.first {
+        left: 60px;
+      }
+      &.second {
+        right: 60px;
+      }
+    }
   }
   .cls-textarea {
     text-align: left;
     background-color: rgba(232, 232, 232, 1);
     border-radius: 30px;
     border: 0;
+    padding: 40px 26px;
     .at-textarea__textarea {
       font-size: 28px;
       height: 300px !important;

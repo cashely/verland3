@@ -378,7 +378,8 @@ export default function WeekIndex(props) {
               <View className="time">{item.label}:00</View>
               <View className="text">
                 {invalidTimes.includes(item.key) ||
-                invalidRiteTimes.includes(item.key) ? (
+                (formItem.prop === 'riteDateTime' &&
+                  invalidRiteTimes.includes(item.key)) ? (
                   '已满'
                 ) : item?.disabled ? (
                   '不可预约'

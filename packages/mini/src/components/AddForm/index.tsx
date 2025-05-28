@@ -9,6 +9,7 @@ import {
   Picker,
   Checkbox,
   Image,
+  RichText,
 } from '@tarojs/components';
 import {
   AtForm,
@@ -37,7 +38,7 @@ export default forwardRef((props, ref) => {
     invalidTimes = [],
     setPageStyle,
   } = props;
-
+  const UpText = ['一', '二', '三', '四', '五', '六', '七', '八'];
   const [petPickerShow, setPetPickerShow] = useState(false);
   const [_formList, setFormList] = useState(formList);
   const [formData, setFormData] = useState({
@@ -111,12 +112,13 @@ export default forwardRef((props, ref) => {
               props.onFormChange &&
                 props.onFormChange(formItem.prop, {
                   ...formData,
-                  [formItem.prop]: res.name,
+                  [formItem.prop]: `${res?.name ? res?.name : ''}`,
 
                   //`${province}-${city}${
                   //district ? '-' + district : ''
                   //}`,
-                  detail: res.address,
+                  detail,
+                  detail1: detail,
                   province,
                   city,
                   area: district,
@@ -209,7 +211,7 @@ export default forwardRef((props, ref) => {
         {_formList.map((formItem, index) => (
           <>
             {['text'].includes(formItem.type) && !formItem.hidden ? (
-              <View className="formItemView" key={index}>
+              <View className="formItemView textItem" key={index}>
                 <AtList className="flex items-center justify-between">
                   <AtListItem
                     title={formItem.label}
@@ -311,10 +313,12 @@ export default forwardRef((props, ref) => {
                   ) : null}
                   <Text className={`${formItem.error ? 'text-color-red' : ''}`}>
                     {formItem.label}
+                    {!!formItem?.itemProps?.mark &&
+                      `<Text className="text-color-red font-24">${formItem?.itemProps?.mark}</Text>`}
                   </Text>
                 </View>
                 <AtTextarea
-                  height={formItem.itemProps?.height || 52}
+                  height={formItem.itemProps?.height || 100}
                   maxLength={formItem.itemProps?.maxLength || 100}
                   count={formItem.itemProps?.count || false}
                   placeholder={formItem.itemProps.placeholder}
@@ -332,6 +336,7 @@ export default forwardRef((props, ref) => {
                   invalidTimes={invalidTimes}
                   invalidRiteTimes={invalidRiteTimes}
                   setPageStyle={setPageStyle}
+                  mark={formItem?.itemProps?.mark}
                 />
               </View>
             ) : null}
@@ -372,7 +377,7 @@ export default forwardRef((props, ref) => {
             ) : null}
 
             {formItem.type === 'petPicker' && !formItem.hidden ? (
-              <View className="formItemView" key={index}>
+              <View className="formItemView petPicker" key={index}>
                 <AtList className="flex items-center justify-between">
                   <AtListItem
                     onClick={() => handleListClick(formItem)}
@@ -390,6 +395,7 @@ export default forwardRef((props, ref) => {
                         </Text>
                       </View>
                     }
+                    arrow="right"
                     extraText={
                       formData[formItem.prop]
                         ? formData[formItem.prop] +
@@ -469,8 +475,27 @@ export default forwardRef((props, ref) => {
                   ) : null}
                 </View>
                 {formItem.tabsOptions[tabIndex]?.content && (
-                  <View className="tab-content">
-                    {formItem.tabsOptions[tabIndex]?.content}
+                  <View
+                    className="tab-content"
+                    style={{
+                      backgroundColor: '#fff',
+                      borderRadius: '16rpx',
+                    }}
+                  >
+                    {/* {JSON.stringify(formItem.tabsOptions[tabIndex]?.content)} */}
+                    {formItem.tabsOptions[tabIndex]?.content?.map(
+                      (item, index) => (
+                        <View
+                          className="graph"
+                          style={{
+                            fontSize: '24rpx',
+                            color: '#333',
+                          }}
+                        >
+                          {UpText[index]}、{item}
+                        </View>
+                      )
+                    )}
                   </View>
                 )}
               </View>

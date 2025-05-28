@@ -36,6 +36,14 @@
     white-space: unset;
     // overflow-x: scroll;
   }
+  &-extra {
+    flex-grow: 1;
+  }
+
+  &-content {
+    flex: unset;
+    margin-right: 20px;
+  }
   .item-extra__icon-arrow {
     font-size: unset;
   }
@@ -51,6 +59,15 @@
   .at-list__item .item-extra__info {
     padding-right: 0;
   }
+  .item-content {
+    // margin-right: 20px;
+    min-width: 168px;
+  }
+  &.petPicker {
+    .item-extra__info {
+      margin-right: 20px;
+    }
+  }
 }
 
 .customItem {
@@ -59,7 +76,7 @@
   .label {
     display: block;
     margin-right: 32rpx;
-    width: 190rpx;
+    width: 200rpx;
     font-size: 28rpx;
     line-height: 1.5;
     text-align: left;

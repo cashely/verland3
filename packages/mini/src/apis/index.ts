@@ -75,10 +75,9 @@ export default function (
 
           return;
         }
-        setTimeout(function () {
-          resolve(res.data);
-          loadingInstance && (hideLoading(), (loadingInstance = null));
-        }, 1000);
+
+        resolve(res.data);
+        loadingInstance && (hideLoading(), (loadingInstance = null));
       },
       fail: (err) => {
         console.log(err, '错误信息');

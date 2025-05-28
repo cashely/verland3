@@ -1,13 +1,22 @@
 .page-pets {
-  padding: 64px 40px 64px 120px;
   background-color: #154e7b;
-  min-height: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+  .content {
+    padding: 64px 40px 64px 120px;
+    position: absolute;
+    bottom: 0;
+    overflow: scroll;
+    top: 0;
+  }
   .pet-item {
-    background-color: #fff;
-    border-radius: 16px;
+    background-color: rgba(251, 251, 251, 0.8);
+    border-radius: 30px;
     padding: 32px 32px 32px 100px;
     margin-bottom: 32px;
     height: 140px;
+
     position: relative;
     .avatar {
       position: absolute;
@@ -33,7 +42,6 @@
     }
   }
   .footer {
-    padding-top: 40px;
     width: 670px;
     position: relative;
     margin-left: -80px;

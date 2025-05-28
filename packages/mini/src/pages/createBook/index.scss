@@ -1,23 +1,78 @@
 .page-createBox {
   padding: 40px;
   padding-bottom: 80px;
-  background-color: rgba(157, 218, 251, 1);
+  // background-color: rgba(157, 218, 251, 1);
+  background-image: url('../../subpackages/assets/images/bg2.jpg');
   min-height: 100%;
+  background-size: cover;
   .formCon {
     overflow: hidden;
     border-radius: 30px;
     margin-bottom: 44px;
     padding: 12px;
-    background-color: #fff;
+    border: 2px solid #fff;
+    background-color: rgba(255, 255, 255, 0.8);
   }
   .at-form {
+    background-color: rgb(237, 247, 251);
     &::after {
       border: none;
     }
+    .formItemView:not(.petPicker) {
+      border-bottom: 3px solid #e5e5e5;
+    }
+    .at-list {
+      background-color: rgb(237, 247, 251);
+    }
+    .at-list__item {
+      background-color: rgb(237, 247, 251);
+      &::after {
+        background-color: #e5e5e5;
+      }
+      .item-content__info-title {
+        color: #154e7b;
+      }
+    }
+    .at-input__title {
+      color: #154e7b;
+    }
+    .at-textarea {
+      background-color: rgb(237, 247, 251);
+    }
+    .textItem {
+      // border-bottom: 3px solid #e5e5e5;
+    }
+    .customItem {
+      // background-color: rgb(237, 247, 251);
+      border-bottom: 2px solid #e5e5e5;
+      .label {
+        color: #154e7b;
+      }
+      .graph {
+        line-height: 2;
+      }
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
     .at-input {
+      background-color: rgb(237, 247, 251);
+      border-bottom: 2px solid #e5e5e5;
+
+      &::after {
+        display: none;
+      }
+      // &::after {
+      //   display: block;
+      //   content: '';
+      //   border-color: red;
+      //   border-bottom: 2px solid red;
+      // }
       &:last-child {
         &::after {
           border: none;
+          display: none;
         }
       }
     }

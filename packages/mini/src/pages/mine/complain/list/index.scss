@@ -8,13 +8,14 @@
       rgba(157, 218, 251, 1) -89.32%,
       rgba(255, 255, 255, 1) 46.69%
     );
+    border: 2px solid #fff;
     padding: 20px 24px;
     margin-bottom: 20px;
     font-size: 24px;
     border-radius: 20px;
     position: relative;
     &-head {
-      margin-bottom: 20px;
+      margin-bottom: 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -45,7 +46,7 @@
     .content {
       background-color: #e8e8e8;
       padding: 20px;
-      border-radius: 10px;
+      border-radius: 16px;
     }
     .bottom {
       margin-top: 30px;

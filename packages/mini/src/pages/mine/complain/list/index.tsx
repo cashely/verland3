@@ -55,7 +55,7 @@ export default function List() {
             {getStatusBg(item)}
           </View>
           <View className="content">{item.content}</View>
-          <View className="bottom">点击查看</View>
+          <View className="bottom">点击查看 ></View>
         </View>
       ))}
       {showEmpty && (

@@ -3,7 +3,7 @@ import { View, Text, Image } from '@tarojs/components';
 import { navigateTo, useDidShow } from '@tarojs/taro';
 import { AtAvatar, AtButton } from 'taro-ui';
 import { list } from '@/apis/pet';
-import { DEFAULT_IMAGE } from '@/constants';
+import petBg from '../../../subpackages/assets/images/bg.png';
 import { fileUrl } from '@/apis';
 import './index.scss';
 
@@ -32,27 +32,41 @@ export default function Pets() {
   };
   return (
     <View className="page-pets">
-      {pets.map((item, index) => (
-        <View className="pet-item" key={index}>
-          <Image
-            className="avatar"
-            src={showImage(item?.petImage?.[0]?.image?.path)}
-          ></Image>
-          <View className="flex justify-between info">
-            <Text className="font-bold name">{item.petname}</Text>
-            <View>
-              {item.age && <Text className="age">{item.age}个月</Text>}
-              {item.weight && (
-                <Text className="ml-2 age">{item.weight || '-'}kg</Text>
-              )}
+      <Image
+        src={petBg}
+        mode="aspectFill"
+        style={{
+          width: '100%',
+        }}
+      ></Image>
+      <View className="content">
+        {pets.map((item, index) => (
+          <View className="pet-item" key={index}>
+            <Image
+              className="avatar"
+              src={showImage(item?.petImage?.[0]?.image?.path)}
+            ></Image>
+            <View className="flex justify-between info">
+              <Text className="font-bold name">{item.petname}</Text>
+              <View>
+                {item.age && <Text className="age">{item.age}个月</Text>}
+                {item.weight && (
+                  <Text className="ml-2 age">{item.weight || '-'}kg</Text>
+                )}
+              </View>
             </View>
           </View>
+        ))}
+        <View
+          className="footer"
+          style={{
+            paddingTop: pets.length ? '80rpx' : '420rpx',
+          }}
+        >
+          <AtButton className="addBtn" onClick={handleAddPet} type="primary">
+            添加
+          </AtButton>
         </View>
-      ))}
-      <View className="footer">
-        <AtButton className="addBtn" onClick={handleAddPet} type="primary">
-          添加
-        </AtButton>
       </View>
     </View>
   );

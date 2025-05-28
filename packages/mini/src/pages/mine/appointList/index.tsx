@@ -125,6 +125,7 @@ export default function Index() {
     getlist(current);
   }, [current, pageParams.pageNo]);
   const handleTabClick = (value) => {
+    if (value === current) return;
     setPageParams({
       ...pageParams,
       pageNo: 1,

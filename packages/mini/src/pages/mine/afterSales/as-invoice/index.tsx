@@ -97,7 +97,7 @@ export default function Index() {
               {formatDateTime(item.bookDateTime || item.createdAt)}
             </Text>
           </View>
-          <View className="font-bold priceCon text-price">
+          <View className={`font-bold ${pageType} priceCon  text-price`}>
             {item?.book
               ? formatPrice(item.book?.totalAmount)
               : formatPrice(item.totalAmount)}
@@ -105,7 +105,7 @@ export default function Index() {
           </View>
           {pageType === 'wdsq' && (
             <View className="ticket-footer">
-              <Text>{TICKET_STATUS_TYPE[item.statu]}</Text>
+              <Text>{TICKET_STATUS_TYPE[item.statu]}></Text>
               {/* <Text>未收到发票</Text> */}
             </View>
           )}

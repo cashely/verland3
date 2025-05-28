@@ -1,15 +1,16 @@
 .page-additionalService {
-  padding: 20px;
-  background-color: #f7f7f9;
-  height: 100%;
-  // background-image: url('../../../assets/images/service-bg.png');
+  padding: 30px 30px 0;
+  background-color: blue;
+  min-height: 100%;
+  overflow: hidden;
+  background-image: url('../../../subpackages/assets/images/bg2.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   .content {
     overflow: hidden;
-    border-radius: 30px;
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 16px;
-    background-color: #f3f3f1;
+    border-radius: 20px 20px 0 0;
   }
   .inner {
     display: grid;
@@ -17,6 +18,7 @@
     grid-template-rows: auto;
     grid-auto-flow: row;
     grid-gap: 30px;
+    padding-bottom: 180px;
   }
   .as-item {
     flex: 1;
@@ -68,13 +70,18 @@
       &-name {
         font-size: 26px;
         color: #154e7b;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
+        white-space: wrap;
+        // word-break: keep-all;
       }
       &-price {
         font-size: 28px;
         font-weight: 600;
         line-height: 2;
         color: #ffaa5f;
+      }
+      .subName {
+        font-size: 24px;
       }
       .goDetail {
         color: #154e7b;
@@ -85,7 +92,8 @@
         text-align: center;
         font-size: 24px;
         display: inline-block;
-        padding: 12px 16px;
+        line-height: 32px;
+        padding: 8px 16px;
         line-height: 1;
       }
     }
@@ -108,8 +116,33 @@
     }
   }
 }
-
+.at-action-sheet {
+  &__container {
+    background: linear-gradient(
+      179.17deg,
+      rgba(228, 243, 253, 1) 0.12%,
+      rgba(255, 255, 255, 1) 15.09%
+    );
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  &__header {
+    display: none;
+  }
+}
 .book-content {
-  padding: 32px;
+  padding: 56px;
+  font-size: 32px;
   text-align: left;
+
+  .head {
+    color: #1c3762;
+    .title {
+      font-size: 40px;
+      margin-bottom: 24px;
+    }
+    .price {
+      font-size: 32px;
+    }
+  }
 }

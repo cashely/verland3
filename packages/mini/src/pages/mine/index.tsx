@@ -70,7 +70,7 @@ export default function Index() {
                 key={index}
                 className="toolsItem"
                 title={item.text}
-                arrow="right"
+                arrow={item.isPhone ? undefined : 'right'}
                 extraText={item.value || ''}
                 onClick={() => handleGoPage(item)}
               ></AtListItem>

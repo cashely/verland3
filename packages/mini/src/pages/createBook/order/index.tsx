@@ -265,6 +265,23 @@ export default () => {
           />
         ) : null}
 
+        {order?.address && order?.expressWay == 3 ? (
+          <>
+            {/* <AtListItem
+              title="上门收取时间"
+              extraText={formatDate(order.expressDateTime || '-')}
+            /> */}
+            <AtListItem
+              title="收取地址"
+              extraText={getAddress(order.address)}
+            />
+            <AtListItem
+              title="门牌号"
+              extraText={<>{order?.address?.detail || '-'}</>}
+            />
+          </>
+        ) : null}
+
         {order?.menu?.isRite === 1 ? (
           <AtListItem
             title="是否需要仪式"
@@ -306,23 +323,6 @@ export default () => {
                 : '-'
             }
           />
-        ) : null}
-
-        {order?.address && order?.expressWay == 3 ? (
-          <>
-            {/* <AtListItem
-              title="上门收取时间"
-              extraText={formatDate(order.expressDateTime || '-')}
-            /> */}
-            <AtListItem
-              title="接收地址"
-              extraText={getAddress(order.address)}
-            />
-            <AtListItem
-              title="门牌号"
-              extraText={<>{order?.address?.detail || '-'}</>}
-            />
-          </>
         ) : null}
 
         {order?.bookGoods?.length > 0 && (

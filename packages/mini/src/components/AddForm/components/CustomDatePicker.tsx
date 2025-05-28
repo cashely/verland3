@@ -22,11 +22,19 @@ function CustomDatePicker(props: any) {
     formData,
     invalidTimes = [],
     invalidRiteTimes = [],
+    mark,
   } = props;
   const [visible, setVisible] = useState(false);
 
   // 选择时间点击
   const handleListClick = () => {
+    if (
+      formItem.prop === 'handleDateTime' &&
+      formData.isRite == 2 &&
+      formData.handleWay == 2
+    ) {
+      return false;
+    }
     setVisible(true);
     props?.setPageStyle && props.setPageStyle(true);
   };
@@ -59,18 +67,38 @@ function CustomDatePicker(props: any) {
               </Text>
             </View>
           }
-          extraText={formData[formItem.prop] || formItem.itemProps.placeholder}
+          extraText={
+            mark && formData.isRite == 2 && formData.handleWay == 2 ? (
+              <View
+                style={{
+                  fontSize: 12,
+                  position: 'absolute',
+                  inset: 0,
+                  color: '#999',
+                  wordBreak: 'break-all',
+                  whiteSpace: 'nowrap',
+                  marginTop: 2,
+                }}
+              >
+                {mark}
+              </View>
+            ) : (
+              formData[formItem.prop] || formItem.itemProps.placeholder
+            )
+          }
         />
-        <Image
-          onClick={handleListClick}
-          src={dateIcon}
-          mode="widthFix"
-          style={{
-            width: 20,
-            height: 20,
-            marginRight: 10,
-          }}
-        ></Image>
+        {mark && formData.isRite == 2 && formData.handleWay == 2 ? null : (
+          <Image
+            onClick={handleListClick}
+            src={dateIcon}
+            mode="widthFix"
+            style={{
+              width: 20,
+              height: 20,
+              marginRight: 10,
+            }}
+          ></Image>
+        )}
       </AtList>
 
       <AtActionSheet

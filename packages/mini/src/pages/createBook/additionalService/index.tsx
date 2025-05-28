@@ -41,6 +41,7 @@ export default function AdditionalService() {
     const bookInfo = getStorageSync('bookInfo') || {};
     add({
       ...bookInfo,
+      detail: (bookInfo?.detail1 || '') + ' ' + (bookInfo.detail || ''),
       bookGoodIds: data
         .filter((_, index) => selectedIndex.includes(index))
         .map((item) => item.id),
@@ -99,6 +100,12 @@ export default function AdditionalService() {
     setSelectedItem(data?.find((item) => item.id === id));
   };
 
+  const handleSplitName = (str: string) => {
+    if (!str) return ['', ''];
+    const [first, second] = str.split(/\((.*)\)/).filter(Boolean);
+    console.log('first', first, 'second', second);
+    return [first, second];
+  };
   useEffect(() => {
     getData();
   }, []);
@@ -106,45 +113,63 @@ export default function AdditionalService() {
   return (
     <Suspense fallback={<Text>加载中...</Text>}>
       <View className="page-additionalService">
-        <View className="content">
-          <View className="inner">
-            {data.map((item, index) => (
-              <View
-                className={`as-item ${
-                  selectedIndex.includes(index) ? 'selected' : ''
-                }`}
-                key={index}
-                onClick={() => handleSelectItem(index)}
-              >
-                <View className="as-item__image">
-                  <Image
-                    className="image"
-                    mode="widthFix"
-                    style={{ width: '80px', height: '80px' }}
-                    src={fileUrl + '/' + item.imageUrl}
-                  ></Image>
-                </View>
-                <View className="as-item__content">
-                  <View className="as-item__content-name">{item.title}</View>
-                  <View>
-                    <View
-                      onClick={(e) => handleShowDetail(e, item.id)}
-                      className="goDetail"
-                    >
-                      查看详情
+        {data?.length ? (
+          <View className="content">
+            <View className="inner">
+              {data.map((item, index) => (
+                <View
+                  className={`as-item ${
+                    selectedIndex.includes(index) ? 'selected' : ''
+                  }`}
+                  key={index}
+                  onClick={() => handleSelectItem(index)}
+                >
+                  <View className="as-item__image">
+                    <Image
+                      className="image"
+                      mode="widthFix"
+                      style={{
+                        width: '80px',
+                        height: '80px',
+                        borderRadius: '10rpx',
+                      }}
+                      src={fileUrl + '/' + item.imageUrl}
+                    ></Image>
+                  </View>
+                  <View className="as-item__content">
+                    <View className="as-item__content-name">
+                      {handleSplitName(item.title)?.[0]}
+                      <Text className="subName">
+                        {handleSplitName(item.title)?.[1]
+                          ? `(${handleSplitName(item.title)?.[1]})`
+                          : ''}
+                      </Text>
                     </View>
+                    <View>
+                      <View
+                        onClick={(e) => handleShowDetail(e, item.id)}
+                        className="goDetail"
+                      >
+                        查看详情
+                      </View>
 
-                    <View className="as-item__content-price">
-                      ¥{formatPrice(item.price)}
+                      <View className="as-item__content-price">
+                        ¥{formatPrice(item.price)}
+                        {String(formatPrice(item.price))?.split('.')?.length ==
+                        1
+                          ? '.00'
+                          : '/公里'}
+                      </View>
                     </View>
                   </View>
                 </View>
-              </View>
-            ))}
-            {showEmpty ? <View className="empty">暂无附加服务数据</View> : null}
+              ))}
+              {showEmpty ? (
+                <View className="empty">暂无附加服务数据</View>
+              ) : null}
+            </View>
           </View>
-        </View>
-
+        ) : null}
         <View className="flex gap-4 mt-40 footer">
           <AtButton
             type="secondary"
@@ -170,7 +195,27 @@ export default function AdditionalService() {
         title={selectedItem?.title}
       >
         <View className="book-content">
-          {selectedItem?.content || '暂无内容'}
+          <View className="flex justify-between head">
+            <Image
+              mode="widthFix"
+              src={fileUrl + '/' + selectedItem?.imageUrl}
+              style={{
+                width: '200rpx',
+                marginRight: '56rpx',
+                borderRadius: '10rpx',
+                boxShadow: '0 2rpx 8rpx 0 rgba(0,0,0,0.4)',
+                marginBottom: '48rpx',
+                border: '4rpx solid #fff',
+              }}
+            ></Image>
+            <View className="flex-1">
+              <View className="title">{selectedItem?.title}</View>
+              <View className="price">
+                ￥{formatPrice(selectedItem?.price as number)}
+              </View>
+            </View>
+          </View>
+          <View className="body">{selectedItem?.content || '暂无内容'}</View>
         </View>
       </AtActionSheet>
     </Suspense>

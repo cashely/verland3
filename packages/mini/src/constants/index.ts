@@ -68,11 +68,17 @@ const GENDER = ['', '男', '女'];
 const TICKET_TYPE = [
   {
     label: '个人',
+    text: '个人',
     value: '1',
+    disabled: false,
+    checked: false,
   },
   {
     label: '企业',
+    text: '企业',
     value: '2',
+    disabled: false,
+    checked: false,
   },
 ];
 

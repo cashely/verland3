@@ -164,7 +164,7 @@ export default function AsApplyInvoice() {
         onConfirm={handleConfirm}
         onCancel={handleClose}
         content={textTemplate[status]}
-      />
+      ></AtModal>
     </View>
   );
 }

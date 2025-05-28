@@ -31,12 +31,12 @@ export default defineAppConfig({
   ],
   tabBar: {
     list: [
-      {
-        pagePath: 'pages/shop/index',
-        text: '商城',
-        iconPath: 'assets/icon/shop.png',
-        selectedIconPath: 'assets/icon/shop.png',
-      },
+      // {
+      //   pagePath: 'pages/shop/index',
+      //   text: '商城',
+      //   iconPath: 'assets/icon/shop.png',
+      //   selectedIconPath: 'assets/icon/shop.png',
+      // },
       {
         pagePath: 'pages/index/index',
         text: '它念',

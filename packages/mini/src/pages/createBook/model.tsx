@@ -92,6 +92,29 @@ const otherFormList = [
     invalidTimes: [],
   },
   {
+    label: '收取地址',
+    prop: 'postAddress',
+    // type: "textarea",
+    type: 'location',
+    hidden: true, // 控制显示隐藏
+    itemProps: {
+      mark: '请补充完整地址，例1层101室',
+      placeholder: '点击选择位置',
+    },
+    rules: [],
+  },
+  {
+    label: '门牌号',
+    prop: 'detail',
+    type: 'textarea',
+    hidden: true,
+    itemProps: {
+      maxLength: 50,
+      placeholder: '详细地址，要求小区名称,例某某小区1层101室',
+    },
+    rules: [],
+  },
+  {
     label: '是否需要仪式',
     prop: 'isRite',
     type: 'radio',
@@ -156,6 +179,7 @@ const otherFormList = [
     type: 'picker-date',
     itemProps: {
       placeholder: '请选择',
+      mark: '请在订单完成后与客服确认时间',
     },
     rules: [],
     hidden: false,
@@ -184,28 +208,6 @@ const otherFormList = [
     hidden: true, // 控制显示隐藏
     rules: [],
     options: [],
-  },
-  {
-    label: '接收地址',
-    prop: 'postAddress',
-    // type: "textarea",
-    type: 'location',
-    hidden: true, // 控制显示隐藏
-    itemProps: {
-      placeholder: '点击选择位置',
-    },
-    rules: [],
-  },
-  {
-    label: '门牌号',
-    prop: 'detail',
-    type: 'textarea',
-    hidden: true,
-    itemProps: {
-      maxLength: 50,
-      placeholder: '详细地址，例1层101室',
-    },
-    rules: [],
   },
   {
     label: '备注',
